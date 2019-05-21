@@ -1,0 +1,127 @@
+// 全局class
+
+.disabled{
+  pointer-events: none;
+}
+
+// 容器，最外层必须使用
+.com-container{
+  height: 100%;
+}
+
+.com-box{
+  padding: 10px;
+}
+
+// 适用于只有下方一个按钮，且内容不多的情况
+.com-mainBtn-container{
+  .com-box;
+  margin-top: 100px;
+}
+
+// 后退按钮，暂未使用
+.com-btn-back{
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url('~@img/btn/back.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+// 输入框icon
+.com-input-icon{
+  width: 26px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.com-input-container{
+  > input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: inherit;
+    color: inherit;
+    text-align: inherit;
+    box-sizing: border-box;
+    background-color: transparent;
+  }
+}
+
+// cell右侧显示文字
+.com-cell-text{
+  margin-right: 10px;
+}
+
+// hr分割线
+.com-hrline{
+  border: none;
+  background-color: #ccc;
+  height: 1px;
+  margin: 0 10px;
+}
+
+// 100%宽度主题色title
+.com-fillTitle{
+  text-indent: 20px;
+  font-size: 14px;
+  line-height: 40px;
+  background-color: @theme;
+  color: white;
+}
+
+// 带header的view-box高度
+.com-header-view{
+  height: ~'calc(100% - 46px)' !important;
+}
+
+// 带header和tab的view-box高度
+.com-tab-view{
+  height: ~'calc(100% - 90px)' !important;
+}
+
+// fixed绝对居中
+.com-ab-center{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// 和vux-cell自带的link图标相同，为解决有时cell组件图标不显示的问题
+.com-icon-link{
+  content: " ";
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  border-width: 2px 2px 0 0;
+  border-color: #C8C8CD;
+  border-style: solid;
+  transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+  position: relative;
+  top: 50%;
+  margin-top: -4px;
+  right: 2px;
+}
+
+// 重新加载按钮
+.com-reloadBtn{
+  color: @theme;
+  font-size: 18px;
+}
+
+// 下三角
+.com-jiao{
+  width: 0; 
+  height: 0;
+  border-width: 0.35em;
+  border-style: solid;
+  border-color:#ccc transparent transparent transparent;
+  display: inline-block;
+}
+
+.com-xicon-gray{
+  fill: #ccc;
+}

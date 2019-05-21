@@ -1,0 +1,104 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import guard from './guard'
+
+import Home from '@v/Home/Home'
+import Login from '@v/Login/Login'
+import Register from '@v/Login/Register'
+
+
+Vue.use(Router)
+
+const r = {
+  ResetPassword: () => import('@v/Login/Reset'),
+  sub: {
+    BeforeCheckPsd: () => import('@v/sub/BeforeCheckPsd')
+  },
+  My: {
+    Index: () => import('@v/My/Index'),
+    Info: () => import('@v/My/Info'),
+    Account: {
+      Index: () => import('@v/My/Account/Index'),
+      ChangePsd: () => import('@v/My/Account/ChangePsd'),
+      ChangePhone: () => import('@v/My/Account/ChangePhone'),
+    },
+    Feedback: () => import('@v/My/Feedback')
+  },
+}
+
+const keepAlive = true,
+fromUrlStop = true
+
+// 设置路由path和name
+function p(name, path){
+  return {
+    path: `/${path ? path : name}`,
+    name,
+    meta: {}  // 防止未设置meta造成取到undefined的情况
+  }
+}
+
+var routes = [
+  {
+    path: '/',
+    name: 'home',
+    component: Home,
+    meta: {
+      keepAlive
+    }
+  }, {  // 公用前置验证密码页面
+    ...p('sub/before_check_psd'),
+    component: r.sub.BeforeCheckPsd,
+    meta: {
+      fromUrlStop
+    }
+  }, {  // 登录
+    ...p('login'),
+    component: Login
+  }, {  // 注册
+    ...p('register'),
+    component: Register
+  }, {  // 重置密码
+    ...p('reset_psd'),
+    component: r.ResetPassword
+  }, {  // 我的
+    ...p('my'),
+    component: r.My.Index
+  }, {  // 我的/个人信息
+    ...p('my/info'),
+    component: r.My.Info,
+    meta: {
+      keepAlive
+    }
+  }, {  // 我的/帐号管理
+    ...p('my/account'),
+    component: r.My.Account.Index
+  }, {  // 我的/帐号管理/修改密码
+    ...p('my/account/change_psd'),
+    component: r.My.Account.ChangePsd,
+    meta: {
+      fromUrlStop
+    }
+  }, {  // 我的/帐号管理/修改手机号
+    ...p('my/account/change_phone'),
+    component: r.My.Account.ChangePhone,
+    meta: {
+      fromUrlStop
+    }
+  }, {  // 我的/反馈
+    ...p('my/feedback'),
+    component: r.My.Feedback
+  },
+  
+  
+  { // 输入不存在的路由时，回到home
+    path: '*',
+    redirect: '/'
+  }
+]
+
+// guard为路由实例添加全局守卫
+export default guard(new Router({
+  mode: 'history',
+  routes
+}))
