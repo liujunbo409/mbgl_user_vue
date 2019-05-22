@@ -24,6 +24,14 @@ const r = {
     },
     Feedback: () => import('@v/My/Feedback')
   },
+  Health: {
+    Health: () => import('@v/Health/Health'),
+    AddIll: () => import('@v/Health/AddIll'),
+    IllInfo: {
+      Index: () => import('@v/Health/IllInfo/Index'),
+      Medicinal: () => import('@v/Health/IllInfo/Medicinal')
+    },
+  }
 }
 
 const keepAlive = true,
@@ -88,13 +96,35 @@ var routes = [
   }, {  // 我的/反馈
     ...p('my/feedback'),
     component: r.My.Feedback
-  },
-  
-  
-  { // 输入不存在的路由时，回到home
-    path: '*',
-    redirect: '/'
+  }, {
+    ...p('health'),
+    component: r.Health.Health
+  }, {
+    ...p('health/add_ill'),
+    component: r.Health.AddIll,
+    meta: {
+      fromUrlStop
+    }
+  }, {
+    ...p('health/ill_info/index'),
+    component: r.Health.IllInfo.Index,
+    meta: {
+      keepAlive,
+      fromUrlStop
+    }
+  }, {
+    ...p('health/ill_info/medicinal'),
+    component: r.Health.IllInfo.Medicinal,
+    meta: {
+      fromUrlStop
+    }
   }
+  
+  
+  // { // 输入不存在的路由时，回到home
+  //   path: '*',
+  //   redirect: '/'
+  // }
 ]
 
 // guard为路由实例添加全局守卫

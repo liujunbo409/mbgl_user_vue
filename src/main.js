@@ -20,6 +20,7 @@ import {
   Group, Cell, ViewBox
 } from 'vux'
 import VueHeader from '@c/header/Header'
+import InlineLoading from '@c/InlineLoading'
 
 // 导入video-player
 require('video.js/dist/video-js.css')
@@ -34,6 +35,7 @@ Vue.component('vux-group', Group)
 Vue.component('vux-cell', Cell)
 Vue.component('vue-header', VueHeader)
 Vue.component('view-box', ViewBox)
+Vue.component('inline-loading', InlineLoading)
 
 
 // 全局变量

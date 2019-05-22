@@ -64,13 +64,13 @@ export default {
     }
   },
 
-  beforeRouteLeave (to, from, next){
-    if(!['my', 'my/role/doctor', 'my/role/nurse'].includes(to.name) && !this.isAccess){
-      this.$bus.$emit('vux.alert', '您还没有进入该模块的权限，请先完成身份认证！')
-      return
-    }
-    next()
-  },
+  // beforeRouteLeave (to, from, next){
+  //   if(!['my', 'my/role/doctor', 'my/role/nurse'].includes(to.name) && !this.isAccess){
+  //     this.$bus.$emit('vux.alert', '您还没有进入该模块的权限，请先完成身份认证！')
+  //     return
+  //   }
+  //   next()
+  // },
 
   activated (){
     this.updateEidtStatus()
