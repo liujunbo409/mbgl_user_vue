@@ -124,8 +124,20 @@
 
 .com-xicon-gray{
   fill: #ccc;
+  color: @theme !important;
 }
 
 .com-xicon-theme{
   fill: @theme;
+  color: @theme !important;
+}
+
+// 未选择图标，大小与vux的icon组件普通图标大小一致
+.com-unchecked{
+  width: 23px;
+  height: 23px;
+  border: 1px #ccc solid;
+  border-radius: 50%;
+  background-color: white;
+  box-sizing: border-box;
 }

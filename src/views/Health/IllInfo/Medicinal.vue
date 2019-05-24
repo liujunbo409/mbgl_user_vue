@@ -16,6 +16,7 @@
         <p v-for="(name, index) in showSelected_Yao_Lists" :key="index">{{ name }}</p>
       </div>
 
+      <!-- 这里和接口的思路不一样，只在提交时统一操作，而不是点一下就发一个请求 -->
       <vux-checklist title="药物列表" ref="checklist" :min="0"
         v-model="selected_Yao_Lists[selected]"
         :options="yao_List"
@@ -38,10 +39,10 @@ export default {
 
   data (){
     return {
-      moduleData: {},
-      data: [],
+      moduleData: {}, 
+      data: [],                     // 药物数据
       loadedSelected_Yao_List: [], // 获取到的之前已选药品
-      selected: '',
+      selected: '',               // 选中的药类id
       selectedTab: '',
       selectedList: {},          // 选中药品类别下的药品列表
       selected_Yao_Lists: {},    // 已选药物列表，因为checklist限制选中数不能大于options数，
@@ -52,18 +53,21 @@ export default {
 
   mounted (){
     this.moduleData = this.$route.params.moduleData
+    // 初始化药类&已有数据
     this.loadClassifyList().then(() =>{
       this.loadSelected()
     })
   },
 
   computed: {
+    // 过滤出药品list
     yao_List (){
       if(!this.selected){ return [] }
       return this.data.filter(val => val.id === this.selected)[0].medicines
       .map(val => ({ key: val.medicine_id, value: val.name })) // vux有bug，key不能为对象
     },
 
+    // 已选药物
     // 这里拿把data中的medicines都取出来，再用所有选项id组成的数组过滤
     showSelected_Yao_Lists (){
       var data = [], selected = []
@@ -74,12 +78,14 @@ export default {
   },
 
   watch: {
+    // 载入药类结束默认选中第一项
     data (){
       Vue.nextTick(() => this.$refs.tab0[0].$el.click())
     }
   },
 
   methods: {
+    // 初始化
     init (){
       this.data = []
       this.loadedSelected_Yao_List = []
@@ -87,6 +93,7 @@ export default {
       this.selected_Yao_Lists = {}
     },
 
+    // 载入药类数据
     loadClassifyList (){
       this.status = 'loading'
       return new Promise((resolve, reject) =>{
@@ -117,6 +124,7 @@ export default {
 
     },
 
+    // 载入之前的选项
     loadSelected (){
       _request({
         url: 'jkda/userMedicine',
@@ -131,7 +139,9 @@ export default {
             this.data.forEach(foo => data = data.concat(foo.medicines))
             data.forEach(bar => {
               if(bar.medicine_id === val.medicine_id){
-                this.selected_Yao_Lists[bar.classify_id] = []
+                if(!this.selected_Yao_Lists[bar.classify_id]){
+                  this.selected_Yao_Lists[bar.classify_id] = []
+                }
                 this.selected_Yao_Lists[bar.classify_id].push(val.medicine_id)
               }
             })
@@ -146,12 +156,15 @@ export default {
       })
     },
 
+    // 提交，判断哪些项增加了，哪些项减少了，之后统一发起请求
     submit (){
       var selected = []
       Object.values(this.selected_Yao_Lists).forEach(val => selected = selected.concat(val))
+      console.log(selected)
       var add = selected.filter(val => !this.loadedSelected_Yao_List.includes(val))
       var del = this.loadedSelected_Yao_List.filter(val => !selected.includes(val))
 
+      console.log(add, del)
       var requests = []
       add.forEach(medicine_id =>{
         requests.push(_request({
@@ -176,11 +189,29 @@ export default {
       })
 
       Promise.all(requests).then(() =>{
-        this.$bus.$emit('vux.toast', {
-          type: 'success',
-          text: '操作成功'
+        _request({
+          url: 'jkda/xuanxiangPost',
+          method: 'post',
+          data: {
+            modular_id: this.moduleData.id
+          }
+        }).then(({data}) =>{
+          if(data.result){
+            var illId = this.moduleData.ill_id
+            if(!data.ret.modular_id){
+              this.$router.replace({
+                name: 'health/ill_info/index',
+                params: { illId }
+              })
+              this.$bus.$emit('vux.alert', '填写完成')
+            }else{
+              var moduleData = this.$store.state.jkda[illId].filter(val => val.id === data.ret.modular_id)[0]
+              this.$toView('health/ill_info/other', {
+                params: { moduleData }
+              })
+            }            
+          }
         })
-        this.$router.back()
       }).catch(e =>{
         this.init()
         this.loadClassifyList().then(() =>{

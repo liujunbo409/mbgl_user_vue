@@ -1,5 +1,6 @@
 // 请求器实例，挂载于window._request
 import axios from 'axios'
+import qs from 'qs'
 import localStorage from '@u/localStorage'
 
 var commonConfig = {
@@ -7,7 +8,7 @@ var commonConfig = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
-  transformRequest: toFormData
+  transformRequest: qs.stringify
 }
 
 var axiosInstance = axios.create({
@@ -62,12 +63,19 @@ function responseDataHandler(res){
 }
 
 // 转换为表单数据(x-www-form-urlencoded)
-function toFormData(data){
-  if(data){
-    return Object.keys(data).map(function(key){
-      return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
-    }).join('&')
-  }
-}
+// function toFormData(data){
+//   if(data){
+//     // var formData = new FormData()
+//     // for(let key in data){
+//     //   formData.append(key, data[key])
+//     // }
+
+//     // return formData
+
+//     // return Object.keys(data).map(function(key){
+//     //   return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+//     // }).join('&')
+//   }
+// }
 
 window._request = axiosInstance

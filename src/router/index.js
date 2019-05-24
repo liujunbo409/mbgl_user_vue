@@ -29,8 +29,14 @@ const r = {
     AddIll: () => import('@v/Health/AddIll'),
     IllInfo: {
       Index: () => import('@v/Health/IllInfo/Index'),
-      Medicinal: () => import('@v/Health/IllInfo/Medicinal')
+      Medicinal: () => import('@v/Health/IllInfo/Medicinal'),
+      Other: () => import('@v/Health/IllInfo/Other'),
+      Wen_Juan: () => import('@v/Health/IllInfo/WenJuan'),
+      CreatingPlan: () => import('@v/Health/IllInfo/CreatingPlan')
     },
+  },
+  LearningPlan: {
+    LearningPlan: () => import('@v/LearningPlan/LearningPlan')
   }
 }
 
@@ -118,6 +124,27 @@ var routes = [
     meta: {
       fromUrlStop
     }
+  }, {
+    ...p('health/ill_info/other'),
+    component: r.Health.IllInfo.Other,
+    meta: {
+      fromUrlStop
+    }
+  }, {
+    ...p('health/ill_info/wen_juan'),
+    component: r.Health.IllInfo.Wen_Juan,
+    meta: {
+      fromUrlStop
+    }
+  }, {
+    ...p('health/ill_info/creating_plan'),
+    component: r.Health.IllInfo.CreatingPlan,
+    meta: {
+      fromUrlStop
+    }
+  }, {
+    ...p('learning_plan'),
+    component: r.LearningPlan.LearningPlan
   }
   
   
