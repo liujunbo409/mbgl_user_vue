@@ -34,7 +34,9 @@
           <tr v-for="({article, status}, index) in stageArticle" :key="index">
             <td>{{ article.title }}</td>
             <td :class="{ gray: !status }">{{ status ? '已通过' : '待学习' }}</td>
-            <td><div class="toArticleBtn" @click="toArticle(article)">学习</div></td>
+            <td><div class="toArticleBtn" 
+              @click="$toView('learning_plan/article', { params: { article, illId } })">学习
+            </div></td>
           </tr>
         </table>
       </div>

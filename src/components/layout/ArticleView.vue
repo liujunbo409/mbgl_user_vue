@@ -60,6 +60,7 @@
             </td>
           </tr>
         </table>
+        <slot name="innerFooter"></slot>
       </div>
     </main>
     <slot></slot>
@@ -108,7 +109,7 @@ export default {
 <style lang="less" scoped>
 main{
   visibility: hidden;
-  height: 100%;
+  height: ~'calc(100% - 46px)';
   overflow: auto;
 
   .main-container{

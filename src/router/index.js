@@ -37,7 +37,11 @@ const r = {
   },
   LearningPlan: {
     LearningPlan: () => import('@v/LearningPlan/LearningPlan'),
-    Article: () => import('@v/LearningPlan/Article')
+    Article: {
+      Article: () => import('@v/LearningPlan/Article/Article'),
+      Test: () => import('@v/LearningPlan/Article/Test'),
+      Feedback: () => import('@v/LearningPlan/Article/Feedback')
+    }
   },
   FamilyTest: {
     Index: () => import('@v/FamilyTest/Index'),
@@ -152,10 +156,14 @@ var routes = [
     }
   }, {
     ...p('learning_plan'),
-    component: r.LearningPlan.LearningPlan
+    component: r.LearningPlan.LearningPlan,
   }, {
     ...p('learning_plan/article'),
-    component: r.LearningPlan.Article
+    component: r.LearningPlan.Article.Article,
+    meta: {
+      fromUrlStop,
+      keepAlive
+    }
   }, {
     ...p('family_test'),
     component: r.FamilyTest.Index
