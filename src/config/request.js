@@ -39,6 +39,7 @@ function responseDataHandler(res){
       if(data === 'false'){ return false }  
       if(data === 'null'){ return null }
       if(/^[1-9]\d*$/.test(data)){ return parseInt(data) }
+      if(data === '0'){ return 0 }
       return data    
     }else{
       if(data === null){ return null }

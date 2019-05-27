@@ -28,6 +28,7 @@ export default function(vue){
   // alert提示
   vue.$bus.$on('vux.alert', (content, options = {}) =>{
     vue.$vux.alert.show({
+      title: '提示',
       content,
       ...options
     })

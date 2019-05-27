@@ -189,6 +189,7 @@ export default {
       })
 
       Promise.all(requests).then(() =>{
+        // 因为需要获取跳转目标页面，虽然用药单独有一个接口，这里也要调用一下post选项接口，获取目标页面
         _request({
           url: 'jkda/xuanxiangPost',
           method: 'post',
@@ -213,6 +214,7 @@ export default {
           }
         })
       }).catch(e =>{
+        // 出错重加载
         this.init()
         this.loadClassifyList().then(() =>{
           this.loadSelected()

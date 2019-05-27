@@ -5,8 +5,8 @@
       :show-lr-borders="false"
       :show-vertical-dividers="false"
     >
-      <grid-item v-for="({link, img, text, badge, badgeClass, hide}, index) in blocks" :key="index"
-        @click.native="$toView(link)" :label="text" :class="{ hide }"
+      <grid-item v-for="({link, img, text, badge, badgeClass, hide, before = null}, index) in blocks" :key="index"
+        @click.native="onClickItem(link, before)" :label="text" :class="{ hide }"
       >
         <img slot="icon" :src="img">
         <div v-if="badge" slot="icon" class="badge" :class="badgeClass">{{ badge }}</div>
@@ -47,6 +47,8 @@ export default {
         }, {
           ...title('学习计划'),
           link: 'learning_plan',
+          before: this.beforeCheckLearningPlan  // 前置判断，返回一个promise，reject状态时取消导航。
+                                                // 不设置默认为resolve
         }, {
           ...title('家庭检测'),
           link: 'family_test',
@@ -107,6 +109,27 @@ export default {
       this.blocks[0].badgeClass = this.infoStatus ? 'info-done' : 'info-blank'
       this.blocks[2].badge = this.czsjStatus
     },
+
+    onClickItem (link, before){
+      before = before || (() => Promise.resolve())
+      before().then(() => this.$toView(link))
+    },
+
+    beforeCheckLearningPlan (){
+      return new Promise((resolve, reject) =>{
+        _request({
+          url: 'xxjh/haveXXJH'
+        }).then(({data}) =>{
+          if(!data.result){
+            this.$bus.$emit('vux.alert', '您还没有生成学习计划，请前往“疾病病情”中填写问卷并生成学习计划')
+            reject()
+            return
+          }
+
+          resolve()
+        })
+      })
+    }
   }
 }
 </script>

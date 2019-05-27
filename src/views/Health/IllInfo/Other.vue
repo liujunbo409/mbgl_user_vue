@@ -387,13 +387,6 @@ sup{
   /deep/ .weui-label{
     margin-left: 50px;
   }
-  /deep/ .weui-select{
-    direction: rtl;
-    font-size: 17px;
-    color: #999;
-    margin-left: 1px;
-    font-family: '\5FAE\8F6F\96C5\9ED1', 'Droid Sans Fallback';
-  }
 }
 
 .addCustomBtn{

@@ -9,6 +9,8 @@
     </keep-alive>
     <router-view v-if="!$route.meta.keepAlive"></router-view>
 
+    <vue-mask :zIndex="maskZIndex" v-if="visibleMask"></vue-mask>
+
     <!-- actionsheet全局方法组件 -->
     <actionsheet v-model="visibleActionSheet"
       v-bind="actionSheet.options"
@@ -26,13 +28,15 @@
 
 <script>
 import { Toast, Actionsheet, Spinner } from 'vux'
+import VueMask from '@v/sub/Mask'
 
 import vueAlert from './vuxAlert.js'
 export default {
   components: {
     VuxToast: Toast,
     Actionsheet,
-    VuxSpinner: Spinner
+    VuxSpinner: Spinner,
+    VueMask
   },
 
   data (){
@@ -45,6 +49,9 @@ export default {
         onMask: new Function()
       },
 
+      maskZIndex: 99,
+      visibleMask: false,
+
       visibleSpinner: false,
       spinnerType: 'crescent'
     }
@@ -53,6 +60,13 @@ export default {
   mounted (){
     // 注册的自定义vux通知方法（方法是自己封装的，非vux直接提供）
     vueAlert(this)
+
+    // 显示遮罩
+    this.$bus.$on('mask.show', (zIndex = 99) =>{
+      this.maskZIndex = zIndex,
+      this.visibleMask = true
+    })
+    this.$bus.$on('mask.hide', () => this.visibleMask = false)
   },
 
   methods: {

@@ -28,8 +28,9 @@ export default {
   },
 
   methods: {
+    // 轮询检查是否生成完毕
     check (){
-      if(this.count > 20){
+      if(this.count > 20){    // 最多20次
         this.$router.replace({
           name: 'health/ill_info/index',
           params: { illId: this.illId }

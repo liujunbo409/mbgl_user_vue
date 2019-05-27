@@ -36,7 +36,15 @@ const r = {
     },
   },
   LearningPlan: {
-    LearningPlan: () => import('@v/LearningPlan/LearningPlan')
+    LearningPlan: () => import('@v/LearningPlan/LearningPlan'),
+    Article: () => import('@v/LearningPlan/Article')
+  },
+  FamilyTest: {
+    Index: () => import('@v/FamilyTest/Index'),
+    XTMB: {     // 血糖目标
+      XTMB: () => import('@v/FamilyTest/XTMB/XTMB'),
+      Change_Fen_Xing: () => import('@v/FamilyTest/XTMB/ChangeFenXing'),
+    }    
   }
 }
 
@@ -145,6 +153,18 @@ var routes = [
   }, {
     ...p('learning_plan'),
     component: r.LearningPlan.LearningPlan
+  }, {
+    ...p('learning_plan/article'),
+    component: r.LearningPlan.Article
+  }, {
+    ...p('family_test'),
+    component: r.FamilyTest.Index
+  }, {
+    ...p('family_test/xtmb'),
+    component: r.FamilyTest.XTMB.XTMB
+  }, {
+    ...p('family_test/xtmb/change_fen_xing'),
+    component: r.FamilyTest.XTMB.Change_Fen_Xing
   }
   
   

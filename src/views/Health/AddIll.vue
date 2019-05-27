@@ -34,6 +34,7 @@ export default {
   },
 
   mounted (){
+    // 载入全部疾病
     _request({
       url: 'jkda/otherIll'
     }).then(({data}) =>{
@@ -46,6 +47,7 @@ export default {
   },
 
   methods: {
+    // 提交
     submit (){
       this.disabled = true
       _request({
