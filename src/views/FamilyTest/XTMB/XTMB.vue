@@ -69,6 +69,7 @@ export default {
   },
 
   methods: {
+    // 加载数据
     loadData (){
       this.status = 'loading'
       _request({
@@ -91,10 +92,7 @@ export default {
       })
     },
 
-    changeFen_Xing (){
-      this.$toView('')
-    },
-
+    // 保存数据
     save (){
       var stop = this.data.taglist.some(val =>{
         var {min, max ,tag_name} = val

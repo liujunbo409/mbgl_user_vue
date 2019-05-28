@@ -52,6 +52,7 @@ export default {
   },
 
   methods: {
+    // 保存数据
     save (){
       if(!this.selected){
         this.$bus.$emit('vux.toast', '必须选择分型')

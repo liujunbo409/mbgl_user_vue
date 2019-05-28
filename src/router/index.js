@@ -50,6 +50,9 @@ const r = {
     XTMB: {     // 血糖目标
       XTMB: () => import('@v/FamilyTest/XTMB/XTMB'),
       Change_Fen_Xing: () => import('@v/FamilyTest/XTMB/ChangeFenXing'),
+    },
+    XT: {       // 血糖
+      XT: () => import('@v/FamilyTest/XT/XT')
     }    
   }
 }
@@ -202,7 +205,10 @@ var routes = [
   }, {
     ...p('family_test/xtmb/change_fen_xing'),
     component: r.FamilyTest.XTMB.Change_Fen_Xing
-  },
+  }, {
+    ...p('family_test/xt'),
+    component: r.FamilyTest.XT.XT
+  }
   
   
   // { // 输入不存在的路由时，回到home
