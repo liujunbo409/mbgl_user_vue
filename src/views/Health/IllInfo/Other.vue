@@ -40,8 +40,7 @@
             </div>
           </template>
 
-          <!-- v-if="moduleData.custom_status" -->
-          <template >
+          <template v-if="moduleData.custom_status">
             <div class="com-fillTitle">自定义疾病列表</div>
             <template v-for="item in data.filter(val => val.id.toString().indexOf('$') === 0)">
               <checker-item :value="item.id" :key="item.id"
@@ -67,7 +66,7 @@
         </vux-checker>
       </vux-group>
 
-      <div class="addCustomBtn" @click="addCustomIll">新增</div>
+      <div class="addCustomBtn" v-if="moduleData.custom_status" @click="addCustomIll">新增</div>
 
       <div class="com-mainBtn-container">
         <x-button @click.native="submit">
@@ -119,7 +118,7 @@ export default {
       // 为什么这样做：vux的checker在单选的情况下selected直接保存选中值，在多选模式下为一个数组
     },
 
-    // 初始化，用于跳转前(该组件复用)清空组件数据
+    // 初始化，用于跳转前(该页面复用)清空组件数据
     init (){
       this.moduleData = {}
       this.data = []

@@ -43,6 +43,7 @@ export default {
       this.articleId = ''
     },
 
+    // 载入文章数据
     load (){
       Promise.all([
         _request({

@@ -49,14 +49,26 @@
         </table>
       </div>
     </view-box>
+
+    <view-box style="height:calc(100% - 138px)" v-if="selectedTab === 'all'">
+      <vux-group class="com-group-noMarginTop">
+        <dir-item v-for="(item, index) in allStage" :key="index"
+          :title="item.catalog_name"
+          :files="allArticle[item.id]"
+          @click.native="loadArticleByStageId(item.id)"
+          @onClickItem="file => toArticle(item, file)"
+        ></dir-item>
+      </vux-group>
+    </view-box>
   </div>
 </template>
 
 <script>
 import { Tab, TabItem } from 'vux'
+import DirItem from '@c/cell/DirItem'
 export default {
   components: {
-    VuxTab: Tab, TabItem,
+    VuxTab: Tab, TabItem, DirItem
   },
 
   data (){
@@ -66,9 +78,12 @@ export default {
       illList: [],              // 疾病列表
       stage: {},                // 当前阶段
       stageArticle: {},         // 阶段下所有文章
-      visibleIllList: false,   // 显示疾病选择列表
-      examData: [],     // 考核数据
-      activeIll: '',    // 当前选中的疾病id
+      visibleIllList: false,    // 显示疾病选择列表
+      examData: [],             // 考核数据
+  
+      allStage: [],             // 全部阶段
+      allArticle: {},           // 全部阶段的全部文章
+
       status: 'init',
     }
   },
@@ -80,6 +95,7 @@ export default {
   },
 
   computed: {
+    // 疾病显示名
     showSelectedIllName (){
       if(!(this.illId && this.illList.length)){ return '读取中' }
       var selected = this.illList.filter(val => val.ill_id === this.illId)
@@ -90,6 +106,7 @@ export default {
       }
     },
 
+    // 疾病选择列表
     showIllList (){
       var list = this.illList.map(val => ({ key: val.ill_id, value: val.ill_name }))
       var needCount = 3 - list.length % 3
@@ -97,10 +114,13 @@ export default {
         list.push({ key: '', value: '' })
       }
       return list
-    }
+    },
+
+
   },  
 
   watch: {
+    // 当疾病id改变时，重新加载（选择疾病功能）
     illId (){
       this.loadNowStage().then(() => this.loadStageArticle())
       this.loadAllStage()
@@ -108,6 +128,7 @@ export default {
   },
 
   methods: {
+    // 获取选择的疾病id
     getSelectedIllId (){
       return new Promise((resolve, reject) =>{
         _request({
@@ -126,6 +147,7 @@ export default {
       })
     },
 
+    // 载入疾病list
     loadIllList (){
       _request({
         url: 'xxjh/XXJHIllList'
@@ -138,6 +160,7 @@ export default {
       })
     },
 
+    // 载入当前阶段
     loadNowStage (){
       return new Promise((resolve, reject) =>{
         _request({
@@ -163,6 +186,7 @@ export default {
       })
     },
 
+    // 载入全部阶段
     loadAllStage (){
       _request({
         url: 'xxjh/illAllStage',
@@ -170,7 +194,7 @@ export default {
           ill_id: this.illId
         }
       }).then(({data}) =>{
-        console.log(data)
+        this.allStage = data.ret
       }).catch(e =>{
         console.log(e)
         this.$bus.$emit('vux.toast', {
@@ -180,6 +204,7 @@ export default {
       })
     },
 
+    // 载入阶段下全部文章
     loadStageArticle (){
       _request({
         url: 'xxjh/stageArticle',
@@ -197,6 +222,7 @@ export default {
       })
     },
 
+    // 选择疾病
     selectIll (illId){
       this.visibleIllList = false
       if(this.illId === illId){ return }
@@ -211,6 +237,7 @@ export default {
       this.loadNowStage()
     },
 
+    // 跳转至阶段考核
     toExam (){
       _request({
         url: 'xxjh/judgeStage',
@@ -227,6 +254,34 @@ export default {
           })
         }else{
           this.$bus.$emit('vux.toast', '你还有没通过考核的文章')
+        }
+      })
+    },
+
+    loadArticleByStageId (id){
+      if(id in this.allArticle){ return }
+      _request({
+        url: 'xxjh/stageArticle',
+        params: {
+          stage: id
+        }
+      }).then(({data}) =>{
+        Vue.set(this.allArticle, id, data.ret)
+      }).catch(e =>{
+        console.log(e)
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
+          text: '网络错误'
+        })
+      })
+    },
+
+    toArticle (stage, art){
+      this.$toView('learning_plan/article', {
+        params: {
+          articleId: art.article.id,
+          illId: this.illId,
+          stageId: stage.id
         }
       })
     }
