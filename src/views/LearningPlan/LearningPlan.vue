@@ -31,12 +31,20 @@
             <th width="20%">学习状态</th>
             <th width="20%">操作</th>
           </tr>
+
           <tr v-for="({article, status}, index) in stageArticle" :key="index">
             <td>{{ article.title }}</td>
             <td :class="{ gray: !status }">{{ status ? '已通过' : '待学习' }}</td>
             <td><div class="toArticleBtn" 
-              @click="$toView('learning_plan/article', { params: { article, illId } })">学习
+              @click="$toView('learning_plan/article', 
+              { params: { articleId: article.id, illId, stageId: stage.id } })">学习
             </div></td>
+          </tr>
+
+          <tr>
+            <td>阶段考核</td>
+            <td></td>
+            <td><div class="toArticleBtn" @click="toExam">考试</div></td>
           </tr>
         </table>
       </div>
@@ -53,13 +61,14 @@ export default {
 
   data (){
     return {
-      illId: '',
-      selectedTab: 'active',
-      illList: [],
-      stage: {},
-      stageArticle: {},
-      visibleIllList: false,
-      activeIll: '',
+      illId: '',                // 当前选中疾病id
+      selectedTab: 'active',    // 选中的tab
+      illList: [],              // 疾病列表
+      stage: {},                // 当前阶段
+      stageArticle: {},         // 阶段下所有文章
+      visibleIllList: false,   // 显示疾病选择列表
+      examData: [],     // 考核数据
+      activeIll: '',    // 当前选中的疾病id
       status: 'init',
     }
   },
@@ -202,7 +211,25 @@ export default {
       this.loadNowStage()
     },
 
-
+    toExam (){
+      _request({
+        url: 'xxjh/judgeStage',
+        params: {
+          stage: this.stage.id
+        }
+      }).then(({data}) =>{
+        if(data.ret === 'no_have_other'){
+          this.$toView('learning_plan/exam', {
+            params: {
+              illId: this.illId,
+              stageId: this.stage.id
+            }
+          })
+        }else{
+          this.$bus.$emit('vux.toast', '你还有没通过考核的文章')
+        }
+      })
+    }
   }
 }
 </script>
@@ -287,7 +314,7 @@ export default {
 }
 
 .gray{
-  color: #ccc;
+  color: #999;
 }
 
 .stageTitle{
@@ -333,6 +360,17 @@ export default {
     
     th:first-child{
       text-align: left;
+    }
+  }
+
+  tr:last-of-type{
+    td{
+      background-color: #aaa;
+      border-color: #aaa;
+    }
+
+    .toArticleBtn{
+      background-color: #4A6F4D;
     }
   }
 

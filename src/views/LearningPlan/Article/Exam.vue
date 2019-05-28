@@ -1,6 +1,6 @@
 <template>
   <div class="com-container">
-    <vue-header title="文章考核"></vue-header>
+    <vue-header title="阶段考核"></vue-header>
     <inline-loading v-if="status === 'loading'"></inline-loading>
     <view-box class="com-header-view" v-if="status === 'success'">
       <vux-checklist
@@ -27,7 +27,7 @@ export default {
 
   data (){
     return {
-      articleId: 0,
+      illId: 0,
       stageId: 0,
       selecteds: {},
       status: 'init',
@@ -36,9 +36,9 @@ export default {
   },
 
   activated (){
-    if(this.$route.params.articleId){
+    if(this.$route.params.stageId){
       this.init()
-      this.articleId = this.$route.params.articleId
+      this.illId = this.$route.params.illId
       this.stageId = this.$route.params.stageId
       this.load()
     }
@@ -49,16 +49,15 @@ export default {
       this.selecteds = {}
       this.status = 'init'
       this.data = []
-      this.articleId = 0
+      this.stageId = 0
     },
 
-    // 载入问题数据
     load (){
       this.status = 'loading'
       _request({
-        url: 'xxjh/articleCheck',
+        url: 'xxjh/stageCheck',
         params: {
-          article_id: this.articleId
+          stage: this.stageId
         }
       }).then(({data}) =>{
         if(data.result){
@@ -78,14 +77,12 @@ export default {
       })
     },
 
-    // 判断考核结果
     check (){
-      // 构建正确答案集（问题id索引：正确答案[数组]），并进行对比
       var answers = {}
       this.data.forEach(val => answers[val.id] = val.answer.toString().split(','))
       var errors = []
       for(let key in answers){
-        if(   // 如果正确答案数和选择数不同，或选择的选项在对应正确答案数组中不存在，则将其id加入errors
+        if(
           answers[key].length !== this.selecteds[key].length || 
           !answers[key].every(val => this.selecteds[key].includes(parseInt(val)))
         ){
@@ -99,7 +96,7 @@ export default {
           title: '对不起',
           content: `您答错了${errors.length}道题`,
           confirmText: '查看解析',
-          cancelText: '重新学习',
+          cancelText: '返回学习计划',
 
           onConfirm: () =>{
             var data = this.data.filter(val => errors.includes(val.id))
@@ -110,74 +107,29 @@ export default {
             })
           },
 
-          onCancel: () => this.$baseToView('article')
+          onCancel: () => this.$toView('learning_plan')
         })
       }else{
-        // 判断有无下一篇
         _request({
-          url: 'xxjh/articlePass',
+          url: 'xxjh/stageCheckPass',
           method: 'post',
           data: {
-            article_id: this.articleId,
+            ill_id: this.illId,
             stage: this.stageId
           }
         }).then(({data}) =>{
           if(data.result){
-            this.checked()
+            this.$vux.alert.show({
+              title: '恭喜你',
+              content: '阶段考核已通过',
+
+              onHide: () => this.$toView('learning_plan')
+            })
           }else{
             this.$bus.$emit('vux.toast', data.message)
           }
         })
       }
-
-    },
-
-    // 通过考核后显示的提示
-    checked (){
-      _request({
-        url: 'xxjh/getNextArticle',
-        params: {
-          article_id: this.articleId,
-          stage: this.stageId
-        }
-      }).then(({data}) =>{
-        if(data.ret.article_id){
-          this.$vux.confirm.show({
-            title: '恭喜你',
-            content: '考核通过',
-            confirmText: '进入下一学习',
-            cancelText: '返回学习计划',
-
-            onConfirm: () =>{
-              this.$baseToView('article', {
-                params: {
-                  articleId: data.ret.article_id,
-                  illId: data.ret.ill_id
-                }
-              })
-            },
-
-            onCancel: () =>{
-              this.$toView('learning_plan')
-            }
-          })
-        }else{
-          this.$vux.confirm.show({
-            title: '恭喜你',
-            content: '考核通过',
-            confirmText: '进入阶段考核',
-            cancelText: '返回学习计划',
-
-            onConfirm: () =>{
-
-            },
-
-            onCancel: () =>{
-              this.$toView('learning_plan')
-            }
-          })
-        }
-      })
 
     }
   }

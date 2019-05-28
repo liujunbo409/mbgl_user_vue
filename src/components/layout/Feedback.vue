@@ -76,7 +76,7 @@ export default {
         data: {
           mokuai: this.feedbackType,
           type: this.type.join('&'),
-          role: this.$store.state.user.userInfo.role,
+          role: this.$store.state.user.userInfo.role || 'user',
           mokuai_id: this.moduleId,
           content: this.content
         }

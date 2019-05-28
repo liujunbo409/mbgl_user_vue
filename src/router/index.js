@@ -40,7 +40,9 @@ const r = {
     Article: {
       Article: () => import('@v/LearningPlan/Article/Article'),
       Test: () => import('@v/LearningPlan/Article/Test'),
-      Feedback: () => import('@v/LearningPlan/Article/Feedback')
+      Feedback: () => import('@v/LearningPlan/Article/Feedback'),
+      Analysis: () => import('@v/LearningPlan/Article/Analysis'),
+      Exam: () => import('@v/LearningPlan/Article/exam')
     }
   },
   FamilyTest: {
@@ -165,6 +167,33 @@ var routes = [
       keepAlive
     }
   }, {
+    ...p('learning_plan/test'),
+    component: r.LearningPlan.Article.Test,
+    meta: {
+      fromUrlStop,
+      keepAlive
+    }
+  }, {
+    ...p('learning_plan/feedback'),
+    component: r.LearningPlan.Article.Feedback,
+    meta: {
+      fromUrlStop,
+      keepAlive
+    }
+  }, {
+    ...p('learning_plan/analysis'),
+    component: r.LearningPlan.Article.Analysis,
+    meta: {
+      fromUrlStop,
+    }
+  }, {
+    ...p('learning_plan/exam'),
+    component: r.LearningPlan.Article.Exam,
+    meta: {
+      fromUrlStop,
+      keepAlive
+    }
+  }, {
     ...p('family_test'),
     component: r.FamilyTest.Index
   }, {
@@ -173,7 +202,7 @@ var routes = [
   }, {
     ...p('family_test/xtmb/change_fen_xing'),
     component: r.FamilyTest.XTMB.Change_Fen_Xing
-  }
+  },
   
   
   // { // 输入不存在的路由时，回到home
