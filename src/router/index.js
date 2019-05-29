@@ -52,8 +52,10 @@ const r = {
       Change_Fen_Xing: () => import('@v/FamilyTest/XTMB/ChangeFenXing'),
     },
     XT: {       // 血糖
-      XT: () => import('@v/FamilyTest/XT/XT')
-    }    
+      XT: () => import('@v/FamilyTest/XT/XT'),
+      CollectXT: () => import('@v/FamilyTest/XT/CollectXT')
+    },
+    Weight: () => import('@v/FamilyTest/Weight')    
   }
 }
 
@@ -208,6 +210,16 @@ var routes = [
   }, {
     ...p('family_test/xt'),
     component: r.FamilyTest.XT.XT
+  }, {
+    ...p('family_test/collect_xt'),
+    component: r.FamilyTest.XT.CollectXT,
+    meta: {
+      keepAlive,
+      fromUrlStop
+    }
+  }, {
+    ...p('family_test/weight'),
+    component: r.FamilyTest.Weight
   }
   
   

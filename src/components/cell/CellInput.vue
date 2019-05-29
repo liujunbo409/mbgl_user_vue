@@ -78,6 +78,7 @@ export default {
   .input{
     margin-left: 20px;
     vertical-align: text-bottom;
+    text-align: right;
   }
 }
 </style>

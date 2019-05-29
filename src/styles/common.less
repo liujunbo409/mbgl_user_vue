@@ -45,6 +45,8 @@
 }
 
 .com-input-container{
+  position: relative;
+
   > input{
     width: 100%;
     height: 100%;
@@ -55,6 +57,14 @@
     text-align: inherit;
     box-sizing: border-box;
     background-color: transparent;
+  }
+
+  &::after{
+    content: attr(data-suffix);
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 5px);
+    transform: translateY(-50%);
   }
 }
 

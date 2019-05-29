@@ -11,7 +11,7 @@
       <grid-item @click.native="toXT" label="血糖">
         <img slot="icon" :src="require('@img/btn/xt.png')">
       </grid-item>
-      <grid-item @click.native="$toView('')" label="体重">
+      <grid-item @click.native="$toView('family_test/weight')" label="体重">
         <img slot="icon" :src="require('@img/btn/tz.png')">
       </grid-item>
     </vux-grid>
