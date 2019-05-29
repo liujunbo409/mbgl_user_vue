@@ -8,23 +8,46 @@
     >
       <checker-item value="write">录入</checker-item>
       <checker-item value="stats">统计</checker-item>
-    </vux-checker>    
+    </vux-checker>   
 
-    <div class="form">
-      <div class="date form-line">
-        <span>日期：</span>
-        <div @click="openDateSelector" class="trigger">{{ date || '未选择' }}</div>
-      </div>
-      <div class="weight form-line">
-        <span>体重：</span>
-        <div class="com-input-container trigger" data-suffix="kg">
-          <input type="number" v-model="weight" >
+    <view-box style="height:calc(100% - 110px)">
+      <template v-if="selectedTab === 'write'">
+        <div class="form">
+          <div class="date form-line">
+            <span>日期：</span>
+            <div @click="openDateSelector" class="trigger">{{ date || '未选择' }}</div>
+          </div>
+          <div class="weight form-line">
+            <span>体重：</span>
+            <div class="com-input-container trigger" data-suffix="kg">
+              <input type="number" v-model.trim.number="weight" >
+            </div>
+          </div>
+          
+          <div class="addBtn" @click="add">添加</div>
         </div>
-      </div>
-      
-      <div class="addBtn" @click="add">添加</div>
-    </div>
 
+        <table class="weight-table">
+          <tr>
+            <th colspan="3">体重表格</th>
+          </tr>
+          <tr>
+            <td>时间</td>
+            <td>体重</td>
+            <td>操作</td>
+          </tr>
+          <tr v-for="(item, index) in data" :key="index">
+            <td>{{ item.updated_at }}</td>
+            <td>{{ item.value }}</td>
+            <td>
+              <span class="editBtn" @click="edit">修改</span>
+              <span class="delBtn" @click="del">删除</span>
+            </td>
+          </tr>
+        </table>
+      </template>      
+    </view-box>
+ 
   </div>
 </template>
 
@@ -40,11 +63,28 @@ export default {
     return {
       selectedTab: 'write',
       date: '',
-      weight: ''
+      weight: '',
+      data: [],
     }
   },
 
+  mounted (){
+    this.load()
+  },
+
   methods: {
+    load (){
+      _request({
+        url: 'cjsj/weightIndex'
+      }).then(({data}) =>{
+        if(data.result){
+          this.data = data.ret
+        }else{
+          this.$bus.$emit('vux.taost', data.message)
+        }
+      })
+    },
+    
     openDateSelector (){
       this.$vux.datetime.show({
         confirmText: '确认',
@@ -57,6 +97,14 @@ export default {
     },
 
     add (){
+
+    },
+
+    edit (){
+
+    },
+
+    del (){
 
     }
   }
@@ -111,7 +159,6 @@ export default {
 
       > input{
         width: calc(100% - 20px);
-        text-align: left;
       }
     }
   }
@@ -127,6 +174,33 @@ export default {
     border-radius: 10px;
     margin: 0 auto;
     margin-top: 10px;
+  }
+}
+
+.weight-table{
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+  margin-top: 30px;
+  font-size: 16px;
+
+  th, td{
+    border: 1px #b5d6e6 solid;
+    padding: 10px 0;
+  }
+
+  th{
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: normal;
+  }
+
+  .editBtn{
+    color: @theme;
+  }
+  .delBtn{
+    color: @danger;
   }
 }
 </style>

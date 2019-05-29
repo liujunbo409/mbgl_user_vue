@@ -56,6 +56,9 @@ const r = {
       CollectXT: () => import('@v/FamilyTest/XT/CollectXT')
     },
     Weight: () => import('@v/FamilyTest/Weight')    
+  },
+  FollowDoctors: {
+    FollowDoctors: () => import('@v/FollowDoctors/FollowDoctors')
   }
 }
 
@@ -220,6 +223,9 @@ var routes = [
   }, {
     ...p('family_test/weight'),
     component: r.FamilyTest.Weight
+  }, {
+    ...p('follow_doctors'),
+    component: r.FollowDoctors.FollowDoctors
   }
   
   
