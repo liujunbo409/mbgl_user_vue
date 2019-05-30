@@ -54,7 +54,7 @@ export default {
           link: 'family_test',
         }, {
           ...title('关注医生'),
-          link: 'attention_doctors'
+          link: 'follow_doctors'
         }, {
           ...title('亲友设定'),
           link: 'setrelative',

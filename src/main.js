@@ -16,7 +16,7 @@ import created from './config/created'
 
 // 全局组件及插件
 import { 
-  ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, DatetimePlugin,
+  ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, DatetimePlugin, ConfigPlugin,
   Group, Cell, ViewBox
 } from 'vux'
 import VueHeader from '@c/header/Header'
@@ -30,7 +30,8 @@ Vue.use(VideoPlayer)
 Vue.use(ToastPlugin, { type: 'text' })
 Vue.use(AlertPlugin, { title: '提示' })
 Vue.use(ConfirmPlugin, { title: '提示' })
-Vue.use(LoadingPlugin, { text: '请稍候' })
+Vue.use(LoadingPlugin)
+Vue.use(ConfigPlugin, { $layout: 'VIEW_BOX' })
 Vue.use(DatetimePlugin)
 Vue.component('vux-group', Group)
 Vue.component('vux-cell', Cell)

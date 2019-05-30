@@ -58,7 +58,10 @@ const r = {
     Weight: () => import('@v/FamilyTest/Weight')    
   },
   FollowDoctors: {
-    FollowDoctors: () => import('@v/FollowDoctors/FollowDoctors')
+    FollowDoctors: () => import('@v/FollowDoctors/FollowDoctors'),
+    Search: () => import('@v/FollowDoctors/Search'),
+    SearchByHosp: () => import('@v/FollowDoctors/SearchByHosp'),
+    DoctorInfo: () => import('@v/FollowDoctors/DoctorInfo')
   }
 }
 
@@ -226,6 +229,15 @@ var routes = [
   }, {
     ...p('follow_doctors'),
     component: r.FollowDoctors.FollowDoctors
+  }, {
+    ...p('follow_doctors/search'),
+    component: r.FollowDoctors.Search
+  }, {
+    ...p('follow_doctors/search_by_hosp'),
+    component: r.FollowDoctors.SearchByHosp
+  }, {
+    ...p('follow_doctors/doctor_info'),
+    component: r.FollowDoctors.DoctorInfo
   }
   
   
