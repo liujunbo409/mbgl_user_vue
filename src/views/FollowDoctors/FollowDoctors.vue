@@ -11,6 +11,7 @@
             query: { doctorUserId: item.doctor.user_id, doctorId: item.doctor_id } 
           })"
         ></vux-cell>
+        <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
       </vux-group>
       <footer>
         <div class="btn" @click="$toView('follow_doctors/search')">搜索关注医生</div>
@@ -25,7 +26,7 @@ export default {
   data (){
     return {
       data: [],
-      status: 'init'
+      status: 'init',
     }
   },
 

@@ -57,7 +57,7 @@ export default {
           link: 'follow_doctors'
         }, {
           ...title('亲友设定'),
-          link: 'setrelative',
+          link: 'relative',
         }, {
           ...title('角色管理'),
           link: 'role_management',

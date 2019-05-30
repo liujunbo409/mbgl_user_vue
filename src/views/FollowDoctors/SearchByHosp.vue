@@ -10,9 +10,10 @@
       <vux-cell v-for="(item, index) in data" :key="index" :is-link="true"
         :title="item.real_name"
         @click.native="$toView('follow_doctors/doctor_info', { 
-          query: { doctorUserId: item.doctor.user_id, doctorId: item.doctor_id } 
+          query: { doctorUserId: item.user_id, doctorId: item.id }
         })"
       ></vux-cell>
+      <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
       <vux-cell class="noData" title="搜索结果为空" v-if="status === 'success' && isNoData"></vux-cell>
     </vux-group>
   </div>
@@ -28,11 +29,15 @@ export default {
     }
   },
 
-  // 载入医院列表
-  mounted (){
-    this.$store.dispatch('hospList/load')
+  beforeRouteEnter (to, from, next){
+    to.meta.clearMark = from.name !== 'follow_doctors/doctor_info'  // 如果不是从医生详细信息里返回的，则重置组件
+    next()
   },
 
+  activated (){
+    if(this.$route.meta.clearMark){ this.init() }
+    this.$store.dispatch('hospList/load')       // 载入医院列表
+  },
 
   computed: {
     hospList (){
@@ -52,6 +57,12 @@ export default {
   },
 
   methods: {
+    init (){
+      this.selectedHosp = ''
+      this.data = {}
+      this.status = 'init'
+    },
+
     // 打开医院选择列表
     openHospList (){
       this.$bus.$emit('vux.actionsheet', {

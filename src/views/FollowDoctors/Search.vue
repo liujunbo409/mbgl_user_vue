@@ -12,9 +12,10 @@
       <vux-cell v-for="(item, index) in data" :key="index" :is-link="true"
         :title="item.real_name"
         @click.native="$toView('follow_doctors/doctor_info', { 
-          query: { doctorUserId: item.doctor.user_id, doctorId: item.doctor_id } 
+          query: { doctorUserId: item.doctor.user_id, doctorId: item.doctor.id } 
         })"
       ></vux-cell>
+      <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
       <vux-cell class="noData" title="搜索结果为空" v-if="status === 'success' && !data.length"></vux-cell>
     </vux-group>
   </div>
@@ -30,7 +31,22 @@ export default {
     }
   },
 
+  beforeRouteEnter (to, from, next){
+    to.meta.clearMark = from.name !== 'follow_doctors/doctor_info'  // 如果不是从医生详细信息里返回的，则重置组件
+    next()
+  },
+
+  activated (){
+    if(this.$route.meta.clearMark){ this.init() }
+  },
+
   methods: {
+    init (){
+      this.keyword = ''
+      this.data = []
+      this.status = 'init'
+    },
+
     search (){
       if(!this.keyword){
         this.$bus.$emit('vux.toast', '搜索关键词不能为空')

@@ -62,6 +62,9 @@ const r = {
     Search: () => import('@v/FollowDoctors/Search'),
     SearchByHosp: () => import('@v/FollowDoctors/SearchByHosp'),
     DoctorInfo: () => import('@v/FollowDoctors/DoctorInfo')
+  },
+  Relative: {
+    Relative: () => import('@v/Relative/Relative')
   }
 }
 
@@ -231,13 +234,22 @@ var routes = [
     component: r.FollowDoctors.FollowDoctors
   }, {
     ...p('follow_doctors/search'),
-    component: r.FollowDoctors.Search
+    component: r.FollowDoctors.Search,
+    meta: {
+      keepAlive
+    }
   }, {
     ...p('follow_doctors/search_by_hosp'),
-    component: r.FollowDoctors.SearchByHosp
+    component: r.FollowDoctors.SearchByHosp,
+    meta: {
+      keepAlive
+    }
   }, {
     ...p('follow_doctors/doctor_info'),
     component: r.FollowDoctors.DoctorInfo
+  }, {
+    ...p('relative'),
+    component: r.Relative.Relative
   }
   
   
