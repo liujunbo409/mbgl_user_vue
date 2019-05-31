@@ -65,6 +65,10 @@ const r = {
   },
   Relative: {
     Relative: () => import('@v/Relative/Relative')
+  },
+  RoleManagement: {
+    Index: () => import('@v/RoleManagement/Index'),
+    ApplyList: () => import('@v/RoleManagement/ApplyList')
   }
 }
 
@@ -130,126 +134,132 @@ var routes = [
   }, {  // 我的/反馈
     ...p('my/feedback'),
     component: r.My.Feedback
-  }, {
+  }, {  // 基本病情
     ...p('health'),
     component: r.Health.Health
-  }, {
+  }, {  // 基本病情/添加疾病
     ...p('health/add_ill'),
     component: r.Health.AddIll,
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 基本病情/疾病详情
     ...p('health/ill_info/index'),
     component: r.Health.IllInfo.Index,
     meta: {
       keepAlive,
       fromUrlStop
     }
-  }, {
+  }, {  // 基本病情/疾病详情/当前用药
     ...p('health/ill_info/medicinal'),
     component: r.Health.IllInfo.Medicinal,
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 基本病情/疾病详情/其他（除当前用药以外的其他模块）
     ...p('health/ill_info/other'),
     component: r.Health.IllInfo.Other,
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 基本病情/疾病详情/问卷
     ...p('health/ill_info/wen_juan'),
     component: r.Health.IllInfo.Wen_Juan,
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 疾病详情/疾病详情/生成计划中
     ...p('health/ill_info/creating_plan'),
     component: r.Health.IllInfo.CreatingPlan,
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 学习计划
     ...p('learning_plan'),
     component: r.LearningPlan.LearningPlan,
-  }, {
+  }, {  // 学习计划/文章详情
     ...p('learning_plan/article'),
     component: r.LearningPlan.Article.Article,
     meta: {
       fromUrlStop,
       keepAlive
     }
-  }, {
+  }, {  // 学习计划/文章考核
     ...p('learning_plan/test'),
     component: r.LearningPlan.Article.Test,
     meta: {
       fromUrlStop,
       keepAlive
     }
-  }, {
+  }, {  // 学习计划/反馈
     ...p('learning_plan/feedback'),
     component: r.LearningPlan.Article.Feedback,
     meta: {
       fromUrlStop,
       keepAlive
     }
-  }, {
+  }, {  // 学习计划/错题解析
     ...p('learning_plan/analysis'),
     component: r.LearningPlan.Article.Analysis,
     meta: {
       fromUrlStop,
     }
-  }, {
+  }, {  // 学习计划/阶段考核
     ...p('learning_plan/exam'),
     component: r.LearningPlan.Article.Exam,
     meta: {
       fromUrlStop,
       keepAlive
     }
-  }, {
+  }, {  // 家庭测试
     ...p('family_test'),
     component: r.FamilyTest.Index
-  }, {
+  }, {  // 家庭测试/血糖目标
     ...p('family_test/xtmb'),
     component: r.FamilyTest.XTMB.XTMB
-  }, {
+  }, {  // 家庭测试/血糖目标/改变分型
     ...p('family_test/xtmb/change_fen_xing'),
     component: r.FamilyTest.XTMB.Change_Fen_Xing
-  }, {
+  }, {  // 家庭测试/血糖
     ...p('family_test/xt'),
     component: r.FamilyTest.XT.XT
-  }, {
+  }, {  // 家庭测试/血糖采集
     ...p('family_test/collect_xt'),
     component: r.FamilyTest.XT.CollectXT,
     meta: {
       keepAlive,
       fromUrlStop
     }
-  }, {
+  }, {  // 家庭测试/体重
     ...p('family_test/weight'),
     component: r.FamilyTest.Weight
-  }, {
+  }, {  // 关注医生
     ...p('follow_doctors'),
     component: r.FollowDoctors.FollowDoctors
-  }, {
+  }, {  // 关注医生/搜索
     ...p('follow_doctors/search'),
     component: r.FollowDoctors.Search,
     meta: {
       keepAlive
     }
-  }, {
+  }, {  // 关注医生/按医院搜索
     ...p('follow_doctors/search_by_hosp'),
     component: r.FollowDoctors.SearchByHosp,
     meta: {
       keepAlive
     }
-  }, {
+  }, {  // 关注医生/医生详情
     ...p('follow_doctors/doctor_info'),
     component: r.FollowDoctors.DoctorInfo
-  }, {
+  }, {  // 亲友设定
     ...p('relative'),
     component: r.Relative.Relative
+  }, {
+    ...p('role_management'),
+    component: r.RoleManagement.Index
+  }, {
+    ...p('role_management/apply_list'),
+    component: r.RoleManagement.ApplyList
   }
   
   

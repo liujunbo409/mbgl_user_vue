@@ -37,7 +37,8 @@ export default {
     openId: window.localStorage.getItem('fwh_openid') || null,
     phoneNum: localStorage.get('phoneNum', ''),
     userInfo,
-    access
+    access,
+    userInfo2: localStorage.get('userInfo2', null)    // 用于在切换账户时备份原账户
   },
 
   mutations: {
@@ -53,6 +54,7 @@ export default {
       localStorage.set('userInfo', payload)
     },
 
+    // 改变进入其他模块的权限状态
     changeAccess (state, payload){
       state.access = payload
     },
@@ -63,6 +65,15 @@ export default {
       state.userInfo = null
       localStorage.set('isLogin', false)
       localStorage.remove('userInfo')
+      localStorage.remove('remoteUser')
+    },
+
+    // 删除控制模式账户
+    backOrigin (state){
+      state.userInfo = state.userInfo2
+      localStorage.set('userInfo', state.userInfo2)
+      state.userInfo2 = null
+      localStorage.remove('userInfo2')
     }
   },
 
@@ -223,6 +234,14 @@ export default {
           reject({ timeout: true })
         })
       })
-    }
+    },
+
+    // 改变控制模式账户
+    changeToRemote (store, payload){
+      var {state} = store
+      localStorage.set('userInfo2', state.userInfo)
+      state.userInfo2 = state.userInfo
+      store.commit('writeState', payload)
+    },
   }
 }
