@@ -1,7 +1,7 @@
 <template>
   <div class="com-container">
     <vue-header title="医生信息"></vue-header>
-    <view-box class="com-header-view">
+    <view-box>
       <header>
         <div class="main-info">
           <div class="icon">
@@ -41,6 +41,7 @@
         </div>
       </div>      
     </view-box>
+    <readonly-mask></readonly-mask>
   </div>
 </template>
 

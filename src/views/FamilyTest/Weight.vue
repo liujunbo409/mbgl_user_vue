@@ -10,7 +10,7 @@
       <checker-item value="stats">统计</checker-item>
     </vux-checker>   
 
-    <view-box style="height:calc(100% - 110px)">
+    <view-box minus="64px">
       <template v-if="selectedTab === 'write'">
         <div class="form">
           <div class="date form-line">
@@ -50,6 +50,7 @@
         </table>
       </template>      
     </view-box>
+    <readonly-mask minus="100px"></readonly-mask>
   </div>
 </template>
 

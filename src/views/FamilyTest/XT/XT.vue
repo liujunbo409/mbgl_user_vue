@@ -41,6 +41,7 @@
         <tr><td>达标率</td><td>{{ statsData.reaching_rate }}</td></tr>
       </table>
     </template>
+    <readonly-mask minus="100px"></readonly-mask>
   </div>
 </template>
 

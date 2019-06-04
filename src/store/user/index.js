@@ -68,6 +68,11 @@ export default {
       localStorage.remove('remoteUser')
     },
 
+    backupOrigin (state){
+      localStorage.set('userInfo2', state.userInfo)
+      state.userInfo2 = localStorage.get('userInfo2')  
+    },
+
     // 删除控制模式账户
     backOrigin (state){
       state.userInfo = state.userInfo2
@@ -238,10 +243,43 @@ export default {
 
     // 改变控制模式账户
     changeToRemote (store, payload){
-      var {state} = store
-      localStorage.set('userInfo2', state.userInfo)
-      state.userInfo2 = state.userInfo
-      store.commit('writeState', payload)
+      store.commit('backupOrigin')    // 先备份原账户
+      store.commit('writeState', payload)   // 再切换
     },
+
+    // 检查权限是否有变化
+    checkRemoteAccess (store){
+      var {state} = store
+      return new Promise((resolve, reject) =>{
+        _request({
+          url: 'account/changeAccount',
+          params: {
+            user_id: state.userInfo2.id,
+            token: state.userInfo2.token,
+            relative_id: state.userInfo.id
+          }
+        }).then(({data}) =>{
+          if(data.result){
+            if(data.ret.qsgx.quanxian === 0){     // 权限为0，撤销控制权
+              store.commit('backOrigin')
+              reject({ type: 'close' })           // 返回特征用于在config/created.js发送提示
+            }else{
+              resolve({                           // 对比，若权限码发生变化，将changed设为true
+                changed: state.userInfo.qsgx.quanxian !== data.ret.qsgx.quanxian,
+                access: data.ret.qsgx.quanxian_str 
+              })
+              store.commit('writeState', data.ret)
+            }
+          }else{
+            store.commit('backOrigin')            // 未知错误，撤销控制权
+            reject({ type: 'error' })
+          }
+        }).catch(e =>{
+          console.log(e)
+          store.commit('backOrigin')             // 网络错误，撤销控制权
+          reject({ timeout: true })
+        })
+      })
+    }
   }
 }

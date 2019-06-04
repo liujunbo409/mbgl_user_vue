@@ -31,12 +31,29 @@ export default function(){
               type: 'cancel',
               text: '您的账户已被禁用'
             })
-          }else{
-            this.$store.commit('user/writeState', data.ret)
           }
         })
       }
     })
+
+    // 若为控制着其他账户的状态，则进行权限确认
+    var userInfo = localStorage.get('userInfo')
+    if(userInfo.qsgx){
+      this.$store.dispatch('user/checkRemoteAccess')
+      .then((data) =>{
+        if(data.changed){
+          this.$bus.$emit('vux.alert', '您当前控制的账户权限已经被改为“' + data.access + '”')
+        }
+      }).catch(e =>{
+        if(e.timeout){
+          this.$bus.$emit('vux.alert', '因网络异常，权限验证失败，您控制的账号“' + userInfo.real_name + '”被迫下线')
+        }else if(e.type === 'close'){
+          this.$bus.$emit('vux.alert', `“${userInfo.real_name}”已将您的控制权限撤销`)
+        }else if(e.type === 'error'){
+          this.$bus.$emit('vux.alert', '因未知错误，权限验证失败，您控制的账号“' + userInfo.real_name + '”被迫下线')
+        }
+      })
+    }
 
     // 初始化医院数据
     this.$store.dispatch('hospList/load')

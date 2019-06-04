@@ -11,6 +11,7 @@
         <x-button @click.native="toCreatePlan">填写调查问卷完成学习计划</x-button>
       </div>    
     </view-box>
+    <readonly-mask></readonly-mask>
   </div>
 </template>
 

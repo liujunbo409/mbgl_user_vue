@@ -45,6 +45,7 @@
         <x-button @click.native="save">保存</x-button>
       </div>
     </main>
+    <readonly-mask></readonly-mask>
   </div>
 </template>
 

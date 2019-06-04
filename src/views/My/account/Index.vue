@@ -15,6 +15,7 @@
         @click.native="beforeAlert('my/account/unbind_weixin')">
       </vux-cell>
     </vux-group>
+    <readonly-mask></readonly-mask>
   </div>
 </template>
 

@@ -58,7 +58,7 @@ export default {
         }, {
           ...title('亲友设定'),
           link: 'relative',
-          hide: this.isRemoteMode
+          hide: false
         }, {
           ...title('角色管理'),
           link: 'role_management',
@@ -79,7 +79,7 @@ export default {
     this.updateEidtStatus()
     this.$store.dispatch('user/editStatus/get')
     // 控制他人账户（store.state.userInfo2存在）时隐藏
-    this.blocks[5] = !!this.$store.state.user.userInfo2
+    this.blocks[5].hide = !!this.$store.state.user.userInfo2
   },
 
   computed: {

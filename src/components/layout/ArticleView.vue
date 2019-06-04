@@ -2,7 +2,7 @@
   <div class="com-container">
     <vue-header title="文章详情"></vue-header>
     <main :class="{ hasFooter: $slots.default, visible: art && source }" :style="{ 
-      ...(minusHeight ? { height: `calc(100% - ${minusHeight})` } : {})  
+      ...(minusHeight ? { height: `calc(100% - ${minusHeight}${isRemoteMode ? '- 30px' : ''})` } : {})  
     }">
       <div class="main-container" v-if="art && source">
         <h2 class="title">{{ `${art.title}(${art.style_str})` }}</h2>
@@ -98,6 +98,12 @@ export default {
 
   mounted (){
     
+  },
+
+  computed: {
+    isRemoteMode (){
+      return !!this.$store.state.user.userInfo2
+    }
   },
 
   methods: {

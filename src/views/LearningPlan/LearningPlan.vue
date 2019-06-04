@@ -22,7 +22,7 @@
 
     <div class="mask" v-if="visibleIllList"></div>
 
-    <view-box style="height:calc(100% - 138px)" v-if="selectedTab === 'active'">
+    <view-box minus="87px" v-if="selectedTab === 'active'">
       <p class="stageTitle">当前学习阶段：{{ stage.catalog_name }}</p>
       <div class="articleList-container">
         <table class="articleList">
@@ -116,7 +116,9 @@ export default {
       return list
     },
 
-
+    isRemoteMode (){
+      return !!this.$store.state.user.userInfo2
+    }
   },  
 
   watch: {

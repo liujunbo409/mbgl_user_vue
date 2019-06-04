@@ -21,6 +21,7 @@
     <div class="com-box mainBtn">
       <x-button text="保存信息" :disabled="disabled" @click.native="saveInfo"></x-button>
     </div>
+    <readonly-mask></readonly-mask>
   </div>
 </template>
 
@@ -28,12 +29,13 @@
 import { XButton, Actionsheet } from 'vux'
 import UserInfoItem from '@c/cell/UserInfoItem'
 
+
 import localStorage from '@u/localStorage'
 
 export default {
   components: {
     XButton, Actionsheet,
-    UserInfoItem
+    UserInfoItem,
   },
 
   data (){
@@ -83,10 +85,20 @@ export default {
       }else{
         return ''
       }
+    },
+
+    isRemoteMode (){
+      return !!this.$store.state.user.userInfo2
     }
   },
 
   methods: {
+    ifRemoteThenStop (e){
+      if(this.isRemoteMode){
+        e.stopImmediatePropagation();
+      }
+    },
+
     // 开启性别选项菜单
     openGenderSelect (){
       this.$bus.$emit('vux.actionsheet', {

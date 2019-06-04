@@ -17,10 +17,12 @@ import created from './config/created'
 // 全局组件及插件
 import { 
   ToastPlugin, AlertPlugin, ConfirmPlugin, LoadingPlugin, DatetimePlugin, ConfigPlugin,
-  Group, Cell, ViewBox
+  Group, Cell
 } from 'vux'
 import VueHeader from '@c/header/Header'
 import InlineLoading from '@c/InlineLoading'
+import ReadonlyMask from '@c/ReadonlyMask'
+import ViewBox from '@c/layout/ViewBox'
 
 // 导入video-player
 require('video.js/dist/video-js.css')
@@ -38,6 +40,7 @@ Vue.component('vux-cell', Cell)
 Vue.component('vue-header', VueHeader)
 Vue.component('view-box', ViewBox)
 Vue.component('inline-loading', InlineLoading)
+Vue.component('readonly-mask', ReadonlyMask)
 
 
 // 全局变量

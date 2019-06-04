@@ -2,7 +2,7 @@
   <div class="com-container">
     <vue-header title="基本病情"></vue-header>
     <inline-loading v-if="status === 'loading'"></inline-loading>
-    <view-box class="viewBox" v-if="status === 'success'">
+    <view-box class="view-box" v-if="status === 'success'">
       <vux-group class="com-group-noMarginTop">
         <vux-cell v-for="({ill_name, ill_id, stage}, index) in list" :key="index" 
           :title="ill_name" :is-link="true"
@@ -55,7 +55,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.viewBox{
+.view-box{
+  height: auto !important;
   max-height: calc(~'100% - 76px'); 
   height: auto;
   overflow: auto;
