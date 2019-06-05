@@ -1,15 +1,17 @@
 <template>
   <div class="com-container">
     <vue-header title="请稍候" :visibleHomeBtn="false"></vue-header>
-    <div class="slogan">
-      <p>本公众号致力于疾病健康教育</p>
-      <p>完善健康档案与调查问卷</p>
-      <p>可生成专属于你的个性教学计划</p>
-    </div>
-    <img src="http://twst.isart.me/image/wait_1547608075269.png" class="banner">
+    <view-box>
+      <div class="slogan">
+        <p>本公众号致力于疾病健康教育</p>
+        <p>完善健康档案与调查问卷</p>
+        <p>可生成专属于你的个性教学计划</p>
+      </div>
+      <img src="http://twst.isart.me/image/wait_1547608075269.png" class="banner">
 
-    <div class="creatingLine"></div>
-    <p class="prompt">正在为您生成学习计划</p>
+      <div class="creatingLine"></div>
+      <p class="prompt">正在为您生成学习计划</p>
+    </view-box>
   </div>
 </template>
 

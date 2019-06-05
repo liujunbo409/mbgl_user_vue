@@ -87,7 +87,7 @@ export default {
             })
           }
         }else{
-          this.$bus.$emit('vux.taost', data.message)
+          this.$bus.$emit('vux.toast', data.message)
         }
       })
     }

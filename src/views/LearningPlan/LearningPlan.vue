@@ -50,7 +50,7 @@
       </div>
     </view-box>
 
-    <view-box style="height:calc(100% - 138px)" v-if="selectedTab === 'all'">
+    <view-box minus="87px" v-if="selectedTab === 'all'">
       <vux-group class="com-group-noMarginTop">
         <dir-item v-for="(item, index) in allStage" :key="index"
           :title="item.catalog_name"
@@ -90,8 +90,12 @@ export default {
 
   mounted (){
     this.$refs.firstTab.$el.click()
-    this.loadIllList()
-    this.getSelectedIllId()
+    this.loadIllList().then(() =>{
+      this.getSelectedIllId()
+      .catch(e =>{        // 如果获取当前学习疾病失败，则自动选中疾病列表的第一项
+        this.selectIll(this.illList[0].ill_id)
+      })
+    })
   },
 
   computed: {
@@ -151,14 +155,21 @@ export default {
 
     // 载入疾病list
     loadIllList (){
-      _request({
-        url: 'xxjh/XXJHIllList'
-      }).then(({data}) =>{
-        if(data.result){
-          this.illList = data.ret
-        }else{
-          this.$bus.$emit('vux.toast', data.message)
-        }
+      return new Promise((resolve, reject) =>{
+        _request({
+          url: 'xxjh/XXJHIllList'
+        }).then(({data}) =>{
+          if(data.result){
+            this.illList = data.ret
+            resolve()
+          }else{
+            this.$bus.$emit('vux.toast', data.message)
+            reject()
+          }
+        }).catch(e =>{
+          console.log(e)
+          reject({ timeout: true })
+        })
       })
     },
 
@@ -231,7 +242,7 @@ export default {
       _request({
         url: 'xxjh/nowIllUpdate',
         params: {
-          ill_id: iLLid
+          ill_id: illId
         }
       })
 
@@ -361,7 +372,7 @@ export default {
 
 .mask{
   position: fixed;
-  top: 0;
+  top: 160px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -422,12 +433,12 @@ export default {
 
   tr:last-of-type{
     td{
-      background-color: #aaa;
-      border-color: #aaa;
+      background-color: #ccc;
+      border-color: #ccc;
     }
 
     .toArticleBtn{
-      background-color: #4A6F4D;
+      background-color: #666;
     }
   }
 

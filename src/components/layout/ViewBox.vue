@@ -1,5 +1,7 @@
 <template>
-  <vux-view-box :style="styleStr" class="header-view"></vux-view-box>
+  <vux-view-box :style="styleStr" class="header-view">
+    <slot></slot>
+  </vux-view-box>
 </template>
 
 <script>

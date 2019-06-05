@@ -259,6 +259,16 @@ export default {
       var options = []
       var data = {}
 
+      // 因为单选为字符串or数字(id)，多选为数组，下面统一以数组格式处理，这里将非数组格式的selected转为数组格式
+      if(!this.moduleData.multi_status && typeof this.selected !== 'object'){
+        if(this.selected){
+          this.selected = [this.selected]
+        }else{
+          this.selected = []
+        }
+      }
+
+      console.log(this.selected)
       if(this.selected.length){
         if(!this.moduleData.multi_status){
           data = {

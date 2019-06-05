@@ -1,11 +1,14 @@
 <template>
   <div class="item">
-    <div class="left">
-      <p>{{ data.name }}</p>
+    <div class="line">
+      <div class="left">
+        <p>{{ data.name }}</p>
+      </div>
+      <div class="right">
+        <div class="editBtn" @click="$emit('onClickEdit')">编辑</div>
+      </div>
     </div>
-    <div class="right">
-      <div class="editBtn" @click="$emit('onClickEdit')">编辑</div>
-    </div>
+    <slot></slot>
   </div>
 </template>
 
@@ -28,24 +31,33 @@ export default {
 <style lang="less" scoped>
 .item{
   min-height: 35px;
-  display: flex;
-  justify-content: space-between;
   padding: 10px;
   background-color: white;
   border-bottom: 1px #ccc solid;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
-  .left, .right{
+  .line{
     display: flex;
-    align-items: center;
+    width: 100%;
+    justify-content: space-between;    
+
+    .left, .right{
+      display: flex;
+      align-items: center;
+    }
+
+    .editBtn{
+      display: inline-block;
+      padding: 3px 10px;
+      background-color: white;
+      color: @theme;
+      border: 1px @theme solid;
+      border-radius: 5px;
+    }
   }
 
-  .editBtn{
-    display: inline-block;
-    padding: 3px 10px;
-    background-color: white;
-    color: @theme;
-    border: 1px @theme solid;
-    border-radius: 5px;
-  }
+
 }
 </style>

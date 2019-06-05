@@ -37,8 +37,9 @@ export default function(){
     })
 
     // 若为控制着其他账户的状态，则进行权限确认
-    var userInfo = localStorage.get('userInfo')
-    if(userInfo.qsgx){
+    var userInfo = localStorage.get('userInfo', null),
+    remoteAccess = localStorage.get('remoteAccess', null)
+    if(remoteAccess){
       this.$store.dispatch('user/checkRemoteAccess')
       .then((data) =>{
         if(data.changed){

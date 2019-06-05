@@ -8,7 +8,7 @@
           :title="ill_name" :is-link="true"
           @click.native="$toView('health/ill_info/index', { params: { illId: ill_id } })"
         >
-          <span class="com-cell-text">
+          <span class="com-cell-text" :class="{ done: stage === 100 }">
             完成度：{{ stage }}%
           </span>
         </vux-cell>
@@ -75,5 +75,9 @@ export default {
   font-size: 18px;
   line-height: 20px;
   font-weight: bold;
+}
+
+.done{
+  color: @success;
 }
 </style>

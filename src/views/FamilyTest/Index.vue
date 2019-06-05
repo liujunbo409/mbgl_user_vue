@@ -60,7 +60,7 @@ export default {
         if(data.result){
           this.$toView('family_test/xt')
         }else{
-          this.$bus.$emit('vux.taost', '您没有进入该功能的权限')
+          this.$bus.$emit('vux.toast', '您没有进入该功能的权限')
         }
       }).catch(e =>{
         console.log(e)

@@ -61,7 +61,7 @@ export default {
 
   methods: {
     submit (){
-      if(this.type === ''){
+      if(!this.type.length){
         this.$bus.$emit('vux.toast', '请选择反馈类型')
         return
       }

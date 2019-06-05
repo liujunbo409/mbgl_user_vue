@@ -1,46 +1,58 @@
 <template>
   <div class="com-container">
     <vue-header :title="'血糖' +  (selectedTab === 'collect' ? '采集' : '统计')"></vue-header>
-    <vux-checker v-model="selectedTab"
-      class="checkers-container" 
-      default-item-class="checkers"
-      selected-item-class="selected"
-    >
-      <checker-item value="collect">采集</checker-item>
-      <checker-item value="stats" @click.native="getStatsData('withTab')">统计</checker-item>
-    </vux-checker>
+    <view-box>
+      <vux-checker v-model="selectedTab"
+        class="checkers-container" 
+        default-item-class="checkers"
+        selected-item-class="selected"
+      >
+        <checker-item value="collect">采集</checker-item>
+        <checker-item value="stats" @click.native="getStatsData('withTab')">统计</checker-item>
+      </vux-checker>
 
-    <table class="collect-table" v-if="selectedTab === 'collect' &&  data.length">
-      <tr>
-        <td>时间段</td>
-        <td>{{ date[0].join('/') }}</td>
-        <td>{{ date[1].join('/') }}</td>
-        <td>{{ date[2].join('/') }}</td>
-      </tr>
-      <tr v-for="(pointer, index) in XT_Pointer" :key="index">
-        <td>{{ pointer.type_name }}</td>
-        <td @click="toCollectXT(date[0], pointer, data[0][index])">{{ data[0][index] | showData }}</td>
-        <td @click="toCollectXT(date[1], pointer, data[1][index])">{{ data[1][index] | showData }}</td>
-        <td @click="toCollectXT(date[2], pointer, data[2][index])">{{ data[2][index] | showData }}</td>
-      </tr>
-    </table>
-
-    <template v-if="selectedTab === 'stats' &&  statsData">
-      <div class="search">
-        <div class="begin block" @click="openDateSelectorForSearchBegin">{{ searchBegin }}</div>
-        <span> - </span>
-        <div class="end block" @click="openDateSelectorForSearchEnd">{{ searchEnd }}</div>
-        <div class="searchBtn" @click="getStatsData('withSearch')">搜索</div>
-      </div>
-      <table class="stats-table">
-        <tr><td>监测总次数</td><td>{{ statsData.total_num }}</td></tr>
-        <tr><td>空腹监测次数</td><td>{{ statsData.empty_stomach_num }}</td></tr>
-        <tr><td>餐前监测次数</td><td>{{ statsData.before_meal_num }}</td></tr>
-        <tr><td>低血糖次数</td><td>{{ statsData.glycopenia_num }}</td></tr>
-        <tr><td>高血糖次数</td><td>{{ statsData.hyperglycaemia_num }}</td></tr>
-        <tr><td>达标率</td><td>{{ statsData.reaching_rate }}</td></tr>
+      <inline-loading v-if="data === null"></inline-loading>
+      <table class="collect-table" v-if="selectedTab === 'collect' &&  data">
+        <tr>
+          <td>时间段</td>
+          <td>{{ date[2].join('/') }}</td>
+          <td>{{ date[1].join('/') }}</td>
+          <td>{{ date[0].join('/') }}</td>
+        </tr>
+        <tr v-for="(pointer, index) in XT_Pointer" :key="index">
+          <td>{{ pointer.type_name }}</td>
+          <td 
+            @click="toCollectXT(date[2], pointer, data[2][index])"
+            :class="{ red: is_XT_Danger(data[2][index]) }"
+          >{{ data[2][index] | showData }}</td>
+          <td 
+            @click="toCollectXT(date[1], pointer, data[1][index])"
+            :class="{ red: is_XT_Danger(data[1][index]) }"
+          >{{ data[1][index] | showData }}</td>
+          <td
+            @click="toCollectXT(date[0], pointer, data[0][index])"
+            :class="{ red: is_XT_Danger(data[0][index]) }"
+          >{{ data[0][index] | showData }}</td>
+        </tr>
       </table>
-    </template>
+
+      <template v-if="selectedTab === 'stats' &&  statsData">
+        <div class="search">
+          <div class="begin block" @click="openDateSelectorForSearchBegin">{{ searchBegin }}</div>
+          <span> - </span>
+          <div class="end block" @click="openDateSelectorForSearchEnd">{{ searchEnd }}</div>
+          <div class="searchBtn" @click="getStatsData('withSearch')">搜索</div>
+        </div>
+        <table class="stats-table">
+          <tr><td>监测总次数</td><td>{{ statsData.total_num }}</td></tr>
+          <tr><td>空腹监测次数</td><td>{{ statsData.empty_stomach_num }}</td></tr>
+          <tr><td>餐前监测次数</td><td>{{ statsData.before_meal_num }}</td></tr>
+          <tr><td>低血糖次数</td><td>{{ statsData.glycopenia_num }}</td></tr>
+          <tr><td>高血糖次数</td><td>{{ statsData.hyperglycaemia_num }}</td></tr>
+          <tr><td>达标率</td><td>{{ statsData.reaching_rate }}</td></tr>
+        </table>
+      </template>
+    </view-box>
     <readonly-mask minus="100px"></readonly-mask>
   </div>
 </template>
@@ -113,7 +125,7 @@ export default {
       
       selectedTab: 'collect',
 
-      data: [],
+      data: null,
       XT_Pointer: [],       // 血糖时间点数据
 
       statsData: null,
@@ -159,7 +171,7 @@ export default {
           params: { date: this.date[2].join('-') }
         }),
       ]).then(data =>{
-        this.data = this.data.concat(data.map(val => val.data.ret))
+        this.data = data.map(val => val.data.ret)
       }).catch(e =>{
         console.log(e)
         this.$bus.$emit('vux.toast', {
@@ -239,6 +251,9 @@ export default {
       })
     },
     
+    is_XT_Danger (val){
+      return val && (parseFloat(val.value) > val.max || parseFloat(val.value) < val.min)
+    }
   }
 }
 </script>
@@ -320,5 +335,9 @@ export default {
     border: 1px #b5d6e6 solid;
     padding: 10px 0;
   }
+}
+
+.red{
+  color: @danger;
 }
 </style>

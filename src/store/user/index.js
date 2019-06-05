@@ -38,7 +38,8 @@ export default {
     phoneNum: localStorage.get('phoneNum', ''),
     userInfo,
     access,
-    userInfo2: localStorage.get('userInfo2', null)    // 用于在切换账户时备份原账户
+    userInfo2: localStorage.get('userInfo2', null),    // 用于在切换账户时备份原账户
+    remoteAccess: localStorage.get('remoteAccess', null)
   },
 
   mutations: {
@@ -68,6 +69,12 @@ export default {
       localStorage.remove('remoteUser')
     },
 
+    writeRemoteAccess (state, payload){
+      state.remoteAccess = payload
+      localStorage.set('remoteAccess', payload)
+    },
+
+    // 备份原账户
     backupOrigin (state){
       localStorage.set('userInfo2', state.userInfo)
       state.userInfo2 = localStorage.get('userInfo2')  
@@ -79,6 +86,7 @@ export default {
       localStorage.set('userInfo', state.userInfo2)
       state.userInfo2 = null
       localStorage.remove('userInfo2')
+      localStorage.remote('remoteAccess')
     }
   },
 
@@ -245,6 +253,7 @@ export default {
     changeToRemote (store, payload){
       store.commit('backupOrigin')    // 先备份原账户
       store.commit('writeState', payload)   // 再切换
+      store.commit('writeRemoteAccess', payload.qsgx)
     },
 
     // 检查权限是否有变化
@@ -265,10 +274,10 @@ export default {
               reject({ type: 'close' })           // 返回特征用于在config/created.js发送提示
             }else{
               resolve({                           // 对比，若权限码发生变化，将changed设为true
-                changed: state.userInfo.qsgx.quanxian !== data.ret.qsgx.quanxian,
+                changed: state.remoteAccess.quanxian !== data.ret.qsgx.quanxian,
                 access: data.ret.qsgx.quanxian_str 
               })
-              store.commit('writeState', data.ret)
+              store.commit('writeRemoteAccess', data.ret.qsgx)
             }
           }else{
             store.commit('backOrigin')            // 未知错误，撤销控制权

@@ -14,7 +14,9 @@
       <!-- 该插槽重写left内容，间接消除back按钮 -->
       <span slot="overwrite-left" v-if="!visibleBackBtn"></span>
     </x-header>
-    <div class="romoteHint" v-if="isRemoteMode">您正在控制“{{ $store.state.user.userInfo.real_name }}”的帐号</div>
+    <div class="romoteHint" v-if="isRemoteMode">
+      <span>您正以{{ $store.state.user.remoteAccess.quanxian_str }}权限控制“{{ $store.state.user.userInfo.real_name }}”的帐号</span>
+    </div>
   </div>
 </template>
 
@@ -61,13 +63,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.header{
+.container{
   z-index: 100;
 }
 
 .romoteHint{
   line-height: 30px;
-  background-color: #008F00;
+  background-color: #4CB14C;
   color: white;
   text-align: center;
 }

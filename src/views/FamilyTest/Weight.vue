@@ -98,7 +98,7 @@ export default {
         if(data.result){
           this.data = data.ret.data
         }else{
-          this.$bus.$emit('vux.taost', data.message)
+          this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         console.log(e)
@@ -137,7 +137,7 @@ export default {
         return
       }
       if(!this.weight){
-        this.$bus.$emit('vux.taost', '体重不能为空')
+        this.$bus.$emit('vux.toast', '体重不能为空')
         return
       }
       if(!this.testWeight(this.weight)){ return }
@@ -167,7 +167,7 @@ export default {
     // 修改
     edit (item){
       if(!this.weight){
-        this.$bus.$emit('vux.taost', '体重不能为空')
+        this.$bus.$emit('vux.toast', '体重不能为空')
         return
       }
       if(!this.testWeight(this.weight)){ return }

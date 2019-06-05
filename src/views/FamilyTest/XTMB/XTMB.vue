@@ -3,48 +3,50 @@
     <vue-header title="当前目标">
       <div class="infoBtn" slot="right" @click="toView('family_test/xtmb/info')">检测说明</div>
     </vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <main v-if="status === 'success'">
-      <header>
-        <span class="fen_Xing_Name">{{ data.fenxingname }}</span>
-        <span class="changeBtn" @click="$toView('family_test/xtmb/change_fen_xing')">切换分型</span>
-      </header>
-      <p class="subtitle">
-        <vux-icon type="warn"></vux-icon>
-        <span class="text">各类糖尿病血糖标准</span>
-      </p>
+    <view-box>
+      <inline-loading v-if="status === 'loading'"></inline-loading>
+      <main v-if="status === 'success'">
+        <header>
+          <span class="fen_Xing_Name">{{ data.fenxingname }}</span>
+          <span class="changeBtn" @click="$toView('family_test/xtmb/change_fen_xing')">切换分型</span>
+        </header>
+        <p class="subtitle">
+          <vux-icon type="warn"></vux-icon>
+          <span class="text">各类糖尿病血糖标准</span>
+        </p>
 
-      <table class="table">
-        <tr>
-          <td colspan="3">
-            <span>目标开始时间</span>
-            <span></span>
-          </td>
-        </tr>
-        <tr>
-          <td>时间段</td>
-          <td>目标上限</td>
-          <td>目标下限</td>
-        </tr>
-        <tr v-for="(line, index) in data.taglist" :key="index">
-          <td>{{ line.tag_name }}</td>
-          <td>
-            <div class="com-input-container">
-              <input type="number" v-model.number.trim="line.max" min="0" max="500">
-            </div>
-          </td>
-          <td>
-            <div class="com-input-container">
-              <input type="number" v-model.number.trim="line.min" min="0" max="500">
-            </div>
-          </td>
-        </tr>
-      </table>
+        <table class="table">
+          <tr>
+            <td colspan="3">
+              <span>目标开始时间：{{ data.start_time || '获取中' }}</span>
+              <span></span>
+            </td>
+          </tr>
+          <tr>
+            <td>时间段</td>
+            <td>目标下限</td>
+            <td>目标上限</td>
+          </tr>
+          <tr v-for="(line, index) in data.taglist" :key="index">
+            <td>{{ line.tag_name }}</td>
+            <td>
+              <div class="com-input-container">
+                <input type="number" v-model.number.trim="line.min" min="0" max="500">
+              </div>
+            </td>
+            <td>
+              <div class="com-input-container">
+                <input type="number" v-model.number.trim="line.max" min="0" max="500">
+              </div>
+            </td>
+          </tr>
+        </table>
 
-      <div class="mainBtn-container">
-        <x-button @click.native="save">保存</x-button>
-      </div>
-    </main>
+        <div class="mainBtn-container">
+          <x-button @click.native="save">保存</x-button>
+        </div>
+      </main>
+    </view-box>
     <readonly-mask></readonly-mask>
   </div>
 </template>
@@ -81,7 +83,7 @@ export default {
           this.data = data.ret
         }else{
           this.status = 'error'
-          this.$bus.$emit('vux.taost', data.message)
+          this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         this.status = 'error'

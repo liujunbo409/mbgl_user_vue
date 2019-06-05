@@ -47,17 +47,26 @@ export default {
 
   activated (){
     if(this.$route.params.date){
+      this.init()
       this.date = this.$route.params.date
       this.pointer = this.$route.params.pointer
       this.data = this.$route.params.data
       if(this.data){
         this.XT_value = this.data.value
       }
-      this.get_XT_Target()
     }
+    this.get_XT_Target()
   },
 
   methods: {
+    // 初始化
+    init (){
+      this.XT_value = ''
+      this.collectTime = ''
+      this.min = 0
+      this.max = 0
+    },
+
     // 获取血糖目标
     get_XT_Target (){
       _request({
@@ -86,7 +95,7 @@ export default {
     // 保存
     save (){
       if(!this.collectTime){
-        this.$bus.$emit('vux.taost', '请填写采集时间')
+        this.$bus.$emit('vux.toast', '请填写采集时间')
         return
       }
 
