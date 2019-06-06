@@ -12,7 +12,8 @@ Vue.use(Router)
 const r = {
   ResetPassword: () => import('@v/Login/Reset'),
   sub: {
-    BeforeCheckPsd: () => import('@v/sub/BeforeCheckPsd')
+    BeforeCheckPsd: () => import('@v/sub/BeforeCheckPsd'),
+    CreatePlanHint: () => import('@v/sub/CreatePlanHint')
   },
   My: {
     Index: () => import('@v/My/Index'),
@@ -86,7 +87,7 @@ function p(name, path){
 
 var routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: Home,
     meta: {
@@ -98,6 +99,9 @@ var routes = [
     meta: {
       fromUrlStop
     }
+  }, {
+    ...p('sub/create_plan_hint'),
+    component: r.sub.CreatePlanHint
   }, {  // 登录
     ...p('login'),
     component: Login
@@ -260,13 +264,13 @@ var routes = [
   }, {
     ...p('role_management/apply_list'),
     component: r.RoleManagement.ApplyList
+  },
+  
+  
+  { // 输入不存在的路由时，回到home
+    path: '*',
+    redirect: '/home'
   }
-  
-  
-  // { // 输入不存在的路由时，回到home
-  //   path: '*',
-  //   redirect: '/'
-  // }
 ]
 
 // guard为路由实例添加全局守卫

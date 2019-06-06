@@ -6,7 +6,6 @@ import user from './user'     // 保存用户相关数据
 import constText from './constText'   // 常量数据，带缓存（获取一次后再次获取直接返回之前获取的数据）
 import hospList from './hospList'     // 医院列表
 import baseIllList from './baseIllList'   // 基础疾病列表
-import jkda from './jkda'           // 保存健康档案的模块数据
 
 Vue.use(Vuex)
 
@@ -24,6 +23,6 @@ export default new Vuex.Store({
   },
 
   modules: {
-    user, constText, hospList, baseIllList, jkda
+    user, constText, hospList, baseIllList
   }
 })

@@ -4,6 +4,7 @@ import localStorage from '@u/localStorage'
 
 export default function(){
   // 如果标记为已登录，尝试判断登录状态是否有效以及账户是否被禁用，若有效更新userInfo，无效跳转login
+  var laravelId = window.localStorage.getItem('user_laravel_id', false)
   if(localStorage.get('isLogin', false)){
     _request({
       url: 'my/getByIdWithToken'
@@ -61,6 +62,21 @@ export default function(){
 
     // 获取填写状态
     this.$store.dispatch('user/editStatus/get')
+  }else if(laravelId){
+    // 获取用户信息
+    _request({
+      url: 'my/getByIdWithToken',
+      params: {
+        user_id: laravelId
+      }
+    }).then(({data}) =>{
+      if(data.result){
+        this.$store.commit('user/writeState', data.ret)
+        window.location.href = window.location.origin
+      }
+    }).catch(e =>{
+      console.log(e)
+    })
   }
 
   
