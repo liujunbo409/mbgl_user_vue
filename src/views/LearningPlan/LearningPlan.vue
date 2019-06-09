@@ -92,9 +92,6 @@ export default {
     this.$refs.firstTab.$el.click()
     this.loadIllList().then(() =>{
       this.getSelectedIllId()
-      .catch(e =>{        // 如果获取当前学习疾病失败，则自动选中疾病列表的第一项
-        this.selectIll(this.illList[0].ill_id)
-      })
     })
   },
 
@@ -141,7 +138,7 @@ export default {
           url: 'xxjh/nowIll'
         }).then(({data}) =>{
           if(data.result){
-            this.illId = data.ret
+            this.illId = data.ret || this.illList[0].ill_id  // 如果获取当前学习疾病失败，则自动选中疾病列表的第一项
             resolve(data.ret)
           }else{
             reject(data)

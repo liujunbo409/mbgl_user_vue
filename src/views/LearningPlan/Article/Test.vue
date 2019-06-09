@@ -4,10 +4,10 @@
     <inline-loading v-if="status === 'loading'"></inline-loading>
     <view-box class="com-header-view" v-if="status === 'success'">
       <vux-checklist
-        v-for="(item, index) in data" :key="index"
+        v-for="({test: item}, index) in data" :key="index"
         v-model="selecteds[item.id]" label-position="right" 
         :title="`【${item.answer.toString().indexOf(',') < 0 ? '单选' : '多选'}】${item.question}`"
-        :options="item.answers.split('&&').map((val, ind) => ({ key: ind, value: val }))"
+        :options="item.answers.map((val, ind) => ({ key: ind, value: val }))"
       ></vux-checklist>
       <div class="com-mainBtn-container">
         <x-button @click.native="check">提交答案</x-button>
@@ -29,6 +29,7 @@ export default {
     return {
       articleId: 0,
       stageId: 0,
+      illId: 0,
       selecteds: {},
       status: 'init',
       data: [],
@@ -39,7 +40,12 @@ export default {
     if(this.$route.params.articleId){
       this.init()
       this.articleId = this.$route.params.articleId
-      this.stageId = this.$route.params.stageId
+      if(this.$route.params.stageId){
+        this.stageId = this.$route.params.stageId
+      }
+      if(this.$route.params.illId){
+        this.illId = this.$route.params.illId
+      }
       this.load()
     }
   },
@@ -82,7 +88,7 @@ export default {
     check (){
       // 构建正确答案集（问题id索引：正确答案[数组]），并进行对比
       var answers = {}
-      this.data.forEach(val => answers[val.id] = val.answer.toString().split(','))
+      this.data.forEach(val => answers[val.test.id] = val.test.answer.toString().split(','))
       var errors = []
       for(let key in answers){
         if(   // 如果正确答案数和选择数不同，或选择的选项在对应正确答案数组中不存在，则将其id加入errors
@@ -102,7 +108,7 @@ export default {
           cancelText: '重新学习',
 
           onConfirm: () =>{
-            var data = this.data.filter(val => errors.includes(val.id))
+            var data = this.data.filter(val => errors.includes(val.test.id))
             .map(val => ({ title: val.question, content: val.analysis }))
 
             this.$baseToView('analysis', {
@@ -169,7 +175,12 @@ export default {
             cancelText: '返回学习计划',
 
             onConfirm: () =>{
-
+              this.$toView('learning_plan/exam', {
+                params: {
+                  illId: this.illId,
+                  stageId: this.stageId
+                }
+              })
             },
 
             onCancel: () =>{

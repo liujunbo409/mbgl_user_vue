@@ -98,8 +98,7 @@ export default {
           this.disabled = false
           this.$bus.$emit('vux.toast', { type: 'success', text: '登录成功' })
           this.$store.dispatch('hospList/load')
-          this.$store.dispatch('user/editStatus/get')
-          this.$toView('home')
+          this.$store.dispatch('user/editStatus/get').then(() => this.$toView('home'))
         }).catch(e =>{
           this.disabled = false
           // 这里拿到的错误对象的type属性为自定义的(在store)，用于提示非login接口返回的错误类型

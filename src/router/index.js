@@ -6,6 +6,7 @@ import Home from '@v/Home/Home'
 import Login from '@v/Login/Login'
 import Register from '@v/Login/Register'
 
+import localStorage from '@u/localStorage'
 
 Vue.use(Router)
 
@@ -70,6 +71,9 @@ const r = {
   RoleManagement: {
     Index: () => import('@v/RoleManagement/Index'),
     ApplyList: () => import('@v/RoleManagement/ApplyList')
+  },
+  AllQA: {
+    AllQA: () => import('@v/AllQA/AllQA')
   }
 }
 
@@ -99,12 +103,16 @@ var routes = [
     meta: {
       fromUrlStop
     }
-  }, {
+  }, {  // 用户引导页
     ...p('sub/create_plan_hint'),
     component: r.sub.CreatePlanHint
   }, {  // 登录
     ...p('login'),
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if(localStorage.get('isLogin', false) && from.name){ next({ name: 'home' }) }
+      else{ next() }
+    }
   }, {  // 注册
     ...p('register'),
     component: Register
@@ -264,6 +272,9 @@ var routes = [
   }, {
     ...p('role_management/apply_list'),
     component: r.RoleManagement.ApplyList
+  }, {
+    ...p('all_qa'),
+    component: r.AllQA.AllQA
   },
   
   

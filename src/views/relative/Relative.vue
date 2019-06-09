@@ -31,7 +31,7 @@
             <br><span class="color-theme">点击修改</span>
           </td>
           <td>{{ item.quanxian > 0 ? '已' : '未' }}授权</td>
-          <td><span class="delBtn" @click="del(item.id)">删除</span></td>
+          <td><span class="delBtn" @click="del(item.id, index)">删除</span></td>
         </tr>
       </table>
     </vux-group>
@@ -124,7 +124,7 @@ export default {
       })
     },
 
-    del (id){     // 删除亲友
+    del (id, index){     // 删除亲友
       this.$vux.confirm.show({
         title: '提示',
         content: '确定要解除亲友关系吗？',
@@ -135,6 +135,7 @@ export default {
             data: { id }
           }).then(({data}) =>{
             if(data.result){
+              this.relativeList.splice(index, 1)
               this.$bus.$emit('vux.toast', {
                 type: 'success',
                 text: '操作成功'

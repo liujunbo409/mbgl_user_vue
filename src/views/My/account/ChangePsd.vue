@@ -67,7 +67,7 @@ export default {
           this.$bus.$emit('vux.alert', '密码修改成功')
           this.$router.back()
         }else{
-          this.$bus.emit('vux.toast', {
+          this.$bus.$emit('vux.toast', {
             type: 'cancel',
             text: data.message
           })

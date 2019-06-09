@@ -68,7 +68,8 @@ export default {
       this.$baseToView('test', { 
         params: { 
           articleId: this.art.id,
-          stageId: this.stageId
+          stageId: this.stageId,
+          illId: this.illId
         }
       })
     }

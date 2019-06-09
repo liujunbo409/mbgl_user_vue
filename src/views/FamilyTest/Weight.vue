@@ -40,7 +40,7 @@
             <td>操作</td>
           </tr>
           <tr v-for="(item, index) in data" :key="index">
-            <td>{{ item.updated_at.split(' ')[0] }}</td>
+            <td>{{ item.date.split(' ')[0] }}</td>
             <td>{{ item.value }}</td>
             <td>
               <span class="editBtn" @click="editTarget = item">修改</span>
@@ -83,7 +83,7 @@ export default {
         this.date = ''
         this.weight = ''
       }else{
-        this.date = val.updated_at.split(' ')[0]
+        this.date = val.date
         this.weight = val.value
       }
     }

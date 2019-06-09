@@ -15,7 +15,7 @@ export default function(router){
     if(
       localStorage.get('isLogin', false) && 
       !localStorage.get('isInfoEdited', false) && 
-      to.name !== 'my/info'
+      to.name !== 'my/info' && to.name !== 'sub/create_plan_hint'
     ){
       next({ name: 'my/info' })
     }

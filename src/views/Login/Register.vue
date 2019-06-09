@@ -42,6 +42,12 @@
         <img slot="label" src="@img/sub/lock.png" class="com-input-icon">
       </x-input>
 
+      <x-input type="password" v-model.trim="inviteCode" :disabled="disabled" placeholder="请输入邀请码"
+        :show-clear="false" v-if="!resetPsd"
+      >
+        <img slot="label" src="@img/sub/yao_qing.png" class="com-input-icon">
+      </x-input>
+
       <div class="registerBtn-container">
         <x-button :text="resetPsd ? '重置密码' : '注册'" :disabled="disabled" @click.native="register"></x-button>
       </div>
@@ -78,6 +84,7 @@ export default {
       getMsgVcCodeTimeoutKey: 0,  // 当该值非0时，禁用获取验证码的按钮
       password: '',
       passwordCheck: '',
+      inviteCode: '',
       disabled: false,
     }
   },
@@ -143,6 +150,14 @@ export default {
       var val = this.passwordCheck || ''
       if(val !== this.password){
         return 'noIdentical'
+      }
+      return 'correct'
+    },
+
+    testInviteCode (){
+      var val = this.inviteCode || ''
+      if(val === ''){
+        return 'empty'
       }
       return 'correct'
     },
@@ -243,14 +258,26 @@ export default {
         return
       }
 
+      type = this.testInviteCode()
+      if(type !== 'correct'){
+        var text = {
+          empty: '邀请码不能为空',
+        }[type]
+
+        this.$bus.$emit('vux.toast', text)     
+        
+        return
+      }
+
       // 注册主逻辑
       var {
         phoneNum: phonenum,
         password,
-        msgVcCodeInputVal: sm_validate
+        msgVcCodeInputVal: sm_validate,
+        inviteCode: invite 
       } = this
 
-      var requestBody = { phonenum, password, sm_validate }
+      var requestBody = { phonenum, password, sm_validate, invite }
       if(this.resetPsd){
         this.resetPsd(requestBody)
       }else{
@@ -261,11 +288,11 @@ export default {
           this.$bus.$emit('vux.toast', { type: 'success', text: '注册成功' })
           this.$store.dispatch('hospList/load')
           this.$store.dispatch('user/editStatus/get')
-          this.$toView('my/info')
+          this.$toView('sub/create_plan_hint')
         }).catch(e =>{
           this.disabled = false
           var text = e.timeout ? '网络错误' : e.message
-          this.$bus.emit('vux.toast', {
+          this.$bus.$emit('vux.toast', {
             type: 'cancel', text
           })
         })

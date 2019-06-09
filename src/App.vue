@@ -14,6 +14,10 @@ export default {
     return {
       blobUri: '',  
     }
+  },
+
+  mounted (){
+   
   }
 }
 </script>

@@ -58,8 +58,6 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
-
-
 beforeInit(() => new Vue({
   router, store,
   beforeCreate, created,

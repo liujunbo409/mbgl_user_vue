@@ -24,14 +24,25 @@ export default {
 
   actions: {
     load (store, payload){
-      _request({
-        baseURL: Vue._GLOBAL.comApi,
-        url: 'baseIllList',
-        params: {
-          role: 'doctor'
+      var {state} = store
+      return new Promise((resolve, reject) =>{
+        if(state.data.length){
+          resolve(state.data)
+        }else{
+          _request({
+            baseURL: Vue._GLOBAL.comApi,
+            url: 'baseIllList',
+            params: {
+              role: 'doctor'
+            }
+          }).then(({data: {ret}}) =>{
+            store.commit('writeStatus', ret)
+            resolve()
+          }).catch(e =>{
+            console.log(e)
+            reject()
+          })
         }
-      }).then(({data: {ret}}) =>{
-        store.commit('writeStatus', ret)
       })
     }
   }

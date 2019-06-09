@@ -1,6 +1,6 @@
 <template>
   <div class="com-container">
-    <vue-header :title="moduleData.name"></vue-header>
+    <vue-header :title="moduleData.name" :visibleBackBtn="false"></vue-header>
     <inline-loading v-if="status === 'loading'"></inline-loading>
     <view-box class="com-header-view" v-if="status === 'success'">
       <vux-group class="com-group-noMarginTop">
@@ -69,7 +69,7 @@
       <div class="addCustomBtn" v-if="moduleData.custom_status" @click="addCustomIll">新增</div>
 
       <div class="com-mainBtn-container">
-        <x-button @click.native="submit">
+        <x-button @click.native="submit" :disabled="submitStatus === 'loading'">
           {{ selected === '' || (typeof selected === 'object' && !selected.length) ? '跳过' : '确定' }}
         </x-button>
       </div>
@@ -93,7 +93,8 @@ export default {
       visibleChildMenus: {},    // 统一控制点击项目后展开的菜单，key为项id，val为布尔值
       optionsForm: {},       // 保存统一的表单数据，提交前使用selected进行过滤，筛选出已选中的项目
       selected: [],         // 当前选中的项，单选为字符串or数字(id)，多选为数组
-      status: 'init'
+      status: 'init',
+      submitStatus: 'init'
     }
     // 自定义疾病的id在该组件内都以$为前缀，新生成还未提交过的疾病以时间戳为id，提交过从服务读取过来的使用服务器提供的id
   },
@@ -127,6 +128,7 @@ export default {
       this.optionsForm = {}
       this.selected = []
       this.status = 'init'
+      this.submitStatus = 'init'
     },
 
     // 加载基础选项数据
@@ -255,6 +257,7 @@ export default {
 
     // 提交
     submit (){
+      this.submitStatus = 'loading'
       this.$vux.loading.show({ text: '请稍候' })
       var options = []
       var data = {}
@@ -268,7 +271,6 @@ export default {
         }
       }
 
-      console.log(this.selected)
       if(this.selected.length){
         if(!this.moduleData.multi_status){
           data = {
@@ -327,6 +329,7 @@ export default {
         if(data.result){
           var illId = this.moduleData.ill_id
           if(!data.ret.modular_id){
+            this.submitStatus = 'success'
             this.$router.replace({
               name: 'health/ill_info/index',
               params: { illId }
@@ -344,9 +347,13 @@ export default {
               this.loadData()
             }
           }
+        }else{
+          this.submitStatus = 'error'
+          this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         this.$vux.loading.hide()
+        this.submitStatus = 'error'
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

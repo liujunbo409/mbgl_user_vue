@@ -4,10 +4,10 @@
     <inline-loading v-if="status === 'loading'"></inline-loading>
     <view-box class="com-header-view" v-if="status === 'success'">
       <vux-checklist
-        v-for="(item, index) in data" :key="index"
+        v-for="({test: item}, index) in data" :key="index"
         v-model="selecteds[item.id]" label-position="right" 
         :title="`【${item.answer.toString().indexOf(',') < 0 ? '单选' : '多选'}】${item.question}`"
-        :options="item.answers.split('&&').map((val, ind) => ({ key: ind, value: val }))"
+        :options="item.answers.map((val, ind) => ({ key: ind, value: val }))"
       ></vux-checklist>
       <div class="com-mainBtn-container">
         <x-button @click.native="check">提交答案</x-button>
@@ -79,7 +79,7 @@ export default {
 
     check (){
       var answers = {}
-      this.data.forEach(val => answers[val.id] = val.answer.toString().split(','))
+      this.data.forEach(val => answers[val.test.id] = val.test.answer.toString().split(','))
       var errors = []
       for(let key in answers){
         if(
@@ -99,7 +99,7 @@ export default {
           cancelText: '返回学习计划',
 
           onConfirm: () =>{
-            var data = this.data.filter(val => errors.includes(val.id))
+            var data = this.data.filter(val => errors.includes(val.test.id))
             .map(val => ({ title: val.question, content: val.analysis }))
 
             this.$baseToView('analysis', {

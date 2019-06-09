@@ -9,7 +9,9 @@
       >
         <div class="line" v-if="item.type === 'medicinal'">
           <div class="left yao_Ming">药名：</div>
-          <div class="right">{{ yong_Yao_Data.map(val => val.name).join('、') }}</div>
+          <div class="right">
+            {{ yong_Yao_Data.length ? yong_Yao_Data.map(val => val.name).join('、') : '未选择' }}
+          </div>
         </div>
         <div class="line" v-else>
           <template>
@@ -85,26 +87,20 @@ export default {
     load (){
       return new Promise((resolve, reject) =>{
         this.status = 'loading'
-        _request({
-          url: 'jkda/illIndex',
-          params: { ill_id: this.illId }
-        }).then(({data}) =>{
-          if(data.result){
-            this.status = 'success'
-            this.data = data.ret
-            resolve()
-          }else{
-            this.status = 'error'
-            this.$bus.$emit('vux.toast', data.message)
-            reject()
-          }
+        this.$store.dispatch('jkda/get', this.illId).then(data =>{
+          this.status = 'success'
+          this.data = data
+          resolve()
         }).catch(e =>{
-          console.log(e)
           this.status = 'error'
-          this.$bus.$emit('vux.toast', {
-            type: 'cancel',
-            text: '网络错误'
-          })
+          if(e.timeout){
+            this.$bus.$emit('vux.toast', {
+              type: 'cancel',
+              text: '网络错误'
+            })          
+          }else{
+            this.$bus.$emit('vux.toast', e.message)
+          }
           reject()
         })
       })
@@ -180,6 +176,6 @@ export default {
 }
 
 .yao_Ming{
-  flex-basis: 4em;
+  flex-basis: 6em;
 }
 </style>

@@ -62,7 +62,8 @@ export default function(){
 
     // 获取填写状态
     this.$store.dispatch('user/editStatus/get')
-  }else if(laravelId){
+
+  }else if(laravelId){        // 判断是否有openId
     // 获取用户信息
     _request({
       url: 'my/getByIdWithToken',
