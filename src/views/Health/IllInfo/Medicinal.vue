@@ -160,11 +160,9 @@ export default {
     submit (){
       var selected = []
       Object.values(this.selected_Yao_Lists).forEach(val => selected = selected.concat(val))
-      console.log(selected)
       var add = selected.filter(val => !this.loadedSelected_Yao_List.includes(val))
       var del = this.loadedSelected_Yao_List.filter(val => !selected.includes(val))
-
-      console.log(add, del)
+      
       var requests = []
       add.forEach(medicine_id =>{
         requests.push(_request({
