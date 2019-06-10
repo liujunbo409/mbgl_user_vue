@@ -213,6 +213,7 @@ export default {
         .then(({data}) =>{
           if(data.result){
             store.commit('writeState', data.ret)
+            localStorage.set('isInfoEdited', true)
             resolve()
           }else{
             reject(data) 

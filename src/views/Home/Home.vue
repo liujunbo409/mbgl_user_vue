@@ -65,7 +65,9 @@ export default {
         }, {
           ...title('全部问答'),
           link: 'all_qa',
-          hide: true
+        }, {
+          ...title('用户指南'),
+          link: 'sub/create_plan_hint'
         }
       ]
     }

@@ -32,6 +32,7 @@
                 </vux-datetime>
                 <vux-selector v-if="item.level.length" v-model="optionsForm[item.id].level"
                   class="menu-levelSelector"
+                  :class="{ required_Fen_Xing: item.level_status }"
                   title="分型分期"
                   placeholder="未选择"
                   :options="item.level.map(val => ({ key: val.id, value: val.name }))"
@@ -183,13 +184,17 @@ export default {
               }else{
                 this.selected = val.xuanxiang_id
               }
+              // 装入已填数据
               this.optionsForm[val.xuanxiang_id].date = val.date
+              // 展开已选项
+              this.visibleChildMenus[val.xuanxiang_id] = true
             }
             var allLevel = []
             this.data.forEach(option =>{
               allLevel = allLevel.concat(option.level || [])
             })
 
+            // 为将选项项目加到其对应的疾病中
             allLevel.some(option => {
               if(val.xuanxiang_id === option.id){
                 this.optionsForm[option.father_id].level = val.xuanxiang_id
@@ -257,28 +262,45 @@ export default {
 
     // 提交
     submit (){
-      this.submitStatus = 'loading'
-      this.$vux.loading.show({ text: '请稍候' })
       var options = []
       var data = {}
 
       // 因为单选为字符串or数字(id)，多选为数组，下面统一以数组格式处理，这里将非数组格式的selected转为数组格式
-      if(!this.moduleData.multi_status && typeof this.selected !== 'object'){
-        if(this.selected){
-          this.selected = [this.selected]
+      var selected = JSON.parse(JSON.stringify(this.selected))
+      if(!this.moduleData.multi_status && typeof selected !== 'object'){
+        if(selected){
+          selected = [selected]
         }else{
-          this.selected = []
+          selected = []
         }
       }
 
-      if(this.selected.length){
+      var dataIdMap = {} 
+      this.data.forEach(val =>{         // 以id映射选项基础数据
+        dataIdMap[val.id] = val
+      })
+      for(let i=0, len=selected.length; i < len; i++){
+        var id = selected[i]
+        if(
+          (dataIdMap[id].date_status && !this.optionsForm[id].date) 
+        ){
+          this.$bus.$emit('vux.toast', '请检查是否有未填的必填项')
+          return
+        }
+      }
+
+      this.submitStatus = 'loading'
+      this.$vux.loading.show({ text: '请稍候' })
+
+      if(selected.length){
         if(!this.moduleData.multi_status){
           data = {
             [this.selected]: this.optionsForm[this.selected]
           }
         }else{
           for(let key in this.optionsForm){
-            if(this.selected.includes(key)){
+            // id统一拿字符串格式匹配
+            if(selected.map(val => val.toString()).includes(key.toString())){
               data[key] = this.optionsForm[key]
             }
           }
@@ -295,6 +317,8 @@ export default {
           })
           return id
         }
+
+        console.log(data)
 
         // 判断自定义的疾病（id以$开头）
         for(let key in data){
@@ -316,6 +340,8 @@ export default {
           }
         }
       }
+
+      console.log(options)
 
       _request({
         url: 'jkda/xuanxiangPost',
@@ -413,5 +439,18 @@ sup{
   border-radius: 7px;
   margin: 0 auto;
   margin-top: 5px;
+}
+
+.required_Fen_Xing /deep/ .weui-label{
+  white-space: nowrap;
+
+  &::after{
+    content: " *必填";
+    display: inline;
+    color: @danger;
+    vertical-align: super;
+    font-size: smaller;
+    margin-left: 5px;
+  }
 }
 </style>

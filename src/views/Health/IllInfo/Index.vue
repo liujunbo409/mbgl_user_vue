@@ -14,15 +14,13 @@
           </div>
         </div>
         <div class="line" v-else>
-          <template>
-            <div class="left yao_Ming">病名：</div>
-            <div class="right">{{ 
-              item.xuanxiangs.length ? 
-              item.xuanxiangs
-              .filter(val => val.status && val.date)
-              .map(val => val.name).join('、') : '未选择'
-            }}</div>
-          </template>
+          <div class="left yao_Ming">病名：</div>
+          <div class="right">{{ 
+            item.xuanxiangs.length ? 
+            item.xuanxiangs
+            .filter(val => val.status && val.date)
+            .map(val => val.name).join('、') : '未选择'
+          }}</div>
         </div>
       </ill-module-item>
       <div class="mainBtn-container">
