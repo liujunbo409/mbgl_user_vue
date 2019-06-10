@@ -64,7 +64,8 @@ export default {
           link: 'role_management',
         }, {
           ...title('全部问答'),
-          link: 'all_qa'
+          link: 'all_qa',
+          hide: true
         }
       ]
     }
