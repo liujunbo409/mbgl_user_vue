@@ -1,6 +1,5 @@
 <template>
   <div class="com-container">
-    <!-- 样式需要修改 -->
     <p class="top-head">获取您的定制学习计划</p>
     <p>只需<span style="color:#FFF; font-size:30px;">3</span>步</p>
     <p class="w-fontt">1.完善个人信息</p>
@@ -23,7 +22,6 @@ export default {
   methods: {
     guide (){
       var {info, jbbq, xxjh} = this.$store.state.user.editStatus
-      console.log(info, jbbq, xxjh)
       if(!info){
         this.$toView('my/info')
       }else if(typeof jbbq === 'number'){
