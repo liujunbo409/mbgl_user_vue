@@ -2,5 +2,3 @@
 export default function(){
   this.$store.commit('user/editStatus/writeState', window._GLOBAL.editStatus)
 }
-
-// aaa
