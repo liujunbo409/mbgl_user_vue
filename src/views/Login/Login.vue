@@ -89,18 +89,21 @@ export default {
     // 登录逻辑
     login (){
       if(this.testPhoneNum() && this.testPsd()){
+        this.$vux.loading.show()
         this.disabled = true
         var {phoneNum, password} = this
         this.$store.dispatch('user/login', {
           phoneNum, password
         })
-        .then(() =>{
+        .finally(() => {
           this.disabled = false
+          this.$vux.loading.hide()
+        })
+        .then(() =>{
           this.$bus.$emit('vux.toast', { type: 'success', text: '登录成功' })
           this.$store.dispatch('hospList/load')
           this.$store.dispatch('user/editStatus/get').then(() => this.$toView('home'))
         }).catch(e =>{
-          this.disabled = false
           // 这里拿到的错误对象的type属性为自定义的(在store)，用于提示非login接口返回的错误类型
           // 若不包含type，则为login接口返回的包含result为false的数据
           var text = {

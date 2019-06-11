@@ -1,5 +1,5 @@
 <template>
-  <vux-view-box :style="styleStr" class="header-view">
+  <vux-view-box :style="styleStr" class="header-view" body-padding-bottom="0">
     <slot></slot>
   </vux-view-box>
 </template>
