@@ -288,7 +288,7 @@ var routes = [
     meta: {
       keepAlive
     }
-  }
+  },
   
   
   { // 输入不存在的路由时，回到home

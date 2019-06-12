@@ -66,6 +66,9 @@ export default {
           ...title('全部问答'),
           link: 'all_qa',
         }, {
+          ...title('收藏问答'),
+          link: 'collection_qa',
+        }, {
           ...title('用户指南'),
           link: 'sub/create_plan_hint'
         }

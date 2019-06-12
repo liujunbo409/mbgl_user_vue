@@ -7,7 +7,7 @@
     </div>
     <view-box minus="59px">
       <vux-group>
-        <vux-cell v-for="(item, index) in collectionQaList" :key="index"  :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" :is-link="true"   @click.native="$toView('qa_bank', { query: { qaId: item.id } })"
+        <vux-cell v-for="(item, index) in collectionQaList" :key="index"  :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" :is-link="true" @click.native="$toView('collection_qa/qabank', { query: { qaId: item.id } })"
         ></vux-cell>
       </vux-group>
     </view-box>
