@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import guard from './guard'
 
-
 import Home from '@v/Home/Home'
 import Login from '@v/Login/Login'
 import Register from '@v/Login/Register'
