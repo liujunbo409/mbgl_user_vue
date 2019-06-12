@@ -73,7 +73,11 @@ const r = {
     ApplyList: () => import('@v/RoleManagement/ApplyList')
   },
   AllQA: {
-    AllQA: () => import('@v/AllQA/AllQA')
+    AllQA: () => import('@v/AllQA/AllQA'),
+  },
+  CollectionQA: {
+    CollectionQA: () => import('@v/CollectionQA/CollectionQA'),
+    QaBank: () => import('@v/CollectionQA/QaBank')
   }
 }
 
@@ -275,7 +279,16 @@ var routes = [
   }, {
     ...p('all_qa'),
     component: r.AllQA.AllQA
-  },
+  }, {
+    ...p('collection_qa'),
+    component: r.CollectionQA.CollectionQA
+  },{
+    ...p('collection_qa/qabank'),
+    component: r.CollectionQA.QaBank,
+    meta: {
+      keepAlive
+    }
+  }
   
   
   { // 输入不存在的路由时，回到home
