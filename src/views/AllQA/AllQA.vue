@@ -54,7 +54,7 @@
 import { Tab, TabItem, Cell } from 'vux'
 import CatalogGroup from '@c/Catalog/CatalogGroup'
 
-import List from './list'
+import List from '@u/list'
 export default {
   components: {
     VuxTab: Tab, TabItem,
