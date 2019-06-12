@@ -1,7 +1,7 @@
 <template>
   <div class="com-container">
     <div class="container">
-      <vue-header title="用户反馈"></vue-header>
+      <vue-header title="用户反馈" :back="modal ? () => $emit('input', false) : null"></vue-header>
       <vux-divider>反馈类型（多选）</vux-divider>    
       <vux-checker v-model="type" type="checkbox"
         class="checkers-container" 
@@ -30,6 +30,9 @@ export default {
     },
     moduleId: {
       default: 0
+    },
+    modal: {
+      default: false
     }
   },
 

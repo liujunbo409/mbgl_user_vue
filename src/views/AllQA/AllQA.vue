@@ -32,6 +32,7 @@
           <vux-cell v-for="(item, index) in showList" :key="index" :is-link="true"
           :title="item.qa.question"
           :inline-desc="`浏览：${item.doctor_show_num + item.user_show_num}`"
+          @click.native="showQaBank(item.id)"
         ></vux-cell>
         </vux-group>
       </view-box>
@@ -47,19 +48,22 @@
     <view-box minus="106px" class="catalog-container" v-show="viewMode === 'classify' && classifyData">
       <catalog-group :catalogs="classifyData[selected] ? classifyData[selected].toTree() : {}" class="catalog" :onClickTitle="onClickTitle"></catalog-group>
     </view-box>
+
+    <qa-info :question_id="qa_id" :bank_id="dirDepth[0] ? dirDepth[0].id : 0" v-if="visibleQaBank" v-model="visibleQaBank" class="com-modal"></qa-info>
   </div>
 </template>
 
 <script>
 import { Tab, TabItem, Cell } from 'vux'
 import CatalogGroup from '@c/Catalog/CatalogGroup'
+import QaInfo from './QaInfo'
 
 import List from '@u/list'
 export default {
   components: {
     VuxTab: Tab, TabItem,
     VuxCell: Cell,
-    CatalogGroup
+    CatalogGroup, QaInfo
   },
 
   data (){
@@ -72,6 +76,8 @@ export default {
       classifyData: {},   // 分类目录数据 
       dirDepth: [],       // 分类目录层级
       viewMode: 'all',    // 显示模式，有all(不按分类显示)、classify(分类树)、classifyList(分类树下问答list)
+      qa_id: '',        // 传给qa-bank模态框的id
+      visibleQaBank: false,
       status: 'init'
     }
   },
@@ -130,11 +136,11 @@ export default {
     getList (keyword, currentPage = 1, bank_id){
       if(this.viewMode === 'classify'){ return }
 
-      if(currentPage && this.data[this.selected] && (currentPage > this.data[this.selected].last_page)){
+      if(this.data[this.selected] && (currentPage > this.data[this.selected].last_page)){
         this.$bus.$emit('vux.toast', '已经是最后一页')
         return
       }
-      if(currentPage && (currentPage < 1)){
+      if(currentPage < 1){
         this.$bus.$emit('vux.toast', '已经是第一页')
         return
       }
@@ -159,6 +165,7 @@ export default {
             Vue.set(this.tabsCache, ill_id, {})
           }
 
+          // 保存分类下列表时添加$前缀
           Vue.set(this.data, (this.viewMode === 'classifyList' ? '$' + this.selectedMenuId : ill_id), data.ret.data)
 
           // 缓存页数
@@ -206,7 +213,6 @@ export default {
     jumpPage (num){
       var page = this.data[this.selected].current_page + num
       this.getList(this.keyword, page)
-      console.log(this.$refs.list)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))
     },
 
@@ -214,9 +220,14 @@ export default {
       this.viewMode = 'classify'
     },
 
+    showQaBank (id){
+      console.log(id)
+      this.qa_id = id
+      this.visibleQaBank = true
+    },
+
     // 点击目录树的最下级分类时触发
     onClickTitle (menu){
-      console.log(menu)
       if(!menu.childs.length){    // 最下级分类childs.length为0
         this.viewMode = 'classifyList'
         this.selectedMenuId = menu.id

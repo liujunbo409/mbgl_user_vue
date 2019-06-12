@@ -4,7 +4,7 @@
     <x-header :title="title" :left-options="{
         backText: '',
         preventGoBack: back !== null
-      }" @on-click-back="back || new Function()" class="header">
+      }" @on-click-back="back && back()" class="header">
       <slot name="right" slot="right">
         <img slot="right" src="@img/btn/home.png" style="position:relative; top:-3px;" 
           @click="$toView('home')" width="25px"

@@ -1,32 +1,44 @@
 <template>
   <div class="com-container">
-    <vue-header title="收藏问答"></vue-header>
+    <vue-header title="我收藏的问答题库"></vue-header>
     <div class="com-input-container">
-      <input type="text">
-      <span class="searchBtn">搜索</span>
+      <input type="text" v-model="questionSearch">
+      <span class="searchBtn" @click="load(questionSearch)">搜索</span>
     </div>
-    <view-box minus="59px">
-      <vux-group>
-        <vux-cell v-for="(item, index) in collectionQaList" :key="index"  :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" :is-link="true" @click.native="$toView('collection_qa/qabank', { query: { qaId: item.id } })"
+    <view-box minus="59px" ref="list">
+      <vux-group class="com-group-noMarginTop">
+        <vux-cell v-for="(item, index) in collectionQaList.data" :key="index" :is-link="true" 
+          :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" 
+          @click.native="showQaInfo(item.id)"
         ></vux-cell>
       </vux-group>
     </view-box>
+
     <div class="pageSelectorBar">
-      <span class="btn" v-text="'<'"></span>
-      <span class="nowPage">{{ '1' }}</span>
-      <span class="btn" v-text="'>'"></span>
-      <span class="pageCount">共 {{ '10' }} 页</span>
+      <span class="btn" v-text="'<'" @click="jumpPage(-1)"></span>
+      <span class="nowPage">{{ collectionQaList.current_page || '...' }}</span> 
+      <span class="btn" v-text="'>'" @click="jumpPage(1)"></span>
+      <span class="pageCount">共 {{ Math.ceil(collectionQaList.total / 10) }} 页</span>
     </div>
+
+    <qa-info :question_id="qa_id" v-if="visibleQaInfo" v-model="visibleQaInfo" class="com-modal"></qa-info>
   </div>
 </template>
 
 <script>
+import QaInfo from '@v/AllQA/QaInfo'
 export default {
+  components: {
+    QaInfo
+  },
+
   data() {
     return {
       user_id: '',
+      qa_id: '',
       questionSearch: '',
-      collectionQaList: []
+      collectionQaList: [],
+      visibleQaInfo: false
     }
   },
 
@@ -35,38 +47,52 @@ export default {
   },
 
   methods: {
-    load() {
+    load(questionSearch, currentPage = 1) {
+      if(this.collectionQaList && (currentPage > this.collectionQaList.last_page)){
+        this.$bus.$emit('vux.toast', '已经是最后一页')
+        return
+      }
+      if(currentPage < 1){
+        this.$bus.$emit('vux.toast', '已经是第一页')
+        return
+      }
+
       this.$bus.$emit('vux.spinner.show')
       _request({
         url: 'qa/collectList',
         params: {
-          user_id: this.user_id,
-          questionSearch: this.questionSearch
+          questionSearch,
+          page: currentPage,
         }
       }).finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({ data }) => {
-          if (data.result) {
-            this.collectionQaList = data.ret.collections.data
-            // console.log(this.collectionQaList)
-            this.$bus.$emit('vux.toast', {
-              type: 'success',
-              text: '已发送申请'
-            })
-          } else {
-            this.$bus.$emit('vux.toast', data.message)
-          }
+        if (data.result) {
+          this.collectionQaList = data.ret.collections
+        } else {
+          this.$bus.$emit('vux.toast', data.message)
+        }
+      })
+      .catch(e => {
+        console.log(e)
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
+          text: '网络错误'
         })
-        .catch(e => {
-          console.log(e)
-          this.$bus.$emit('vux.toast', {
-            type: 'cancel',
-            text: '网络错误'
-          })
-        })
+      })
+    },
+
+    jumpPage (num){
+      var page = this.collectionQaList.current_page + num
+      this.load(this.questionSearch, page)
+      Vue.nextTick(() => this.$refs.list.scrollTo(0))      
+    },
+
+    showQaInfo (id){
+      this.qa_id = id      
+      this.visibleQaInfo = true
     }
   }
 }
-// 跳转到零一页、
 
 </script>
 
@@ -79,6 +105,7 @@ export default {
 
   > input {
     padding: 5px;
+    border-bottom: 2px #aaa solid;
   }
 
   > .searchBtn {
