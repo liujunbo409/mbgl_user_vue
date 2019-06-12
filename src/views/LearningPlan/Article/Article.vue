@@ -37,9 +37,9 @@ export default {
 
   methods: {
     init (){
-      this.art = null
+      this.art = null     // 文章数据
       this.illId = ''
-      this.source = null
+      this.source = null    // 参考文献
       this.articleId = ''
     },
 

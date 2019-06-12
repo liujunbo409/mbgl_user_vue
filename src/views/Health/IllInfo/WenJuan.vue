@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
     <vue-header title="调查问卷"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <main v-if="status === 'success'">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <main v-if="status === 3">
       <div class="number">第{{ data.seq }}题</div>
       <vux-checklist v-model="selected" :required="true" :max="1"
         :title="`【${data.type ?  '多选' : '单选'}】 ${data.question}`"
@@ -25,16 +25,16 @@ export default {
   data (){
     return {
       illId: '',
-      data: [],
+      data: [],     // 问卷数据
       selected: [],
-      status: 'init'
+      status: 1
     }
   },
 
   mounted (){
     // 读取问卷
     this.illId = this.$route.params.illId
-    this.status = 'loading'
+    this.status = 2
     _request({
       url: 'wj/start',
       params: {
@@ -42,14 +42,14 @@ export default {
       }
     }).then(({data}) =>{
       if(data.result){
-        this.status = 'success'
+        this.status = 3
         this.data = data.ret
       }else{
-        this.status = 'error'
+        this.status = 0
         this.$bus.$emit('vux.toast', data.message)
       }
     }).catch(e =>{
-      this.status = 'error'
+      this.status = 0
       console.log(e)
       this.$bus.$emit('vux.toast', {
         type: 'cancel',

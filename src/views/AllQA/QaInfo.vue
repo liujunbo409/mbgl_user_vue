@@ -1,22 +1,26 @@
 <template>
   <div class="com-container">
     <vue-header title="问答题库" :back="() => $emit('input', false)"></vue-header>
-    <inline-loading v-if="!qqbank"></inline-loading>
+    <inline-loading v-if="!infoData"></inline-loading>
     <template v-else>
       <view-box minus="40px" class="classify">
-        <p class="top_text">{{ qqbank.question.question }}</p>
-        <p class="top_time">{{ qqbank.question.oper_name }} {{ qqbank.question.updated_at }} 浏览数:{{ qqbank.count.doctor_show_num + qqbank.count.user_show_num }}</p>
-        <p>所属分类: {{ qqbank.banks.map(val => val.bankname).join(' > ') }}</p>
-        <p v-html="qqbank.question.answer" class="nav-content"></p>
+        <p class="top_text">{{ infoData.question.question }}</p>
+        <p class="top_time">
+          <span>{{ infoData.question.oper_name }}</span>
+          <span>{{ infoData.question.updated_at }}</span>  
+          <span>浏览数:{{ infoData.count.doctor_show_num + infoData.count.user_show_num }}</span>
+        </p>
+        <p>所属分类: {{ infoData.banks.map(val => val.bankname).join(' > ') }}</p>
+        <p v-html="infoData.question.answer" class="content"></p>
         <p>关联文章:</p>
         <p>文章来源:</p>
         <div class="btn" @click="showFeedback">问答反馈</div>
       </view-box>
       <div
         class="bottom-btn"
-        @click="changeState"
-        :class="{ disabled: status === 'loading' }"
-      >{{ is_collected ? '取消' : '添加' }}收藏</div>
+        @click="toggleState"
+        :class="{ disabled: status === 2 }"
+      >{{ isCollected ? '取消' : '添加' }}收藏</div>
     </template>
     <vue-feedback feedbackType="question" :moduleId="bank_id" :modal="true" class="com-modal"
       v-if="visibleFeedback"
@@ -28,7 +32,7 @@
 <script>
 import Feedback from '@c/layout/Feedback'
 export default {
-  props: ['question_id', 'bank_id'],
+  props: ['questionId', 'bankId'],
 
   components: {
     VueFeedback: Feedback
@@ -36,117 +40,116 @@ export default {
 
   data() {
     return {
-      qqbank: null,
-      user_id: "",
-      qa_id: "",
-      is_collected: false,
-      status: "init",
+      infoData: null,
+      isCollected: false,
+      status: 1,
       clickCount: 0,
       visibleFeedback: false,
-    };
+    }
   },
 
   mounted() {
-    this.load();
-    this.getCollectState();
+    this.load()
+    this.getCollectState()
   },
   
   methods: {
     load() {
-      this.$bus.$emit("vux.spinner.show");
+      this.$bus.$emit('vux.spinner.show')
       _request({
-        url: "qa/info",
+        url: 'qa/info',
         params: {
-          question_id: this.question_id,
-          bank_id: this.bank_id || 0
+          question_id: this.questionId,
+          bank_id: this.bankId || 0
         }
       })
-      .finally(() => this.$bus.$emit("vux.spinner.hide"))
+      .finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({ data }) => {
         if (data.result) {
-          this.qqbank = data.ret;
+          this.infoData = data.ret
         } else {
-          this.$bus.$emit("vux.toast", data.message);
+          this.$bus.$emit('vux.toast', data.message)
         }
       })
       .catch(e => {
-        console.log(e);
-        this.$bus.$emit("vux.toast", {
-          type: "cancel",
-          text: "网络错误"
-        });
-      });
+        console.log(e)
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
+          text: '网络错误'
+        })
+      })
     },
 
     getCollectState() {
       _request({
-        url: "qa/collect",
+        url: 'qa/collect',
         params: {
-          qa_id: this.question_id
+          qa_id: this.questionId
         }
       })
-      .finally(() => this.$bus.$emit("vux.spinner.hide"))
+      .finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({ data }) => {
         if (data.result) {
-          this.is_collected = !data.ret;
+          this.isCollected = data.ret
         } else {
-          this.$bus.$emit("vux.toast", data.message);
+          this.$bus.$emit('vux.toast', data.message)
         }
       })
       .catch(e => {
-        console.log(e);
-        this.$bus.$emit("vux.toast", {
-          type: "cancel"
-        });
-      });
+        console.log(e)
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
+          text: '网络错误'
+        })
+      })
     },
 
     toggleState() {
       if (this.clickCount > 4) {
-        this.$bus.$emit("vux.toast", "您的点击频率过快");
-        return;
+        this.$bus.$emit('vux.toast', '您的点击频率过快')
+        return
       }
 
-      this.clickCount++;
-      setTimeout(() => this.clickCount--, 10000);
+      this.clickCount++
+      setTimeout(() => this.clickCount--, 10000)
 
-      this.status = "loading";
+      this.status = 2
       _request({
-        url: "qa/collectPost",
-        method: "post",
+        url: 'qa/collectPost',
+        method: 'post',
         data: {
-          qa_id: this.question_id
+          qa_id: this.questionId
         }
       })
-      .finally(() => this.$bus.$emit("vux.spinner.hide"))
+      .finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({ data }) => {
         if (data.result) {
-          this.status = "success";
-          this.is_collected = !this.is_collected;
+          this.status = 3
+          this.isCollected = !this.isCollected
           this.$bus.$emit('vux.toast', {
             type: 'success',
             text: '操作成功'
           })
         } else {
-          this.status = "error";
-          this.$bus.$emit("vux.toast", data.message);
+          this.status = 0
+          this.$bus.$emit('vux.toast', data.message)
         }
       })
       .catch(e => {
-        console.log(e);
-        this.status = "error";
-        this.$bus.$emit("vux.toast", {
-          type: "cancel",
+        console.log(e)
+        this.status = 0
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
           text: '网络错误'
-        });
-      });
+        })
+      })
     },
 
     showFeedback (){
       this.visibleFeedback = true
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -161,7 +164,7 @@ export default {
   color: #aaa;
   font-size: 12px;
 }
-.nav-content {
+.content {
   padding-left: 5px;
   color: #a9a9a9;
   margin: 10px 0;

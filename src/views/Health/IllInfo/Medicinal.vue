@@ -2,7 +2,7 @@
   <div class="com-container">
     <vue-header :title="moduleData.name" :visibleBackBtn="false"></vue-header>
     <view-box class="com-header-view">
-      <inline-loading v-if="status === 'loading'"></inline-loading>
+      <inline-loading v-if="status === 2"></inline-loading>
       
       <vux-tab :animate="false">
         <tab-item v-for="({name, id, medicines}, index) in data" :key="index"
@@ -39,7 +39,7 @@ export default {
 
   data (){
     return {
-      moduleData: {}, 
+      moduleData: {},           // 从index页面传来的模块数据
       data: [],                     // 药物数据
       loadedSelected_Yao_List: [], // 获取到的之前已选药品
       selected: '',               // 选中的药类id
@@ -47,7 +47,7 @@ export default {
       selectedList: {},          // 选中药品类别下的药品列表
       selected_Yao_Lists: {},    // 已选药物列表，因为checklist限制选中数不能大于options数，
                                  // 这里用每种药类都用一个数组保存，里面是选中的药名
-      status: 'init',
+      status: 1,
     }
   },
 
@@ -95,7 +95,7 @@ export default {
 
     // 载入药类数据
     loadClassifyList (){
-      this.status = 'loading'
+      this.status = 2
       return new Promise((resolve, reject) =>{
         _request({
           url: 'jkda/classifyList',
@@ -104,16 +104,16 @@ export default {
           }
         }).then(({data}) =>{
           if(data.result){
-            this.status = 'success'
+            this.status = 3
             this.data = data.ret
             data.ret.forEach(val => Vue.set(this.selected_Yao_Lists, val.id, []))
             resolve()
           }else{
-            this.status = 'error'
+            this.status = 0
             this.$bus.$emit('vux.toast', data.message)
           }
         }).catch(e =>{
-          this.status = 'error'
+          this.status = 0
           console.log(e)
           this.$bus.$emit('vux.toast', {
             type: 'cancel',

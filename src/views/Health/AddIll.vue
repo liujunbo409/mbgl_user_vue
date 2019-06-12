@@ -8,7 +8,7 @@
     >
       <checker-item v-for="({id, name}, index) in list" :key="index" :value="id">{{ name }}</checker-item>
     </vux-checker>
-    <div class="noData" v-if="status === 'success' && !list.length">已经添加了全部的疾病</div>
+    <div class="noData" v-if="status === 3 && !list.length">已经添加了全部的疾病</div>
     <div class="mainBtn-container">
       <x-button v-if="list.length" @click.native="submit" :disabled="disabled">确定选择</x-button>
       <x-button v-else @click.native="$router.back" :disabled="disabled">点击返回</x-button>
@@ -26,9 +26,9 @@ export default {
 
   data (){
     return {
-      list: [],
+      list: [],     // 可选疾病列表
       selected: '',
-      status: 'init',
+      status: 1,
       disabled: false
     }
   },

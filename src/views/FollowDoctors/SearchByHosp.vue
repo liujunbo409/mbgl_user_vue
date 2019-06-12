@@ -7,14 +7,14 @@
 
     <p class="searchResultTitle">搜索结果</p>
     <vux-group>
-      <vux-cell v-for="(item, index) in data" :key="index" :is-link="true"
+      <vux-cell v-for="(item, index) in byHospData" :key="index" :is-link="true"
         :title="item.real_name"
         @click.native="$toView('follow_doctors/doctor_info', { 
           query: { doctorUserId: item.user_id, doctorId: item.id }
         })"
       ></vux-cell>
       <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
-      <vux-cell class="noData" title="搜索结果为空" v-if="status === 'success' && isNoData"></vux-cell>
+      <vux-cell class="noData" title="搜索结果为空" v-if="status === 3 && isNoData"></vux-cell>
     </vux-group>
   </div>
 </template>
@@ -24,8 +24,8 @@ export default {
   data (){
     return {
       selectedHosp: '',
-      data: {},
-      status: 'init'
+      byHospData: {},
+      status: 1
     }
   },
 
@@ -52,15 +52,15 @@ export default {
     },
     
     isNoData (){
-      return !Object.keys(this.data).length
+      return !Object.keys(this.byHospData).length
     }
   },
 
   methods: {
     init (){
       this.selectedHosp = ''
-      this.data = {}
-      this.status = 'init'
+      this.byHospData = {}
+      this.status = 1
     },
 
     // 打开医院选择列表
@@ -76,7 +76,7 @@ export default {
 
     // 用医院id获取医生集
     getDoctorsByHospId (){
-      this.status = 'loading'
+      this.status = 2
       this.$vux.loading.show({ text: '加载中' })
       _request({
         url: 'attention/getAttentionDoctorsByHospital',
@@ -86,16 +86,16 @@ export default {
       }).then(({data}) =>{
         this.$vux.loading.hide()
         if(data.result){
-          this.status = 'success'
-          this.data = data.ret
+          this.status = 3
+          this.byHospData = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         this.$vux.loading.hide()
         console.log(e)
-        this.status = 'error'
+        this.status = 0
         this.$bus.$emit('vux.toast', {
           type: 'cancel',
           text: '网络错误'

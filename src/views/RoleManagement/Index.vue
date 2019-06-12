@@ -48,8 +48,8 @@ export default {
   data (){
     return {
       applyTotal: -1,
-      list: [],
-      status: 'init'
+      list: [],         // 已同意亲友列表
+      status: 1
     }
   },
 
@@ -84,19 +84,19 @@ export default {
     },
 
     load (){
-      this.stauts = 'loading'
+      this.status = 2
       _request({
         url: 'account/getAccountList'
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.list = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
-        this.status = 'error'
+        this.status = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

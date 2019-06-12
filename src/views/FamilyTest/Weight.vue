@@ -67,7 +67,7 @@ export default {
       selectedTab: 'write',
       date: '',
       weight: '',
-      data: [],
+      data: [],     // 现有体重数据
       editTarget: null,     // 修改目标，当非unll时，上面的日期体重输入框为修改下方表格的信息
     }
   },

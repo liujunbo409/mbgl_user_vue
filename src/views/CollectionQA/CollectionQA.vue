@@ -2,8 +2,8 @@
   <div class="com-container">
     <vue-header title="我收藏的问答题库"></vue-header>
     <div class="com-input-container">
-      <input type="text" v-model="questionSearch">
-      <span class="searchBtn" @click="load(questionSearch)">搜索</span>
+      <input type="text" v-model="keyword">
+      <span class="searchBtn" @click="load(keyword)">搜索</span>
     </div>
     <view-box minus="59px" ref="list">
       <vux-group class="com-group-noMarginTop">
@@ -21,7 +21,7 @@
       <span class="pageCount">共 {{ Math.ceil(collectionQaList.total / 10) }} 页</span>
     </div>
 
-    <qa-info :question_id="qa_id" v-if="visibleQaInfo" v-model="visibleQaInfo" class="com-modal"></qa-info>
+    <qa-info :questionId="qaId" v-if="visibleQaInfo" v-model="visibleQaInfo" class="com-modal"></qa-info>
   </div>
 </template>
 
@@ -34,9 +34,8 @@ export default {
 
   data() {
     return {
-      user_id: '',
-      qa_id: '',
-      questionSearch: '',
+      qaId: '',
+      keyword: '',
       collectionQaList: [],
       visibleQaInfo: false
     }
@@ -47,7 +46,7 @@ export default {
   },
 
   methods: {
-    load(questionSearch, currentPage = 1) {
+    load(keyword, currentPage = 1) {
       if(this.collectionQaList && (currentPage > this.collectionQaList.last_page)){
         this.$bus.$emit('vux.toast', '已经是最后一页')
         return
@@ -61,7 +60,7 @@ export default {
       _request({
         url: 'qa/collectList',
         params: {
-          questionSearch,
+          questionSearch: keyword,
           page: currentPage,
         }
       }).finally(() => this.$bus.$emit('vux.spinner.hide'))
@@ -83,12 +82,12 @@ export default {
 
     jumpPage (num){
       var page = this.collectionQaList.current_page + num
-      this.load(this.questionSearch, page)
+      this.load(this.keyword, page)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))      
     },
 
     showQaInfo (id){
-      this.qa_id = id      
+      this.qaId = id      
       this.visibleQaInfo = true
     }
   }

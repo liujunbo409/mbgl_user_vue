@@ -84,7 +84,7 @@ export default {
       allStage: [],             // 全部阶段
       allArticle: {},           // 全部阶段的全部文章
 
-      status: 'init',
+      status: 1,
     }
   },
 

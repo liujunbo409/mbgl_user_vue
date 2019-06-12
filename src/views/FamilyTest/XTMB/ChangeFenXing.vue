@@ -4,7 +4,7 @@
     <vux-group>
       <vux-selector v-model="selected" title="分型"
         placeholder="未选择"
-        :options="data.map(val => ({ key: val.id, value: val.name }))"
+        :options="typeData.map(val => ({ key: val.id, value: val.name }))"
       ></vux-selector>
     </vux-group>
     <div class="com-mainBtn-container">
@@ -23,7 +23,7 @@ export default {
 
   data (){
     return {
-      data: [],
+      typeData: [],     // 分型数据
       selected: '',
     }
   },
@@ -33,8 +33,8 @@ export default {
       url: 'xtmb/getStyleList'
     }).then(({data}) =>{
       if(data.result){
-        this.data = data.ret
-        this.data.some(val => {
+        this.typeData = data.ret
+        this.typeData.some(val => {
           if(val.pitch){
             this.selected = val.id
             return true

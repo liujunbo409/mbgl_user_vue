@@ -9,14 +9,14 @@
     </header>
     <p class="searchResultTitle">搜索结果</p>
     <vux-group>
-      <vux-cell v-for="(item, index) in data" :key="index" :is-link="true"
+      <vux-cell v-for="(item, index) in searchResultData" :key="index" :is-link="true"
         :title="item.real_name"
         @click.native="$toView('follow_doctors/doctor_info', { 
           query: { doctorUserId: item.doctor.user_id, doctorId: item.doctor.id } 
         })"
       ></vux-cell>
       <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
-      <vux-cell class="noData" title="搜索结果为空" v-if="status === 'success' && !data.length"></vux-cell>
+      <vux-cell class="noData" title="搜索结果为空" v-if="status === 3 && !data.length"></vux-cell>
     </vux-group>
   </div>
 </template>
@@ -26,8 +26,8 @@ export default {
   data (){
     return {
       keyword: '',
-      data: [],
-      status: 'init'
+      searchResultData: [],
+      status: 1
     }
   },
 
@@ -43,8 +43,8 @@ export default {
   methods: {
     init (){
       this.keyword = ''
-      this.data = []
-      this.status = 'init'
+      this.searchResultData = []
+      this.status = 1
     },
 
     search (){
@@ -52,7 +52,7 @@ export default {
         this.$bus.$emit('vux.toast', '搜索关键词不能为空')
         return
       }
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'attention/getAttentionDoctorsByRealName',
         params: {
@@ -60,15 +60,15 @@ export default {
         }
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
-          this.data = data.ret
+          this.status = 3
+          this.searchResultData = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         console.log(e)
-        this.status = 'error'
+        this.status = 0
         this.$bus.$emit('vux.toast', {
           type: 'cancel',
           text: '网络错误'

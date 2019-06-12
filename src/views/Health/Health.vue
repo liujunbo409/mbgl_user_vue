@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
     <vue-header title="基本病情"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <view-box class="view-box" v-if="status === 'success'">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <view-box class="view-box" v-if="status === 3">
       <vux-group class="com-group-noMarginTop">
         <vux-cell v-for="({ill_name, ill_id, stage}, index) in list" :key="index" 
           :title="ill_name" :is-link="true"
@@ -15,8 +15,8 @@
         <div class="noData" v-if="!list.length">暂未添加任何疾病</div>
       </vux-group>
     </view-box>
-    <div class="addIllBtn" @click="$toView('health/add_ill')" v-if="status === 'success'">+ 添加疾病</div>
-    <div class="com-reloadBtn" @click="load" v-if="status === 'error'">重新加载</div>
+    <div class="addIllBtn" @click="$toView('health/add_ill')" v-if="status === 3">+ 添加疾病</div>
+    <div class="com-reloadBtn" @click="load" v-if="!status">重新加载</div>
   </div>
 </template>
 
@@ -26,8 +26,8 @@ export default {
 
   data (){
     return {
-      list: [],
-      status: 'init'
+      list: [],     // 已添加疾病列表
+      status: 1
     }
   },
 
@@ -37,16 +37,16 @@ export default {
 
   methods: {
     load (){
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'jkda/getJKDAIllList'
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.list = data.ret
         }
       }).catch(e =>{
-        this.status = 'error'
+        this.status = 0
         console.log(e)
       })
     }

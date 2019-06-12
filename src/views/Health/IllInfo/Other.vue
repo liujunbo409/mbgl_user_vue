@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
     <vue-header :title="moduleData.name" :visibleBackBtn="false"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <view-box class="com-header-view" v-if="status === 'success'">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <view-box class="com-header-view" v-if="status === 3">
       <vux-group class="com-group-noMarginTop">
         <vux-checker v-model="selected" :type="moduleData.multi_status ? 'checkbox' : 'radio'"
           default-item-class="unchecked checker-item"
@@ -94,7 +94,7 @@ export default {
       visibleChildMenus: {},    // 统一控制点击项目后展开的菜单，key为项id，val为布尔值
       optionsForm: {},       // 保存统一的表单数据，提交前使用selected进行过滤，筛选出已选中的项目
       selected: [],         // 当前选中的项，单选为字符串or数字(id)，多选为数组
-      status: 'init',
+      status: 1,
       submitStatus: 'init'
     }
     // 自定义疾病的id在该组件内都以$为前缀，新生成还未提交过的疾病以时间戳为id，提交过从服务读取过来的使用服务器提供的id
@@ -128,13 +128,13 @@ export default {
       this.visibleChildMenus = []
       this.optionsForm = {}
       this.selected = []
-      this.status = 'init'
+      this.status = 1
       this.submitStatus = 'init'
     },
 
     // 加载基础选项数据
     loadData (){
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'jkda/xuanxiang',
         params: {
@@ -142,7 +142,7 @@ export default {
         }
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.data = data.ret
           data.ret.forEach(val => {
             Vue.set(this.visibleChildMenus, val.id, false)
@@ -151,10 +151,10 @@ export default {
           this.loadUserData()
           this.loadUserCustomData()
         }else{
-          this.status = 'error'
+          this.status = 0
         }
       }).catch(e =>{
-        this.status = 'error'
+        this.status = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

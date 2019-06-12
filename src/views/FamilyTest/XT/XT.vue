@@ -11,8 +11,8 @@
         <checker-item value="stats" @click.native="getStatsData('withTab')">统计</checker-item>
       </vux-checker>
 
-      <inline-loading v-if="data === null"></inline-loading>
-      <table class="collect-table" v-if="selectedTab === 'collect' &&  data">
+      <inline-loading v-if="tableData === null"></inline-loading>
+      <table class="collect-table" v-if="selectedTab === 'collect' &&  tableData">
         <tr>
           <td>时间段</td>
           <td>{{ date[2].join('/') }}</td>
@@ -22,17 +22,17 @@
         <tr v-for="(pointer, index) in XT_Pointer" :key="index">
           <td>{{ pointer.type_name }}</td>
           <td 
-            @click="toCollectXT(date[2], pointer, data[2][index])"
-            :class="{ red: is_XT_Danger(data[2][index]) }"
-          >{{ data[2][index] | showData }}</td>
+            @click="toCollectXT(date[2], pointer, tableData[2][index])"
+            :class="{ red: is_XT_Danger(tableData[2][index]) }"
+          >{{ tableData[2][index] | showData }}</td>
           <td 
-            @click="toCollectXT(date[1], pointer, data[1][index])"
-            :class="{ red: is_XT_Danger(data[1][index]) }"
-          >{{ data[1][index] | showData }}</td>
+            @click="toCollectXT(date[1], pointer, tableData[1][index])"
+            :class="{ red: is_XT_Danger(tableData[1][index]) }"
+          >{{ tableData[1][index] | showData }}</td>
           <td
-            @click="toCollectXT(date[0], pointer, data[0][index])"
-            :class="{ red: is_XT_Danger(data[0][index]) }"
-          >{{ data[0][index] | showData }}</td>
+            @click="toCollectXT(date[0], pointer, tableData[0][index])"
+            :class="{ red: is_XT_Danger(tableData[0][index]) }"
+          >{{ tableData[0][index] | showData }}</td>
         </tr>
       </table>
 
@@ -125,12 +125,12 @@ export default {
       
       selectedTab: 'collect',
 
-      data: null,
+      tableData: null,         // 列表数据
       XT_Pointer: [],       // 血糖时间点数据
 
-      statsData: null,
-      searchBegin: '',
-      searchEnd: ''
+      statsData: null,      // 统计数据
+      searchBegin: '',      // 统计搜索时间段开始
+      searchEnd: ''         // 结束
     }
   },
 
@@ -171,7 +171,7 @@ export default {
           params: { date: this.date[2].join('-') }
         }),
       ]).then(data =>{
-        this.data = data.map(val => val.data.ret)
+        this.tableData = data.map(val => val.data.ret)
       }).catch(e =>{
         console.log(e)
         this.$bus.$emit('vux.toast', {

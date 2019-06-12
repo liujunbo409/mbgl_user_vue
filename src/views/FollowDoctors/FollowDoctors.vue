@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
     <vue-header title="关注列表"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <template v-if="status === 'success'">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <template v-if="status === 3">
       <div class="noData" v-if="isNoData">您还未关注任何医生</div>
       <vux-group class="com-group-noMarginTop">
         <vux-cell v-for="(item, index) in data" :key="index" :is-link="true"
@@ -25,8 +25,8 @@
 export default {
   data (){
     return {
-      data: [],
-      status: 'init',
+      data: [],         // 已关注医生数据
+      status: 1,
     }
   },
 
@@ -37,26 +37,26 @@ export default {
   computed: {
     // 拿回的数据格式为对象，需要这样判断是否为空
     isNoData (){
-      return this.status === 'success' && !Object.keys(this.data)
+      return this.status === 3 && !Object.keys(this.data)
     }
   },
 
   methods: {
     // 载入数据
     load (){
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'attention/getAttentionDoctors'
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.data = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
-        this.status = 'error'
+        this.status = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

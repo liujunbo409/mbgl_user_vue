@@ -39,9 +39,9 @@
       
       <div class="pageSelectorBar">
         <span class="btn" v-text="'<'" @click="jumpPage(-1)"></span>
-        <span class="nowPage">{{ data[selected].current_page || '...' }}</span> 
+        <span class="nowPage">{{ illListData[selected].current_page || '...' }}</span> 
         <span class="btn" v-text="'>'" @click="jumpPage(1)"></span>
-        <span class="pageCount">共 {{ Math.ceil(data[selected].total / 10) }} 页</span>
+        <span class="pageCount">共 {{ Math.ceil(illListData[selected].total / 10) }} 页</span>
       </div>
     </template>
 
@@ -49,7 +49,7 @@
       <catalog-group :catalogs="classifyData[selected] ? classifyData[selected].toTree() : {}" class="catalog" :onClickTitle="onClickTitle"></catalog-group>
     </view-box>
 
-    <qa-info :question_id="qa_id" :bank_id="dirDepth[0] ? dirDepth[0].id : 0" v-if="visibleQaBank" v-model="visibleQaBank" class="com-modal"></qa-info>
+    <qa-info :questionId="qaId" :bankId="dirDepth[0] ? dirDepth[0].id : 0" v-if="visibleQaBank" v-model="visibleQaBank" class="com-modal"></qa-info>
   </div>
 </template>
 
@@ -72,13 +72,13 @@ export default {
       selectedMenuId: '',   // 已选中目录id
       keyword: '',    // 搜索关键词
       tabsCache: {},  // 管理缓存状态
-      data: {},       // 所有疾病列表数据的集合，以$开头的数据为分类下目录数据
+      illListData: {},       // 所有疾病列表数据的集合，以$开头的数据为分类下目录数据
       classifyData: {},   // 分类目录数据 
       dirDepth: [],       // 分类目录层级
       viewMode: 'all',    // 显示模式，有all(不按分类显示)、classify(分类树)、classifyList(分类树下问答list)
-      qa_id: '',        // 传给qa-bank模态框的id
+      qaId: '',        // 传给qa-bank模态框的id
       visibleQaBank: false,
-      status: 'init'
+      status: 1
     }
   },
 
@@ -120,13 +120,13 @@ export default {
 
     // 要交给列表组件显示的数据
     showList (){
-      if(!this.data[this.selected]){ return [] }
+      if(!this.illListData[this.selected]){ return [] }
       if(this.viewMode === 'all'){
-        return this.data[this.selected].data
+        return this.illListData[this.selected].data
       }
       if(this.viewMode === 'classifyList'){
-        if(!this.data[`$${this.selectedMenuId}`]){ return [] }
-        return this.data[`$${this.selectedMenuId}`].data
+        if(!this.illListData[`$${this.selectedMenuId}`]){ return [] }
+        return this.illListData[`$${this.selectedMenuId}`].data
       }
     }
   },
@@ -136,7 +136,7 @@ export default {
     getList (keyword, currentPage = 1, bank_id){
       if(this.viewMode === 'classify'){ return }
 
-      if(this.data[this.selected] && (currentPage > this.data[this.selected].last_page)){
+      if(this.illListData[this.selected] && (currentPage > this.illListData[this.selected].last_page)){
         this.$bus.$emit('vux.toast', '已经是最后一页')
         return
       }
@@ -146,7 +146,7 @@ export default {
       }
 
       var ill_id = this.selected
-      this.status = 'loading'
+      this.status = 2
       this.$bus.$emit('vux.spinner.show')
       _request({
         url: `qa/${this.viewMode === 'all' ? 'illQa' : 'qa'}List`,
@@ -160,24 +160,25 @@ export default {
       .finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           if(!(ill_id in this.tabsCache)){
             Vue.set(this.tabsCache, ill_id, {})
           }
 
           // 保存分类下列表时添加$前缀
-          Vue.set(this.data, (this.viewMode === 'classifyList' ? '$' + this.selectedMenuId : ill_id), data.ret.data)
+          Vue.set(this.illListData, (this.viewMode === 'classifyList' ? '$' + this.selectedMenuId : ill_id), data.ret.data)
 
           // 缓存页数
           if(this.viewMode === 'all'){
             this.tabsCache[this.selected].page = data.ret.data.current_page
           }
         }else{
-          this.error = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
         console.log(e)
+        this.status = 0
         this.$bus.$emit('vux.toast', {
           type: 'cancel',
           text: '网络错误'
@@ -211,18 +212,19 @@ export default {
 
     // 跳转至指定页
     jumpPage (num){
-      var page = this.data[this.selected].current_page + num
+      var page = this.illListData[this.selected].current_page + num
       this.getList(this.keyword, page)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))
     },
 
+    // 返回按钮
     backCatalog (){
       this.viewMode = 'classify'
     },
 
+    // 显示文章详情模态框
     showQaBank (id){
-      console.log(id)
-      this.qa_id = id
+      this.qaId = id
       this.visibleQaBank = true
     },
 

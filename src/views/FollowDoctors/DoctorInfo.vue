@@ -54,7 +54,7 @@ export default {
       data: {},   // 医生数据
       czsjData: [],   // 出诊计划数据
       followed: false,    // 是否关注
-      status: 'init',
+      status: 1,
     }
   },
 
@@ -68,7 +68,7 @@ export default {
   methods: {
     // 载入数据
     load (){
-      this.status = 'loading'
+      this.status = 2
       this.$vux.loading.show({ text: '加载中' })
       _request({
         url: 'attention/getAttentionDetail',
@@ -78,7 +78,7 @@ export default {
       }).then(({data}) =>{
         this.$vux.loading.hide()
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.data = data.ret
           // 直接在每组数据前加入星期用来渲染
           this.czsjData = data.ret.czsjs.map((val, ind) =>{

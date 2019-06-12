@@ -4,8 +4,8 @@
       <div class="infoBtn" slot="right" @click="toView('family_test/xtmb/info')">检测说明</div>
     </vue-header>
     <view-box>
-      <inline-loading v-if="status === 'loading'"></inline-loading>
-      <main v-if="status === 'success'">
+      <inline-loading v-if="status === 2"></inline-loading>
+      <main v-if="status === 3">
         <header>
           <span class="fen_Xing_Name">{{ data.fenxingname }}</span>
           <span class="changeBtn" @click="$toView('family_test/xtmb/change_fen_xing')">切换分型</span>
@@ -62,7 +62,7 @@ export default {
   data (){
     return {
       data: [],
-      status: 'init',
+      status: 1,
       table: [],
     }
   },
@@ -74,19 +74,19 @@ export default {
   methods: {
     // 加载数据
     loadData (){
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'xtmb/getXTMBList'
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.data = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e =>{
-        this.status = 'error'
+        this.status = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

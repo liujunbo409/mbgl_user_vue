@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
     <vue-header title="阶段考核"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <view-box class="com-header-view" v-if="status === 'success'">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <view-box class="com-header-view" v-if="status === 3">
       <vux-checklist
         v-for="({test: item}, index) in data" :key="index"
         v-model="selecteds[item.id]" label-position="right" 
@@ -30,8 +30,8 @@ export default {
       illId: 0,
       stageId: 0,
       selecteds: {},
-      status: 'init',
-      data: [],
+      status: 1,
+      data: [],       // 问题数据
     }
   },
 
@@ -47,13 +47,13 @@ export default {
   methods: {
     init (){
       this.selecteds = {}
-      this.status = 'init'
+      this.status = 1
       this.data = []
       this.stageId = 0
     },
 
     load (){
-      this.status = 'loading'
+      this.status = 2
       _request({
         url: 'xxjh/stageCheck',
         params: {
@@ -61,14 +61,14 @@ export default {
         }
       }).then(({data}) =>{
         if(data.result){
-          this.status = 'success'
+          this.status = 3
           this.data = data.ret
         }else{
-          this.status = 'error'
+          this.status = 0
           this.$bus.$emit('vux.toast', data.message)
         }
       }).catch(e => {
-        this.status = 'error'
+        this.status = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',

@@ -35,13 +35,13 @@ export default {
 
   data (){
     return {
-      date: [],
-      pointer: {},
-      collectTime: '',
-      XT_value: '',
-      data: {},
-      min: 0,
-      max: 0
+      date: [],   // 日期
+      pointer: {},    // 采集时间信息对象
+      collectTime: '',  // 采集时间
+      XT_value: '',   // 血糖值
+      data: {}, //  之前已填写的信息，没有时为null
+      min: 0,   // 控制目标最小值
+      max: 0    // 控制目标最大值
     }
   },
 

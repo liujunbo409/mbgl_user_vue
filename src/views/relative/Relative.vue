@@ -49,9 +49,9 @@ export default {
     return {
       name: '',
       phoneNum: '',
-      relation: '',
-      relationList: [],
-      relativeList: []
+      relation: '',     // 关系
+      relationList: [],       // 关系列表
+      relativeList: []        // 亲友列表
     }
   },
 

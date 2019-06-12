@@ -1,9 +1,9 @@
 <template>
   <div class="com-container">
     <vue-header title="疾病详情"></vue-header>
-    <inline-loading v-if="status === 'loading'"></inline-loading>
-    <view-box class="com-header-view" v-if="status === 'success'">
-      <ill-module-item v-for="(item, index) in data" :key="index"
+    <inline-loading v-if="status === 2"></inline-loading>
+    <view-box class="com-header-view" v-if="status === 3">
+      <ill-module-item v-for="(item, index) in modulesData" :key="index"
         :data="item"
         @onClickEdit="toModulePage(item)"
       >
@@ -42,10 +42,10 @@ export default {
   data (){
     return {
       illId: '',
-      data: [],
+      modulesData: [],
       yong_Yao_Data: [],
 
-      status: 'init'
+      status: 1
     }
   },
 
@@ -55,7 +55,7 @@ export default {
     }
 
     this.load().then(() =>{
-      this.data.forEach(val =>{
+      this.modulesData.forEach(val =>{
         if(val.type === 'medicinal'){
           _request({
             url: 'jkda/userMedicine',
@@ -84,13 +84,13 @@ export default {
     // 读取模块列表
     load (){
       return new Promise((resolve, reject) =>{
-        this.status = 'loading'
+        this.status = 2
         this.$store.dispatch('jkda/get', this.illId).then(data =>{
-          this.status = 'success'
-          this.data = data
+          this.status = 3
+          this.modulesData = data
           resolve()
         }).catch(e =>{
-          this.status = 'error'
+          this.status = 0
           if(e.timeout){
             this.$bus.$emit('vux.toast', {
               type: 'cancel',

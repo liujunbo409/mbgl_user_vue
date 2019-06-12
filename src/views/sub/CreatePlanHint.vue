@@ -2,9 +2,9 @@
   <div class="com-container">
     <p class="top-head">获取您的定制学习计划</p>
     <p>只需<span style="color:#FFF; font-size:30px;">3</span>步</p>
-    <p class="w-fontt">1.完善个人信息</p>
-    <p class="w-fontt">2.维护基本病情</p>
-    <p class="w-fontt">3.填写调查问卷</p>
+    <p class="text">1.完善个人信息</p>
+    <p class="text">2.维护基本病情</p>
+    <p class="text">3.填写调查问卷</p>
     <img src="@img/home/doctor.png">
 
     <div class="mainBtn" @click="guide">生成学习计划</div>
@@ -71,7 +71,7 @@ img {
   left: 50%;
   transform: translateX(-50%);
 }
-.w-fontt {
+.text {
   color: #ffffff;
 }
 
