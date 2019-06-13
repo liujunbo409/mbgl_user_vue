@@ -73,12 +73,16 @@ const r = {
     ApplyList: () => import('@v/RoleManagement/ApplyList')
   },
   AllQA: {
-    AllQA: () => import('@v/AllQA/AllQA')
+    AllQA: () => import('@v/AllQA/AllQA'),
+    QAInfo: () => import('@v/AllQA/QAInfo')
   },
   CollectionQA: {
     CollectionQA: () => import('@v/CollectionQA/CollectionQA'),
   },
-  
+  OpenQA: {
+    OpenQA: () => import('@v/OpenQA/OpenQA'),
+    AllIll: () => import('@v/OpenQA/AllIll')
+  }
 }
 
 const keepAlive = true,
@@ -129,9 +133,6 @@ var routes = [
   }, {  // 我的/个人信息
     ...p('my/info'),
     component: r.My.Info,
-    meta: {
-      keepAlive
-    }
   }, {  // 我的/帐号管理
     ...p('my/account'),
     component: r.My.Account.Index
@@ -278,11 +279,37 @@ var routes = [
     component: r.RoleManagement.ApplyList
   }, {  // 全部问答
     ...p('all_qa'),
-    component: r.AllQA.AllQA
+    component: r.AllQA.AllQA,
+    
+    children: [
+      {
+        ...p('all_qa/qa_info'),
+        component: r.AllQA.QAInfo
+      }
+    ]
   }, {  // 收藏问答
     ...p('collection_qa'),
-    component: r.CollectionQA.CollectionQA
-  }, ,
+    component: r.CollectionQA.CollectionQA,
+
+    children: [
+      {
+        ...p('collection_qa/qa_info'),
+        component: r.AllQA.QAInfo
+      }
+    ]
+  }, {  // 公开问答
+    ...p('open_qa'),
+    component: r.OpenQA.OpenQA,
+    meta: {
+      keepAlive
+    }
+  }, {  // 公开问答/更多疾病
+    ...p('open_qa/all_ill'),
+    component: r.OpenQA.AllIll,
+    meta: {
+      keepAlive
+    }
+  },
   
   
   { // 输入不存在的路由时，回到home

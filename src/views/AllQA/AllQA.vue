@@ -32,38 +32,37 @@
           <vux-cell v-for="(item, index) in showList" :key="index" :is-link="true"
           :title="item.qa.question"
           :inline-desc="`浏览：${item.doctor_show_num + item.user_show_num}`"
-          @click.native="showQaBank(item.id)"
+          @click.native="$toView('all_qa/qa_info', { query: { questionId: item.qa.id, bankId: selected } })"
         ></vux-cell>
         </vux-group>
       </view-box>
       
-      <div class="pageSelectorBar">
-        <span class="btn" v-text="'<'" @click="jumpPage(-1)"></span>
-        <span class="nowPage">{{ illListData[selected].current_page || '...' }}</span> 
-        <span class="btn" v-text="'>'" @click="jumpPage(1)"></span>
-        <span class="pageCount">共 {{ Math.ceil(illListData[selected].total / 10) }} 页</span>
-      </div>
+      <page-selector
+        :nowPage="illListData[selected].current_page || '...'"
+        :pageCount="Math.ceil(illListData[selected].total / 10)"
+        @onClickLeft="jumpPage(-1)"
+        @onClickRight="jumpPage(1)"
+      ></page-selector>
     </template>
 
     <view-box minus="106px" class="catalog-container" v-show="viewMode === 'classify' && classifyData">
       <catalog-group :catalogs="classifyData[selected] ? classifyData[selected].toTree() : {}" class="catalog" :onClickTitle="onClickTitle"></catalog-group>
     </view-box>
 
-    <qa-info :questionId="qaId" :bankId="dirDepth[0] ? dirDepth[0].id : 0" v-if="visibleQaBank" v-model="visibleQaBank" class="com-modal"></qa-info>
+    <router-view class="com-modal"></router-view>
   </div>
 </template>
 
 <script>
-import { Tab, TabItem, Cell } from 'vux'
+import { Tab, TabItem } from 'vux'
 import CatalogGroup from '@c/Catalog/CatalogGroup'
-import QaInfo from './QaInfo'
+import PageSelector from '@c/block/PageSelector'
 
 import List from '@u/list'
 export default {
   components: {
     VuxTab: Tab, TabItem,
-    VuxCell: Cell,
-    CatalogGroup, QaInfo
+    CatalogGroup, PageSelector
   },
 
   data (){
@@ -76,16 +75,13 @@ export default {
       classifyData: {},   // 分类目录数据 
       dirDepth: [],       // 分类目录层级
       viewMode: 'all',    // 显示模式，有all(不按分类显示)、classify(分类树)、classifyList(分类树下问答list)
-      qaId: '',        // 传给qa-bank模态框的id
-      visibleQaBank: false,
       status: 1
     }
   },
 
   mounted (){
     this.$store.dispatch('baseIllList/load').then(() =>{
-      // 记得最后改成自动选第一个
-      this.$refs[`tab-${this.baseIllList[3].id}`][0].$el.click()
+      this.$refs[`tab-${this.baseIllList[0].id}`][0].$el.click()
     })
   },
 
@@ -222,12 +218,6 @@ export default {
       this.viewMode = 'classify'
     },
 
-    // 显示文章详情模态框
-    showQaBank (id){
-      this.qaId = id
-      this.visibleQaBank = true
-    },
-
     // 点击目录树的最下级分类时触发
     onClickTitle (menu){
       if(!menu.childs.length){    // 最下级分类childs.length为0
@@ -269,25 +259,6 @@ export default {
 
 .list{
   background-color: white;
-}
-
-.pageSelectorBar{
-  text-align: center;
-  color: #666;
-  font-size: 15px;
-  margin-top: 5px;
-  background-color: white;
-
-  .btn{
-    margin: 0 20px;
-    font-size: #aaa;
-    font-weight: 500;
-  }
-  
-  .nowPage{
-    color: @theme;
-    font-weight: 500;
-  }
 }
 
 .catalog-container{

@@ -11,7 +11,7 @@
         <checker-item v-for="(val, ind) in types" :key="ind" :value="ind + 1">{{ val }}</checker-item>
       </vux-checker>
       <hr class="com-hrline">
-      <x-textarea v-model="content" :height="200" placeholder="请填写您的反馈内容，我们将尽快处理"
+      <x-textarea v-model.trim="content" :height="200" placeholder="请填写您的反馈内容，我们将尽快处理"
       class="textarea"></x-textarea>
     </div>
     <div class="com-mainBtn-container">

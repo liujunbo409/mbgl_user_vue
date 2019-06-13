@@ -71,6 +71,9 @@ export default {
         }, {
           ...title('用户指南'),
           link: 'sub/create_plan_hint'
+        }, {
+          ...title('公开问答'),
+          link: 'open_qa'
         }
       ]
     }

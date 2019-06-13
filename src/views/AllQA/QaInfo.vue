@@ -1,6 +1,6 @@
 <template>
   <div class="com-container">
-    <vue-header title="问答题库" :back="() => $emit('input', false)"></vue-header>
+    <vue-header title="问答题库"></vue-header>
     <inline-loading v-if="!infoData"></inline-loading>
     <template v-else>
       <view-box minus="40px" class="classify">
@@ -32,14 +32,14 @@
 <script>
 import Feedback from '@c/layout/Feedback'
 export default {
-  props: ['questionId', 'bankId'],
-
   components: {
     VueFeedback: Feedback
   },
 
   data() {
     return {
+      questionId: this.$route.query.questionId,
+      bankId: this.$route.query.bankId,
       infoData: null,
       isCollected: false,
       status: 1,

@@ -2,34 +2,35 @@
   <div class="com-container">
     <vue-header title="我收藏的问答题库"></vue-header>
     <div class="com-input-container">
-      <input type="text" v-model="keyword">
+      <input type="text" v-model.trim="keyword">
       <span class="searchBtn" @click="load(keyword)">搜索</span>
     </div>
     <view-box minus="59px" ref="list">
       <vux-group class="com-group-noMarginTop">
         <vux-cell v-for="(item, index) in collectionQaList.data" :key="index" :is-link="true" 
           :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" 
-          @click.native="showQaInfo(item.id)"
+          @click.native="$toView('collection_qa/qa_info', { query: { questionId: item.qa.id } })"
         ></vux-cell>
       </vux-group>
     </view-box>
 
-    <div class="pageSelectorBar">
-      <span class="btn" v-text="'<'" @click="jumpPage(-1)"></span>
-      <span class="nowPage">{{ collectionQaList.current_page || '...' }}</span> 
-      <span class="btn" v-text="'>'" @click="jumpPage(1)"></span>
-      <span class="pageCount">共 {{ Math.ceil(collectionQaList.total / 10) }} 页</span>
-    </div>
+    <page-selector
+      :nowPage="collectionQaList.current_page || '...'"
+      :pageCount="Math.ceil(collectionQaList.total / 10)"
+      @onClickLeft="jumpPage(-1)"
+      @onClickRight="jumpPage(1)"
+    ></page-selector>
 
-    <qa-info :questionId="qaId" v-if="visibleQaInfo" v-model="visibleQaInfo" class="com-modal"></qa-info>
+    <router-view class="com-modal"></router-view>
   </div>
 </template>
 
 <script>
-import QaInfo from '@v/AllQA/QaInfo'
+import PageSelector from '@c/block/PageSelector'
+
 export default {
   components: {
-    QaInfo
+    PageSelector
   },
 
   data() {
@@ -37,7 +38,6 @@ export default {
       qaId: '',
       keyword: '',
       collectionQaList: [],
-      visibleQaInfo: false
     }
   },
 
@@ -85,11 +85,6 @@ export default {
       this.load(this.keyword, page)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))      
     },
-
-    showQaInfo (id){
-      this.qaId = id      
-      this.visibleQaInfo = true
-    }
   }
 }
 
@@ -113,24 +108,6 @@ export default {
     line-height: 30px;
     text-align: center;
     .themeBtn;
-  }
-}
-
-.pageSelectorBar {
-  text-align: center;
-  color: #666;
-  font-size: 15px;
-  margin-top: 5px;
-  background-color: white;
-
-  .btn {
-    margin: 0 20px;
-    font-size: #aaa;
-    font-weight: 500;
-  }
-  .nowPage {
-    color: @theme;
-    font-weight: 500;
   }
 }
 </style>

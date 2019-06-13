@@ -5,7 +5,7 @@
       <vux-cell title="日期" :value="date.join(' / ')"></vux-cell>
       <vux-cell title="时间段" :value="pointer.type_name"></vux-cell>
       <vux-datetime title="测量时间" v-model="collectTime" format="HH:mm"></vux-datetime>
-      <x-input title="血糖数值" v-model="XT_value" text-align="right" type="number"
+      <x-input title="血糖数值" v-model.trim="XT_value" text-align="right" type="number"
         placeholder="待填写"
         :is-type="testXT"
       ></x-input>   

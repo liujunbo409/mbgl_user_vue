@@ -2,8 +2,8 @@
   <div class="com-container">
     <vue-header title="我的亲友"></vue-header>
     <vux-group title="搜索亲友">
-      <x-input title="真实姓名" v-model="name" placeholder="待填写"></x-input>
-      <x-input title="电话号码" v-model="phoneNum" placeholder="待填写"
+      <x-input title="真实姓名" v-model.trim="name" placeholder="待填写"></x-input>
+      <x-input title="电话号码" v-model.trim="phoneNum" placeholder="待填写"
         type="number"
         is-type="china-mobile"
       ></x-input>
