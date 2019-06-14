@@ -1,6 +1,6 @@
 <template>
   <div class="com-container">
-    <vue-header :title="moduleData.name" :visibleBackBtn="false"></vue-header>
+    <vue-header :title="moduleData.name"></vue-header>
     <inline-loading v-if="status === 2"></inline-loading>
     <view-box class="com-header-view" v-if="status === 3">
       <vux-group class="com-group-noMarginTop">
@@ -71,7 +71,11 @@
 
       <div class="com-mainBtn-container">
         <x-button @click.native="submit" :disabled="submitStatus === 'loading'">
-          {{ selected === '' || (typeof selected === 'object' && !selected.length) ? '跳过' : '确定' }}
+          {{ 
+            (selected === '' || (typeof selected === 'object' && !selected.length)) &&
+            !moduleData.mandatory_status
+            ? '跳过' : '确定' 
+          }}
         </x-button>
       </div>
     </view-box>
@@ -265,6 +269,14 @@ export default {
       var options = []
       var data = {}
 
+      if(
+        (!this.selected || (typeof this.selected === 'object' && !this.selected.length)) &&
+        !this.moduleData.mandatory_status
+      ){
+        this.$bus.$emit('vux.toast', '请至少选择一项')
+        return
+      }
+
       // 因为单选为字符串or数字(id)，多选为数组，下面统一以数组格式处理，这里将非数组格式的selected转为数组格式
       var selected = JSON.parse(JSON.stringify(this.selected))
       if(!this.moduleData.multi_status && typeof selected !== 'object'){
@@ -282,7 +294,8 @@ export default {
       for(let i=0, len=selected.length; i < len; i++){
         var id = selected[i]
         if(
-          (dataIdMap[id].date_status && !this.optionsForm[id].date) 
+          (dataIdMap[id].date_status && !this.optionsForm[id].date) ||
+          (dataIdMap[id].level_status && !this.optionsForm[id].level) 
         ){
           this.$bus.$emit('vux.toast', '请检查是否有未填的必填项')
           return

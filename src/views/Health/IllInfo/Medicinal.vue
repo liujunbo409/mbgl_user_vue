@@ -1,6 +1,6 @@
 <template>
   <div class="com-container">
-    <vue-header :title="moduleData.name" :visibleBackBtn="false"></vue-header>
+    <vue-header :title="moduleData.name"></vue-header>
     <view-box class="com-header-view">
       <inline-loading v-if="status === 2"></inline-loading>
       

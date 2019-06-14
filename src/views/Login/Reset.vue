@@ -19,7 +19,7 @@ export default {
         this.$store.dispatch('user/resetPsd', data)
         .then(() =>{
           this.$refs.body.disabld = false
-          this.$toView('home')
+          this.$store.dispatch('user/editStatus/get').then(() => this.$toView('home'))
           this.$bus.$emit('vux.alert', '重置成功，请牢记新密码！')          
         })
         .catch(e =>{

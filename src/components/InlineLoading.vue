@@ -1,7 +1,9 @@
 <template>
   <div class="inline-loading">
     <vux-inline-loading></vux-inline-loading>
-    <span class="loading-text">加载中</span>
+    <span class="loading-text">
+      <slot>加载中</slot>
+    </span>
   </div>
 </template>
 
@@ -11,6 +13,7 @@ export default {
   components: {
     VuxInlineLoading: InlineLoading
   },
+
   data (){
     return {
 

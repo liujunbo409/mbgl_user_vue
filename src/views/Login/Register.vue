@@ -259,7 +259,7 @@ export default {
       }
 
       type = this.testInviteCode()
-      if(type !== 'correct'){
+      if(type !== 'correct' && !this.resetPsd){
         var text = {
           empty: '邀请码不能为空',
         }[type]

@@ -25,6 +25,7 @@
             :title="item.title"
             :inline-desc="`${item.answer_num}个回答　${item.attention_num}人关注`"
             :value="item.created_at.split(' ')[0]"
+            @click.native="$toView('open_qa/qa_info', { query: { qaId: item.id } })"
           ></vux-cell>
         </vux-group>
       </view-box>
@@ -36,7 +37,7 @@
         @onClickRight="jumpPage(1)"
       ></page-selector>
 
-      <footer>
+      <footer @click="toQuestion">
         <img src="@img/btn/edit.png">
         <span>我要提问</span>
       </footer>
@@ -74,11 +75,13 @@ export default {
        }
        Vue.nextTick(() => this.$refs[`tab-${this.$route.params.add.ill_id}`][0].$el.click())
       }else{
-        this.$refs.firstTab.$el.click()   // 都没有，默认选择第一项（最近更新）
+        if(this.selected && this.selected !== 'recent'){
+          Vue.nextTick(() => this.$refs[`tab-${this.selected}`][0].$el.click())
+        }else{
+          this.$refs.firstTab.$el.click()   // 都没有，默认选择第一项（最近更新）
+        }
       }
     })
-
-
   },
 
   computed: {
@@ -170,6 +173,19 @@ export default {
     jumpPage (num){
       this.getQAList(this.QAData[this.selected].current_page + num)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))
+    },
+
+    toQuestion (){
+      if(this.selected === 'recent'){
+        this.$toView('open_qa/all_ill', { params: { selectedIllList: this.selectedIllList } })
+        this.$bus.$emit('vux.toast', '请先选择要提问的疾病')
+      }else{
+        this.$toView('open_qa/question', {
+          params: {
+            ill: this.selectedIllList.filter(val => val.ill_id === this.selected)[0]
+          }
+        })
+      }
     }
   }
 }

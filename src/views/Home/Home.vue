@@ -136,7 +136,6 @@ export default {
           url: 'xxjh/haveXXJH'
         }).then(({data}) =>{
           if(!data.result){
-            // this.$bus.$emit('vux.alert', '您还没有生成学习计划，请前往“疾病病情”中填写问卷并生成学习计划')
             this.$toView('sub/create_plan_hint')
             reject()
             return

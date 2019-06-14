@@ -75,6 +75,7 @@ export default {
   font-size: 18px;
   line-height: 20px;
   font-weight: bold;
+  margin-top: 20px;
 }
 
 .done{

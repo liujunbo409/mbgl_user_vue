@@ -1,13 +1,14 @@
 <template>
   <div class="com-container">
     <vue-header title="公开提问"></vue-header>
-    <inline-loading v-if="status === 2"></inline-loading>
-    <view-box v-if="status === 3">
+    <inline-loading v-if="status === 2 || illistStatus === 2"></inline-loading>
+    <view-box v-if="status === 3 && illistStatus === 3">
       <main>
         <p class="title">选择要提问的疾病</p>
         <p class="subtitle">我关注的疾病</p>
         <div class="illBox-container">
-          <div class="illBox" v-for="(item, index) in selectedList" :key="index"
+          <!-- 过滤掉点击更多疾病时加的临时tab数据（表现为只有id和name没有其他值） -->
+          <div class="illBox" v-for="(item, index) in selectedList.filter(val => val.created_at)" :key="index"
             @click="$toView('open_qa', { params: { select: item.ill_id } })"
           >{{ item.ill_name }}</div>
         </div>
@@ -29,19 +30,48 @@ export default {
     return {
       selectedList: [],
       otherList: [],
-      status: 1
+      status: 1,
+      illistStatus: 1
     }
   },
 
   activated (){
     // 已选列表疾病列表从qa_info里拿（接收）
-    if(this.$route.params.selectedIllList){
-      this.selectedList = this.$route.params.selectedIllList
-    }
+    // if(this.$route.params.selectedIllList){
+    //   this.selectedList = this.$route.params.selectedIllList
+    // }
+    this.loadSelectedIllList()
     this.getOtherIllList()
   },
 
   methods: {
+    loadSelectedIllList (){
+      return new Promise((resolve, reject) =>{
+        this.illistStatus = 2
+        _request({
+          url: 'jkda/getJKDAIllList',
+        }).then(({data}) =>{
+          if(data.result){
+            this.illistStatus = 3
+            this.selectedList = data.ret
+            resolve()
+          }else{
+            this.illistStatus = 0
+            this.$bus.$emit('vux.toast', data.message)
+            reject()
+          }
+        }).catch(e =>{
+          this.illistStatus = 0
+          console.log(e)
+          this.$bus.$emit('vux.toast', {
+            type: 'cancel',
+            text: '网络错误'
+          })
+          reject()
+        })
+      })
+    },
+
     getOtherIllList (){
       this.status = 2
       _request({

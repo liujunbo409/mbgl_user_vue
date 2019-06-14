@@ -66,6 +66,11 @@ export default {
     
     // 跳转至下一问卷
     next (){
+      if(!this.selected.length){
+        this.$bus.$emit('vux.toast', '请至少选择一项')
+        return
+      }
+
       _request({
         url: 'wj/wjPost',
         method: 'post',

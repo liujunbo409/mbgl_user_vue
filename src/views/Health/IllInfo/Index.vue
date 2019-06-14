@@ -15,12 +15,7 @@
         </div>
         <div class="line" v-else>
           <div class="left yao_Ming">病名：</div>
-          <div class="right">{{ 
-            item.xuanxiangs.length ? 
-            item.xuanxiangs
-            .filter(val => val.status && val.date)
-            .map(val => val.name).join('、') : '未选择'
-          }}</div>
+          <div class="right">{{ item.xuanxiangs | showIlls }}</div>
         </div>
       </ill-module-item>
       <div class="mainBtn-container">
@@ -37,6 +32,28 @@ import IllModuleItem from '@c/item/illModuleItem'
 export default {
   components: {
     XButton, IllModuleItem
+  },
+
+  filters: {
+    // 处理显示已选疾病数据
+    showIlls (original){
+      var data = original.filter(val => val.status)
+      if(data.length){
+        var result = data.filter(val => !val.father_id)
+        return result.map(val =>{
+          var type = data.filter(dataVal => dataVal.father_id === val.xuanxiang_id)
+          if(type.length){
+            type = type[0].name
+          }else{
+            type = ''
+          }
+
+          return val.name + type
+        }).join('、')
+      }else{
+        return '未选择'
+      }
+    }
   },
 
   data (){
@@ -125,7 +142,7 @@ export default {
       }).then(({data}) =>{
         if(data.result){
           if(data.ret === 1){
-            this.$bus.$emit('vux.alert', '请先完成填写调查问卷')
+            this.$bus.$emit('vux.alert', '请先将以上项目填写完成')
           }
           if(data.ret === 2){
             this.$vux.confirm.show({

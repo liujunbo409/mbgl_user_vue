@@ -51,6 +51,7 @@ export default {
       this.date = this.$route.params.date
       this.pointer = this.$route.params.pointer
       this.data = this.$route.params.data
+      this.collectTime = this.data.updated_at.match(/ \d\d:\d\d/)[0]
       if(this.data){
         this.XT_value = this.data.value
       }

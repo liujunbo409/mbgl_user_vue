@@ -48,18 +48,61 @@
             </td>
           </tr>
         </table>
-      </template>      
+      </template> 
+
+      <template v-if="selectedTab === 'stats'">
+        <div class="search">
+          <div class="begin block" @click="openDateSelectorForSearchBegin">{{ searchBegin }}</div>
+          <span> - </span>
+          <div class="end block" @click="openDateSelectorForSearchEnd">{{ searchEnd }}</div>
+          <div class="searchBtn" @click="getStatsData('withSearch')">搜索</div>
+        </div>
+
+        <v-chart :data="statsData" v-if="{}.constructor.keys(statsData).length" class="chart">
+          <v-scale x field="date" type="timeCat" mask="MM/DD" :tick-count="3" />
+          <v-scale y field="value" :min="0" alias="当时体重" :tick-count="5" />
+          <v-point
+            :style="{
+              stroke: '#fff',
+              lineWidth: 1
+            }"
+            shape="smooth" />
+          <v-line shape="smooth" />
+        </v-chart>     
+        <div v-else class="noData">暂未录入数据</div>  
+      </template>     
     </view-box>
     <readonly-mask minus="100px"></readonly-mask>
   </div>
 </template>
 
 <script>
-import { Checker, CheckerItem, XDialog  } from 'vux'
+// 转date对象为[YY, MM, DD]格式
+function toDateStrArr(date){
+  return [date.getFullYear(), bu_Wei(date.getMonth() + 1), bu_Wei(date.getDate())]
+}
+
+// 将格式为YY-MM-DD格式的日期转为date对象
+function toDateObj(str){
+  var dateArr = str.split('-')
+  var dateObj = new Date()
+  dateObj.setFullYear(dateArr[0])
+  dateObj.setMonth(parseInt(dateArr[1]) - 1)
+  dateObj.setDate(dateArr[2])
+  return dateObj
+}
+
+import { 
+  Checker, CheckerItem, XDialog,
+  VChart, VLine, VPoint, VScale, VTooltip
+ } from 'vux'
+var bu_Wei = val => val < 10 ? '0' + val : val    // 小于10的补前置0
+
 
 export default {
   components: {
-    VuxChecker: Checker, CheckerItem, XDialog
+    VuxChecker: Checker, CheckerItem, XDialog,
+    VChart, VLine, VPoint, VScale, VTooltip
   },
 
   data (){
@@ -69,6 +112,11 @@ export default {
       weight: '',
       data: [],     // 现有体重数据
       editTarget: null,     // 修改目标，当非unll时，上面的日期体重输入框为修改下方表格的信息
+
+      // 一个月前日期
+      searchBegin: toDateStrArr(new Date(new Date().setDate(new Date().getDate() - 30))).join('-'),
+      searchEnd: toDateStrArr(new Date()).join('-'),
+      statsData: {}
     }
   },
 
@@ -85,6 +133,12 @@ export default {
       }else{
         this.date = val.date
         this.weight = val.value
+      }
+    },
+
+    selectedTab (val){
+      if(val === 'stats'){
+        this.getStatsData()
       }
     }
   },
@@ -211,7 +265,64 @@ export default {
           text: '网络错误'
         })
       })
-    }
+    },
+
+    // 打开搜索的开始时间设置菜单
+    openDateSelectorForSearchBegin (){
+      this.$vux.datetime.show({
+        confirmText: '确认',
+        cancelText: '取消',
+
+        onConfirm: val =>{
+          this.searchBegin = val
+        }
+      })
+    },
+
+    // 打开搜索的结束时间设置菜单
+    openDateSelectorForSearchEnd (){
+      this.$vux.datetime.show({
+        confirmText: '确认',
+        cancelText: '取消',
+
+        onConfirm: val =>{
+          this.searchEnd = val
+        }
+      })
+    },
+
+    getStatsData (type){
+      var beginObj = toDateObj(this.searchBegin),
+      endObj = toDateObj(this.searchEnd)
+      if(beginObj > endObj){
+        this.$bus.$emit('vux.toast', '开始时间不能晚于结束时间')
+        return
+      }
+
+      _request({
+        url: 'cjsj/statisticWeight',
+        params: {
+          start: this.searchBegin,
+          end: this.searchEnd
+        }
+      }).then(({data}) =>{
+        if(data.result){
+          var {dates, values} = data.ret
+          this.statsData = dates.map((val, ind) => ({
+            date: val,
+            value: values[ind] + 'kg'
+          }))
+        }else{
+          this.$bus.$emit('vux.toast', data.message)
+        }
+      }).catch(e =>{
+        console.log(e)
+        this.$bus.$emit('vux.toast', {
+          type: 'cancel',
+          text: '网络错误'
+        })
+      })
+    },
   }
 }
 </script>
@@ -316,5 +427,55 @@ export default {
   .delBtn{
     color: @danger;
   }
+}
+
+.search{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  .block{
+    width: 100px;
+    @height: 30px;
+    height: @height;
+    line-height: @height;
+    text-align: center;
+    background-color: #eee;
+    display: inline-block;
+    padding: 0 5px;
+    vertical-align: middle;
+    margin: 0 5px;
+    border-radius: 10px;
+  }
+
+  .searchBtn{
+    color: @theme;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+}
+
+.stats-table{
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+  margin-top: 30px;
+  
+  td{
+    border: 1px #b5d6e6 solid;
+    padding: 10px 0;
+  }
+}
+
+.chart{
+  margin-top: 30px;
+}
+
+.noData{
+  text-align: center;
+  font-size: 18px;
+  margin-top: 30px;
 }
 </style>

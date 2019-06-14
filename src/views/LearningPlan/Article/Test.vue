@@ -109,7 +109,7 @@ export default {
 
           onConfirm: () =>{
             var data = this.data.filter(val => errors.includes(val.test.id))
-            .map(val => ({ title: val.question, content: val.analysis }))
+            .map(val => ({ title: val.test.question, content: val.test.analysis }))
 
             this.$baseToView('analysis', {
               params: { data }
