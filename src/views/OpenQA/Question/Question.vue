@@ -22,7 +22,7 @@
       <div class="bottom-box">
         <p class="bottom-text">可以先去问答题库找找您想问的问题</p>
         <p class="bottom-text">得不到满意答案再来提问呦</p>
-        <span class="bottom-span">去问答题库看看</span>
+        <span class="bottom-span" @click="$toView('all_qa')">去问答题库看看</span>
       </div>
       <img src="@img/home/woman_doctor.png" class="bottom-img" alt="">
     </div>

@@ -12,23 +12,29 @@ Vue.use(Router)
 
 const r = {
   ResetPassword: () => import('@v/Login/Reset'),
+
   sub: {
     BeforeCheckPsd: () => import('@v/sub/BeforeCheckPsd'),
     CreatePlanHint: () => import('@v/sub/CreatePlanHint')
   },
+
   My: {
     Index: () => import('@v/My/Index'),
     Info: () => import('@v/My/Info'),
+
     Account: {
       Index: () => import('@v/My/Account/Index'),
       ChangePsd: () => import('@v/My/Account/ChangePsd'),
       ChangePhone: () => import('@v/My/Account/ChangePhone'),
     },
+
     Feedback: () => import('@v/My/Feedback')
   },
+
   Health: {
     Health: () => import('@v/Health/Health'),
     AddIll: () => import('@v/Health/AddIll'),
+    
     IllInfo: {
       Index: () => import('@v/Health/IllInfo/Index'),
       Medicinal: () => import('@v/Health/IllInfo/Medicinal'),
@@ -37,8 +43,10 @@ const r = {
       CreatingPlan: () => import('@v/Health/IllInfo/CreatingPlan')
     },
   },
+
   LearningPlan: {
     LearningPlan: () => import('@v/LearningPlan/LearningPlan'),
+
     Article: {
       Article: () => import('@v/LearningPlan/Article/Article'),
       Test: () => import('@v/LearningPlan/Article/Test'),
@@ -49,44 +57,63 @@ const r = {
   },
   FamilyTest: {
     Index: () => import('@v/FamilyTest/Index'),
+
     XTMB: {     // 血糖目标
       XTMB: () => import('@v/FamilyTest/XTMB/XTMB'),
       Change_Fen_Xing: () => import('@v/FamilyTest/XTMB/ChangeFenXing'),
     },
+
     XT: {       // 血糖
       XT: () => import('@v/FamilyTest/XT/XT'),
       CollectXT: () => import('@v/FamilyTest/XT/CollectXT')
     },
-    Weight: () => import('@v/FamilyTest/Weight')    
+
+    Weight: () => import('@v/FamilyTest/Weight')   
   },
+
   FollowDoctors: {
     FollowDoctors: () => import('@v/FollowDoctors/FollowDoctors'),
     Search: () => import('@v/FollowDoctors/Search'),
     SearchByHosp: () => import('@v/FollowDoctors/SearchByHosp'),
     DoctorInfo: () => import('@v/FollowDoctors/DoctorInfo')
   },
+
   Relative: {
     Relative: () => import('@v/Relative/Relative')
   },
+
   RoleManagement: {
     Index: () => import('@v/RoleManagement/Index'),
     ApplyList: () => import('@v/RoleManagement/ApplyList')
   },
+
   AllQA: {
     AllQA: () => import('@v/AllQA/AllQA'),
     QAInfo: () => import('@v/AllQA/QAInfo')
   },
+
   CollectionQA: {
     CollectionQA: () => import('@v/CollectionQA/CollectionQA'),
   },
+
   OpenQA: {
     OpenQA: () => import('@v/OpenQA/OpenQA'),
     AllIll: () => import('@v/OpenQA/AllIll'),
-    QAInfo: () => import('@v/OpenQA/QAInfo'),
+
+    QAInfo: {
+      QAInfo: () => import('@v/OpenQA/QAInfo/QAInfo'),
+      AnswerInfo: () => import('@v/OpenQA/QAInfo/AnswerInfo'),
+      CommentEditor: () => import('@v/OpenQA/QAInfo/CommentEditor')
+    },
+
     Question: {
       Question: () => import('@v/OpenQA/Question/Question'),
       Questioned: () => import('@v/OpenQA/Question/Questioned')
-    }
+    },
+  },
+
+  MyQuestion: {
+    MyQuestion: () => import('@v/MyQuestion/MyQuestion')
   }
 }
 
@@ -325,10 +352,40 @@ var routes = [
     }
   }, {  // 公开提问/问题详情
     ...p('open_qa/qa_info'),
-    component: r.OpenQA.QAInfo,
+    component: r.OpenQA.QAInfo.QAInfo,
     meta: {
       keepAlive, 
-    }
+    },
+
+    children: [
+      {  // 公开提问/问题详情/回答详情  
+        ...p('all_qa/qa_info/answer_info'),
+        component: r.OpenQA.QAInfo.AnswerInfo,
+        meta: {
+          fromUrlStop
+        },
+
+        children: [
+          {  // 公开提问/问题详情/评论
+            ...p('all_qa/qa_info/answer_info/commentEditor'),
+            component: r.OpenQA.QAInfo.CommentEditor,
+            meta: {
+              fromUrlStop
+            }
+          }
+        ]
+      }
+    ]
+  }, {  // 我的提问
+    ...p('my_question'),
+    component: r.MyQuestion.MyQuestion,
+    
+    children: [
+      { // 我的提问/问题详情
+        ...p('my_question/answer_info'),
+        component: r.OpenQA.QAInfo.AnswerInfo
+      }
+    ]
   },
   
   

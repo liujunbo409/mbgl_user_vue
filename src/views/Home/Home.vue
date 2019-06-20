@@ -62,10 +62,13 @@ export default {
         }, {
           ...title('角色管理'),
           link: 'role_management',
-        }, {
+        },
+        
+        {
           ...title('全部问答'),
           link: 'all_qa',
-        }, {
+        },
+         {
           ...title('收藏问答'),
           link: 'collection_qa',
         }, {
@@ -74,6 +77,9 @@ export default {
         }, {
           ...title('公开问答'),
           link: 'open_qa'
+        }, {
+          ...title('我的提问'),
+          link: 'my_question'
         }
       ]
     }
