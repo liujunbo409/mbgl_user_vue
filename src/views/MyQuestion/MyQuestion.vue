@@ -26,12 +26,25 @@
         </select>
       </div>
 
-      <view-box minus="153px">
+      <view-box minus="153px" ref="list">
         <template v-if="$data[selected]">
-          <answer-item v-for="(item, index) in $data[selected].data" :key="index"
-            :data="item"
-            @click.native="toAnswerInfo(item)"
-          ></answer-item>
+          <template v-if="selected === 'thankedList'">
+            <answer-item v-for="(item, index) in $data[selected].data" :key="index"
+              :data="item.openquiz_answer"
+              @click.native="toAnswerInfo(item)"
+            ></answer-item>
+          </template>
+
+          <template v-if="['questionedList', 'attentionList'].includes(selected)">
+            <question-item  v-for="(item, index) in $data[selected].data" :key="index"
+              :data="item"
+              @click.native="toQuestionInfo(item)"
+            ></question-item>
+          </template>
+
+          <template v-if="selected === 'commentedList'">
+            <!-- 接口数据不对，暂时没法做 -->
+          </template>
         </template>
       </view-box>
 
@@ -53,11 +66,12 @@
 import { Tab, TabItem } from 'vux'
 import PageSelector from '@c/block/PageSelector'
 import AnswerItem from '@c/item/AnswerItem'
+import QuestionItem from '@c/item/QuestionItem'
 
 export default {
   components: {
     VuxTab: Tab, TabItem,
-    PageSelector, AnswerItem
+    PageSelector, AnswerItem, QuestionItem
   },
 
   data (){
@@ -124,7 +138,16 @@ export default {
       })
     },
 
-    getList (force = false){
+    getList (force = false, page = 1){
+      if(this[this.selected] && (page > this[this.selected].last_page)){
+        this.$bus.$emit('vux.toast', '已经是最后一页')
+        return
+      }
+      if(page < 1){
+        this.$bus.$emit('vux.toast', '已经是第一页')
+        return
+      } 
+
       var apiName = {
         questionedList: '',
         attentionList: 'Attention',
@@ -140,7 +163,8 @@ export default {
         params: {
           page_size: 10,
           orderby: this.selectedMode,
-          ill_id: this.selectedIll
+          ill_id: this.selectedIll,
+          page
         }
       }).finally(this.$vux.loading.hide)
       .then(({data}) =>{
@@ -152,8 +176,18 @@ export default {
       })
     },
 
-    jumpPage (){
+    jumpPage (num){
+      this.getList(true, this[this.selected].current_page + num)
+      Vue.nextTick(() => this.$refs.list.scrollTo(0))
+    },
 
+    toQuestionInfo (data){
+      this.$toView('open_qa/qa_info', {
+        query: {
+          qaId: data.id,
+          illId: data.ill_id
+        }
+      })
     },
 
     toAnswerInfo (data){
@@ -201,16 +235,18 @@ export default {
   padding: 0 10px;
   display: flex;
   border-bottom: 1px #666 solid;
+  box-sizing: border-box;
 
   select{
     border: none;
     appearance: none;
     font-size: 16px;
     outline: none;
+    background-color: white;
   }
 
   .modeSelector{
-    margin-right: 20px;
+    
   }
 }
 </style>
