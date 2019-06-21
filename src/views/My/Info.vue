@@ -159,9 +159,13 @@ export default {
       }
     
       this.disabled = true
+      this.$vux.loading.show()
       this.$store.dispatch('user/editInfo', this.userInfo)
-      .then(data =>{
+      .finally(() =>{
         this.disabled = false
+        this.$vux.loading.hide()
+      })
+      .then(data =>{
         return this.$store.dispatch('user/editStatus/get')
       })
       .then(() =>{
@@ -170,7 +174,6 @@ export default {
         })
       })
       .catch(e =>{
-        this.disabled = false
         if(e.timeout){
           msg('网络错误')
         }

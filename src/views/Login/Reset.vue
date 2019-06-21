@@ -15,15 +15,14 @@ export default {
     return {
       // 传入操作函数
       request: data =>{
-        this.$refs.body.disabld = true
+        this.$vux.loading.show()
         this.$store.dispatch('user/resetPsd', data)
+        .finally(this.$vux.loading.hide)
         .then(() =>{
-          this.$refs.body.disabld = false
           this.$store.dispatch('user/editStatus/get').then(() => this.$toView('home'))
           this.$bus.$emit('vux.alert', '重置成功，请牢记新密码！')          
         })
         .catch(e =>{
-          this.$refs.body.disabld = false
           var text = e.timeout ? '网络错误' : e.message
           this.$bus.$emit('vux.toast', text)
         })

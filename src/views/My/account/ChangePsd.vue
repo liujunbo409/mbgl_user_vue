@@ -2,11 +2,9 @@
   <div class="com-container">
     <vue-header title="修改密码"></vue-header>
     <cell-input title="新密码　" placeholder="请在此输入密码" :value="newPsd" type="password"
-      :disabled="disabled"
       @input="val => newPsd = val" 
     ></cell-input>
     <cell-input title="确认密码" placeholder="请再次输入密码" :value="newPsdCheck" type="password"
-      :disabled="disabled"
       @input="val => newPsdCheck = val" 
     ></cell-input>
     <div class="com-mainBtn-container">
@@ -54,26 +52,25 @@ export default {
         return
       }
 
-      this.disabled = true
+      this.$vux.loading.show()
       _request({
         url: 'my/revisePassword',
         method: 'post',
         data: {
           new_password: newPsd
         }
-      }).then(({data}) =>{
-        this.disabled = false
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           this.$bus.$emit('vux.alert', '密码修改成功')
           this.$router.back()
         }else{
-          this.$bus.$emit('vux.toast', {
+          this.$bus.emit('vux.toast', {
             type: 'cancel',
             text: data.message
           })
         }
       }).catch(e =>{
-        this.disabled = false
         if(e.timeout){
           this.$bus.$emit('vux.toast', '网络错误')
         }

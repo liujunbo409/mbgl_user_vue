@@ -1,6 +1,7 @@
 <template>
   <div class="com-container">
-    <div class="container">
+    <inline-loading v-if="status === 2"></inline-loading>
+    <view-box v-if="status === 3">
       <vue-header title="用户反馈" :back="modal ? () => $emit('input', false) : null"></vue-header>
       <vux-divider>反馈类型（多选）</vux-divider>    
       <vux-checker v-model="type" type="checkbox"
@@ -12,11 +13,12 @@
       </vux-checker>
       <hr class="com-hrline">
       <x-textarea v-model.trim="content" :height="200" placeholder="请填写您的反馈内容，我们将尽快处理"
-      class="textarea"></x-textarea>
-    </div>
-    <div class="com-mainBtn-container">
-      <x-button @click.native="submit">提交</x-button>
-    </div>
+        class="textarea"></x-textarea>
+
+      <div class="com-mainBtn-container">
+        <x-button @click.native="submit">提交</x-button>
+      </div>
+    </view-box>
   </div>
 </template>
 
@@ -44,21 +46,32 @@ export default {
     return {
       types: [],    // 所有type
       type: [],     // 已选type
-      content: ''
+      content: '',
+      status: 1
     }
   },
 
   mounted (){
+    this.status = 2
     _request({
       baseURL: Vue._GLOBAL.comApi,
       url: 'feedback',
       params: {
         type: this.feedbackType
       }
-    }).then(({data}) =>{
+    })
+    .then(({data}) =>{
       if(data.result){
+        this.status = 3
         this.types = Object.values(data.ret)
       }
+    }).catch(e =>{
+      this.status = 0
+      console.log(e)
+      this.$bus.$emit('vux.toast', {
+        type: 'cancel',
+        text: '网络错误'
+      })
     })
   },
 
@@ -103,9 +116,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container{
+.com-container{
   background-color: white;
-
 }
 
 .checkers-container{

@@ -1,12 +1,12 @@
 <!-- 上传图片组件 -->
 <template>
-  <label :for="'picUpload' + id">
+  <label>
     <main>
       <header>
         <p class="title">{{ title }}</p>
         <p class="subtitle">{{ subtitle }}</p>
       </header>
-      <input type="file" accept=".png, .jpg, .jpeg" :id="'picUpload' + id" style="position:fixed; left: -9999px;"
+      <input type="file" accept="image/*" style="position:fixed; left: -9999px;"
         @change="ready"
       >
       <div class="pic">

@@ -77,11 +77,12 @@ export default {
   data (){
     return {
       selected: '',   // 选中的tab
-      selectedIll: '',
-      selectedMode: 'created_at',
-      illList: [],
-      illListStatus: 1,
+      selectedIll: '', // 选中的疾病
+      selectedMode: 'created_at', // 选中的显示模式
+      illList: [],  // 可选的疾病列表
+      illListStatus: 1,  // 读取疾病列表的状态
       
+      // 三个tab对应的列表数据
       questionedList: null,
       attentionList: null,
       thankedList: null,
@@ -138,6 +139,7 @@ export default {
       })
     },
 
+    // 获取列表数据
     getList (force = false, page = 1){
       if(this[this.selected] && (page > this[this.selected].last_page)){
         this.$bus.$emit('vux.toast', '已经是最后一页')
@@ -176,11 +178,13 @@ export default {
       })
     },
 
+    // 跳页
     jumpPage (num){
       this.getList(true, this[this.selected].current_page + num)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))
     },
 
+    // 前往回答信息
     toQuestionInfo (data){
       this.$toView('open_qa/qa_info', {
         query: {
