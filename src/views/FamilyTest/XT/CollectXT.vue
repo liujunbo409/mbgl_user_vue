@@ -51,8 +51,11 @@ export default {
       this.date = this.$route.params.date
       this.pointer = this.$route.params.pointer
       this.data = this.$route.params.data
-      this.collectTime = this.data.updated_at.match(/ \d\d:\d\d/)[0]
+
       if(this.data){
+        if(this.data.time){
+          this.collectTime = this.data.time.replace(/:00$/, '')
+        }
         this.XT_value = this.data.value
       }
     }
@@ -100,6 +103,12 @@ export default {
         return
       }
 
+      console.log(this.XT_value)
+      if(!this.XT_value){
+        this.$bus.$emit('vux.toast', '请填写血糖值')
+        return
+      }
+
       var testXT = this.testXT(this.XT_value)
       if(!testXT.valid){
         this.$bus.$emit('vux.toast', testXT.msg)
@@ -111,6 +120,7 @@ export default {
         method: 'post',
         data: {
           date: this.date.join('-'),
+          time: this.collectTime,
           type: this.pointer.type,
           value: this.XT_value,
           min: this.min,
