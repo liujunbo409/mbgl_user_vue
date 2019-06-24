@@ -37,7 +37,7 @@ export default {
   computed: {
     // 拿回的数据格式为对象，需要这样判断是否为空
     isNoData (){
-      return this.status === 3 && !Object.keys(this.data)
+      return this.status === 3 && !Object.keys(this.data).length
     }
   },
 
@@ -70,7 +70,7 @@ export default {
 
 <style lang="less" scoped>
 .noData{
-  line-height: 30px;
+  line-height: 40px;
   text-align: center;
   background-color: white;
   font-size: 16px;

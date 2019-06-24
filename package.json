@@ -15,6 +15,7 @@
     "qiniu-js": "^2.5.4",
     "qs": "^6.7.0",
     "sass-resources-loader": "^2.0.0",
+    "text-loader": "^0.0.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-video-player": "^5.0.2",

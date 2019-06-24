@@ -62,7 +62,7 @@ export default {
       localStorage.set('userInfo', state.userInfo2)
       state.userInfo2 = null
       localStorage.remove('userInfo2')
-      localStorage.remote('remoteAccess')
+      localStorage.remove('remoteAccess')
     }
   },
 

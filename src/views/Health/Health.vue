@@ -15,7 +15,7 @@
         <div class="noData" v-if="!list.length">暂未添加任何疾病</div>
       </vux-group>
     </view-box>
-    <div class="addIllBtn" @click="$toView('health/add_ill')" v-if="status === 3">+ 添加疾病</div>
+    <div class="addIllBtn font-18" @click="$toView('health/add_ill')" v-if="status === 3">+ 添加疾病</div>
     <div class="com-reloadBtn" @click="load" v-if="!status">重新加载</div>
   </div>
 </template>

@@ -1,6 +1,8 @@
 <template>
   <div class="com-container">
-    <vue-header title="首页" :visibleBackBtn="false" :visibleHomeBtn="false"></vue-header>
+    <vue-header title="首页" :visibleHomeBtn="false">
+      <span slot="right" @click="$toView('settings')">设置</span>
+    </vue-header>
     <vux-grid :col="3" :cols="3" class="body"
       :show-lr-borders="false"
       :show-vertical-dividers="false"
@@ -64,23 +66,23 @@ export default {
           link: 'role_management',
         },
         
-        {
-          ...title('全部问答'),
-          link: 'all_qa',
-        },
-         {
-          ...title('收藏问答'),
-          link: 'collection_qa',
-        }, {
-          ...title('用户指南'),
-          link: 'sub/create_plan_hint'
-        }, {
-          ...title('公开问答'),
-          link: 'open_qa'
-        }, {
-          ...title('我的提问'),
-          link: 'my_question'
-        }
+        // {
+        //   ...title('全部问答'),
+        //   link: 'all_qa',
+        // },
+        //  {
+        //   ...title('收藏问答'),
+        //   link: 'collection_qa',
+        // }, {
+        //   ...title('用户指南'),
+        //   link: 'sub/create_plan_hint'
+        // }, {
+        //   ...title('公开问答'),
+        //   link: 'open_qa'
+        // }, {
+        //   ...title('我的提问'),
+        //   link: 'my_question'
+        // }
       ]
     }
   },

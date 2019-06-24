@@ -1,7 +1,7 @@
 <template>
   <div class="com-container">
-    <vue-header title="当前目标">
-      <div class="infoBtn" slot="right" @click="toView('family_test/xtmb/info')">检测说明</div>
+    <vue-header title="当前目标"> 
+      <!-- <div class="infoBtn" slot="right" @click="toView('family_test/explain')">检测说明</div> -->
     </vue-header>
     <view-box>
       <inline-loading v-if="status === 2"></inline-loading>

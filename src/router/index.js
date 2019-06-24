@@ -18,6 +18,10 @@ const r = {
     CreatePlanHint: () => import('@v/sub/CreatePlanHint')
   },
 
+  Settings: {
+    Settings: () => import('@v/Settings/Settings')
+  },
+
   My: {
     Index: () => import('@v/My/Index'),
     Info: () => import('@v/My/Info'),
@@ -159,6 +163,9 @@ var routes = [
   }, {  // 重置密码
     ...p('reset_psd'),
     component: r.ResetPassword
+  }, {
+    ...p('settings'),
+    component: r.Settings.Settings
   }, {  // 我的
     ...p('my'),
     component: r.My.Index

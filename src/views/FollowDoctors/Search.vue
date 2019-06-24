@@ -5,9 +5,9 @@
       <div class="com-input-container">
         <input type="text" v-model.trim="keyword">
       </div>
-      <div class="searchBtn" @click="search">搜索</div>
+      <div class="searchBtn font-18" @click="search">搜索</div>
     </header>
-    <p class="searchResultTitle">搜索结果</p>
+    <p class="searchResultTitle font-18">搜索结果</p>
     <vux-group>
       <vux-cell v-for="(item, index) in searchResultData" :key="index" :is-link="true"
         :title="item.real_name"
@@ -16,7 +16,7 @@
         })"
       ></vux-cell>
       <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
-      <vux-cell class="noData" title="搜索结果为空" v-if="status === 3 && !data.length"></vux-cell>
+      <vux-cell class="noData" title="搜索结果为空" v-if="status === 3 && !searchResultData.length"></vux-cell>
     </vux-group>
   </div>
 </template>
@@ -53,12 +53,15 @@ export default {
         return
       }
       this.status = 2
+      this.$vux.loading.show('搜索中')
       _request({
         url: 'attention/getAttentionDoctorsByRealName',
         params: {
           search_word: this.keyword
         }
-      }).then(({data}) =>{
+      })
+      .finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           this.status = 3
           this.searchResultData = data.ret

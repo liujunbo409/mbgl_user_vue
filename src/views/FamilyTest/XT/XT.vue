@@ -1,6 +1,10 @@
 <template>
   <div class="com-container">
-    <vue-header :title="'血糖' +  (selectedTab === 'collect' ? '采集' : '统计')"></vue-header>
+    <vue-header :title="'血糖' +  (selectedTab === 'collect' ? '采集' : '统计')">
+      <!-- <div class="infoBtn" slot="right"
+        @click="toView('family_test/explain', { query: { type: '' } })"
+      >检测说明</div> -->
+    </vue-header>
     <view-box>
       <vux-checker v-model="selectedTab"
         class="checkers-container" 
@@ -214,7 +218,10 @@ export default {
       }).then(({data}) =>{
         if(data.result){
           this.statsData = data.ret
-          type === 'withSearch' && this.$bus.$emit('vux.toast', '数据已更新')
+          type === 'withSearch' && this.$bus.$emit('vux.toast', {
+            type: 'success',
+            text: '数据已更新'
+          })
         }else{
           this.$bus.$emit('vux.toast', data.message)
         }

@@ -2,7 +2,9 @@
   <div class="com-container">
     <vue-header title="搜索医生"></vue-header>
     <vux-group class="com-group-noMarginTop">
-      <vux-cell title="选择医院" :value="showSelectedHosp" @click.native="openHospList"></vux-cell>
+      <vux-selector v-model="selectedHosp" title="选择医院" placeholder="未选择"
+        :options="hospList.map(val => ({ key: val.id, value: val.name }))"
+      ></vux-selector>
     </vux-group>
 
     <p class="searchResultTitle">搜索结果</p>
@@ -20,7 +22,13 @@
 </template>
 
 <script>
+import { Selector } from 'vux'
+
 export default {
+  components: {
+    VuxSelector: Selector
+  },  
+
   data (){
     return {
       selectedHosp: '',
@@ -44,15 +52,14 @@ export default {
       return this.$store.getters['hospList/plain']
     },
     
-    // 拿id去列表中查name
-    showSelectedHosp (){
-      if(!this.selectedHosp){ return '未选择' }
-      this.getDoctorsByHospId()
-      return this.hospList.filter(val => val.id === this.selectedHosp)[0].name
-    },
-    
     isNoData (){
       return !Object.keys(this.byHospData).length
+    }
+  },
+  
+  watch: {
+    selectedHosp (){
+      this.getDoctorsByHospId()
     }
   },
 

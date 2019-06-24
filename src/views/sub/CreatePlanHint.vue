@@ -5,7 +5,7 @@
     <p class="text">1.完善个人信息</p>
     <p class="text">2.维护基本病情</p>
     <p class="text">3.填写调查问卷</p>
-    <img src="@img/home/doctor.png">
+    <img src="/static/images/doctor.png">
 
     <div class="mainBtn" @click="guide">生成学习计划</div>
   </div>

@@ -319,13 +319,13 @@ export default {
 
 .selectedIll{
   display: inline-block;
-  width: 8em;
+  width: 7em;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 
   @media screen and (max-width: 330px) {
-    width: 5em;
+    width: 3em;
   }
 }
 

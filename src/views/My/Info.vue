@@ -17,7 +17,7 @@
       <user-info-item title="联系方式" :value="userInfo.phonenum"
       @input="value => userInfo.phonenum = value"></user-info-item>
     </vux-group>
-    <p class="hint">*理理健康将严格保护您的信息安全</p>
+    <p class="hint font-12">*理理健康将严格保护您的信息安全</p>
     <div class="com-box mainBtn">
       <x-button text="保存信息" :disabled="disabled" @click.native="saveInfo"></x-button>
     </div>

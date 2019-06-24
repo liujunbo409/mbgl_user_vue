@@ -1,40 +1,42 @@
 <template>
   <div class="com-container">
     <vue-header title="我的亲友"></vue-header>
-    <vux-group title="搜索亲友">
-      <x-input title="真实姓名" v-model.trim="name" placeholder="待填写"></x-input>
-      <x-input title="电话号码" v-model.trim="phoneNum" placeholder="待填写"
-        type="number"
-        is-type="china-mobile"
-      ></x-input>
-      <vux-selector title="亲友关系" v-model="relation" placeholder="请选择"
-        :options="relationList.map(val => ({ key: val.id, value: val.type }))"
-      ></vux-selector>
+    <template>
+      <vux-group title="搜索亲友">
+        <x-input title="真实姓名" v-model.trim="name" placeholder="待填写"></x-input>
+        <x-input title="电话号码" v-model.trim="phoneNum" placeholder="待填写"
+          type="number"
+          is-type="china-mobile"
+        ></x-input>
+        <vux-selector title="亲友关系" v-model="relation" placeholder="请选择"
+          :options="relationList.map(val => ({ key: val.id, value: val.type }))"
+        ></vux-selector>
 
-      <cell-box class="btn-container">
-        <div class="addBtn" @click="add">添加亲友</div>
-      </cell-box>
-    </vux-group>
+        <cell-box class="btn-container">
+          <div class="addBtn" @click="add">添加亲友</div>
+        </cell-box>
+      </vux-group>
 
-    <vux-group title="我的亲友">
-      <table class="relativeList">
-        <tr>
-          <th>亲友</th>
-          <th>权限</th>
-          <th>授权状态</th>
-          <th>操作</th>
-        </tr>
-        <tr v-for="(item, index) in relativeList" :key="index">
-          <td>{{ item.real_name }}<br><span style="color:#aaa">{{ item.type_str }}</span></td>
-          <td @click="open_Quan_Xian_Selector(item.id)" style="vertical-align:top">
-            {{ item.quanxian_str }}
-            <br><span class="color-theme">点击修改</span>
-          </td>
-          <td>{{ item.quanxian > 0 ? '已' : '未' }}授权</td>
-          <td><span class="delBtn" @click="del(item.id, index)">删除</span></td>
-        </tr>
-      </table>
-    </vux-group>
+      <vux-group title="我的亲友">
+        <table class="relativeList">
+          <tr>
+            <th>亲友</th>
+            <th>权限</th>
+            <th>授权状态</th>
+            <th>操作</th>
+          </tr>
+          <tr v-for="(item, index) in relativeList" :key="index">
+            <td>{{ item.real_name }}<br><span style="color:#aaa">{{ item.type_str }}</span></td>
+            <td @click="open_Quan_Xian_Selector(item.id)" style="vertical-align:top">
+              {{ item.quanxian_str }}
+              <br><span class="color-theme">点击修改</span>
+            </td>
+            <td>{{ item.quanxian > 0 ? '已' : '未' }}授权</td>
+            <td><span class="delBtn" @click="del(item.id, index)">删除</span></td>
+          </tr>
+        </table>
+      </vux-group>
+    </template>
   </div>
 </template>
 
@@ -99,6 +101,7 @@ export default {
         return
       }
 
+      this.$vux.loading.show()
       _request({
         url: 'qsgx/addRelative',
         params: {
@@ -106,7 +109,8 @@ export default {
           type: this.relation,
           phonenum: this.phoneNum
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           this.$bus.$emit('vux.toast', {
             type: 'success',
@@ -129,11 +133,13 @@ export default {
         title: '提示',
         content: '确定要解除亲友关系吗？',
         onConfirm: () =>{
+          this.$vux.loading.show()
           _request({
             url: 'qsgx/delRelative',
             method: 'post',
             data: { id }
-          }).then(({data}) =>{
+          }).finally(this.$vux.loading.hide)
+          .then(({data}) =>{
             if(data.result){
               this.relativeList.splice(index, 1)
               this.$bus.$emit('vux.toast', {
@@ -171,13 +177,15 @@ export default {
         ],
 
         onClick: selected =>{
+          this.$vux.loading.show()
           _request({
             url: 'qsgx/changeQuanxian',
             params: {
               id,
               action: selected
             }
-          }).then(({data}) =>{
+          }).finally(this.$vux.loading.hide)
+          .then(({data}) =>{
             if(data.result){
               this.load()
             }else{

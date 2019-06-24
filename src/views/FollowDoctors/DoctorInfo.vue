@@ -88,11 +88,12 @@ export default {
             return val
           })
         }else{
-          this.stauts = 'success'
+          this.stauts = 0
           this.bus.emit('vux.toast', data.message)
         }
       }).catch(e =>{
         this.$vux.loading.hide()
+        this.stauts = 0
         console.log(e)
         this.$bus.$emit('vux.toast', {
           type: 'cancel',
@@ -117,7 +118,7 @@ export default {
 
     // 切换关注状态
     followToggle (){
-      if(this.status !== 'success'){ return }
+      if(this.status !== 3){ return }
       _request({
         url: 'attention/changeAttentionStatus',
         method: 'post',
@@ -207,7 +208,7 @@ header{
         .themeBtn;
 
         &::before{
-          content: '- ';
+          content: '';
         }
       }
     }

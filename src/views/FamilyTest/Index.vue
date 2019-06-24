@@ -6,13 +6,13 @@
       :show-vertical-dividers="false"
     >
       <grid-item @click.native="toXTMB" label="血糖目标">
-        <img slot="icon" :src="require('@img/btn/xtmb.png')">
+        <img slot="icon" src="@img/btn/xtmb.png">
       </grid-item>
       <grid-item @click.native="toXT" label="血糖">
-        <img slot="icon" :src="require('@img/btn/xt.png')">
+        <img slot="icon" src="@img/btn/xt.png">
       </grid-item>
       <grid-item @click.native="$toView('family_test/weight')" label="体重">
-        <img slot="icon" :src="require('@img/btn/tz.png')">
+        <img slot="icon" src="@img/btn/tz.png">
       </grid-item>
     </vux-grid>
     <div class="banner">
@@ -33,11 +33,27 @@ export default {
 
   data (){
     return {
-
+      modules: []
     }
   },
 
+  mounted (){
+    // this.loadModules()
+  },
+
   methods: {
+    loadModules (){
+      _request({
+        url: 'homeMonitoring/getHomeMonitoring'
+      }).then(({data}) =>{
+        if(data.result){
+          
+        }else{
+          this.$bus.$emit('vux.toast', data.message)
+        }
+      })
+    },
+
     // 确认能否进入血糖目标页面
     toXTMB (){
       _request({

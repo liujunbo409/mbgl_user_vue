@@ -56,17 +56,18 @@ export default {
 
     // 同意或拒绝申请
     reply (isResolve = true, apply_id){
-      console.log(apply_id)
       this.$vux.confirm.show({
         title: '提示',
         content: `确定要${isResolve ? '同意' : '拒绝'}申请吗？`,
         onConfirm: () =>{
           var url = isResolve ? 'account/agreeShenqing' : 'account/refuseShenqing'
+          this.$vux.loading.show()
           _request({ 
             url,
             method: 'post',
             data: { apply_id }
-          }).then(({data}) =>{
+          }).finally(this.$vux.loading.hide)
+          .then(({data}) =>{
             if(data.result){
               this.$bus.$emit('vux.alert', '操作成功')
               this.load()

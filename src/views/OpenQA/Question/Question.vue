@@ -24,7 +24,7 @@
         <p class="bottom-text">得不到满意答案再来提问呦</p>
         <span class="bottom-span" @click="$toView('all_qa')">去问答题库看看</span>
       </div>
-      <img src="@img/home/woman_doctor.png" class="bottom-img" alt="">
+      <img src="static/images/woman_doctor.png" class="bottom-img" alt="">
     </div>
 
     <template v-if="visibleSimilarQA">

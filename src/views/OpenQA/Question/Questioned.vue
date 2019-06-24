@@ -5,7 +5,7 @@
       <p class="evey_txt">您可以在我的提问中查看到此问题</p>
       <p class="evey_txt">问题得到回复我们及时通知您!</p>
     </div>
-    <img class="woman_doctor" src="@img/home/woman_doctor.png" alt="">
+    <img class="woman_doctor" src="static/images/woman_doctor.png" alt="">
     <div class="btn-isee" @click="toOpenQA">我知道了</div>
   </div>
 </template>

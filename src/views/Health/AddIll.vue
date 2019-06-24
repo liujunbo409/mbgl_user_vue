@@ -50,14 +50,19 @@ export default {
     // 提交
     submit (){
       this.disabled = true
+      this.$vux.loading.show()
       _request({
         url: 'jkda/addIll',
         method: 'post',
         data: {
           ill_id: this.selected
         }
-      }).then(({data}) =>{
+      })
+      .finally(() =>{
+        this.$vux.loading.hide()
         this.disabled = false
+      })
+      .then(({data}) =>{
         if(data.result){
           this.$bus.$emit('vux.toast', {
             type: 'success',
@@ -75,7 +80,6 @@ export default {
         }
       }).catch(e =>{
         console.log(e)
-        this.disabled = false
         this.$bus.$emit('vux.toast', {
           type: 'cancel',
           text: '网络错误'

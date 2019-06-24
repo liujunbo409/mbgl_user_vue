@@ -69,6 +69,13 @@ export default {
     this.$bus.$on('mask.hide', () => this.visibleMask = false)
   },
 
+  watch: {
+    // 路由变化了必定隐藏spinner
+    $route (){
+      this.visibleSpinner = false
+    }
+  },
+
   methods: {
 
   }

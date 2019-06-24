@@ -20,7 +20,7 @@
           <th>权限</th>
           <th>操作</th>
         </tr>
-        <tr v-for="(item, index) in list" :key="index">
+        <tr v-for="(item, index) in list" :key="index" class="font-16">
           <td>{{ item.real_name }}</td> 
           <td>{{ item.type }}</td> 
           <td>{{ item.quanxian }}</td> 
@@ -106,12 +106,14 @@ export default {
     },
 
     changeTo (id){
+      this.$vux.loading.show()
       _request({
         url: 'account/changeAccount',
         params: {
           relative_id: id
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         this.$store.dispatch('user/changeToRemote', data.ret)
         this.$bus.$emit('vux.alert', '您已成功切换账户，请谨慎操作')
       }).catch(e =>{
@@ -166,7 +168,7 @@ export default {
   }
 
   td{
-    font-size: 15px;
+    
   }
 
   .changeBtn{
