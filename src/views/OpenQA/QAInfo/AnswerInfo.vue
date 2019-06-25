@@ -70,7 +70,9 @@ export default {
       questionData: null,
       answerId: '',
       illId: '',
-      answerData: null
+      answerData: null,
+
+      clickBtnCount: 0      // 计数防止用户连点
     }
   },
 
@@ -108,6 +110,7 @@ export default {
   },
 
   methods: {
+    // 点击了头部右侧按钮
     onClickHeaderAnswerBtn (){
       if(this.questionData.have_myself_answer){
         if(this.answerId === this.questionData.have_myself_answer){
@@ -126,6 +129,7 @@ export default {
       }
     },
 
+    // 获取评论
     getComments (showLoading = true){
       showLoading && this.$vux.loading.show()
       _request({
@@ -149,6 +153,7 @@ export default {
       })
     },
 
+    // 点击下一个回答
     nextAnswer (){
       if(!this.answerData.next_answer_id){
         this.$bus.$emit('vux.toast', '已经是最后一条回答')
@@ -157,6 +162,7 @@ export default {
       }
     },
 
+    // 打开评论编辑器
     showCommentEditor (){
       this.$toView('all_qa/qa_info/answer_info/commentEditor', {
         params: {
@@ -168,7 +174,17 @@ export default {
       })
     },
 
+    // 切换关注状态
     toggleFollow (){
+      if(this.clickBtnCount > 5){
+        this.$bus.$emit('vux.toast', '您的操作过于频繁')
+        return
+      }
+
+      this.clickBtnCount++
+      setTimeout(() => this.clickBtnCount--, 10000)
+
+      this.$vux.loading.show()
       _request({
         url: 'openquiz/attention',
         method: 'post',
@@ -177,7 +193,8 @@ export default {
           type: this.questionData.attention_status ? 0 : 1,
           ill_id: this.illId
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           console.log(true)
           this.questionData.attention_status = !this.questionData.attention_status
@@ -194,7 +211,17 @@ export default {
       })
     },
 
+    // 切换感谢状态
     toggleThank (){
+      if(this.clickBtnCount > 5){
+        this.$bus.$emit('vux.toast', '您的操作过于频繁')
+        return
+      }
+
+      this.clickBtnCount++
+      setTimeout(() => this.clickBtnCount--, 10000)
+
+      this.$vux.loading.show()
       _request({
         url: 'openquiz/thank',
         method: 'post',
@@ -204,7 +231,8 @@ export default {
           ill_id: this.illId,
           answer_id: this.answerData.id
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           console.log(true)
           this.answerData.thank_status = !this.answerData.thank_status

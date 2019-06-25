@@ -24,7 +24,7 @@
         <p class="bottom-text">得不到满意答案再来提问呦</p>
         <span class="bottom-span" @click="$toView('all_qa')">去问答题库看看</span>
       </div>
-      <img src="static/images/woman_doctor.png" class="bottom-img" alt="">
+      <img src="/static/images/woman_doctor.png" class="bottom-img" alt="">
     </div>
 
     <template v-if="visibleSimilarQA">
@@ -63,7 +63,6 @@ export default {
       title: '',
       content: '',
       visibleSimilarQA: false,
-      search_word: '',
       searchOpenQuestions: [],
       visibleSpinner: false,
       onChangeTimeoutKey: 0
@@ -75,19 +74,20 @@ export default {
       this.ill = this.$route.params.ill
     }
   },
+
   methods: {
+    // 内容变更时调用，加载相似提问
     onContentChange(val) {
       this.visibleSimilarQA = !!val
       this.visibleSpinner = true
 
       clearTimeout(this.onChangeTimeoutKey)
-      this.onChangeTimeoutKey = setTimeout(() => {
+        this.onChangeTimeoutKey = setTimeout(() => {
         _request({
           url: 'openquiz/getListBySearch',
           params: {
             ill_id: this.ill.ill_id,
-            title: this.title,
-            content: this.content,
+            search_word: val,
             page_size: 10
           }
         })
@@ -102,11 +102,13 @@ export default {
       }, 1000)
     },
 
+    // 隐藏相似提问
     hideSimilarQA (){
       this.visibleSimilarQA = false
       Vue.nextTick(() => this.$refs.content.$el.querySelector('textarea').focus())
     },
 
+    // 提交提问
     submit() {
       if (!this.title) {
         this.$bus.$emit('vux.toast', '标题不能为空')
@@ -116,17 +118,22 @@ export default {
         this.$bus.$emit('vux.toast', '标题必须以问号结尾')
         return
       }
+
+      this.$vux.loading.show('提交中')
       _request({
         url: 'openquiz/addOpenQuiz',
         method: 'post',
         data: {
           ill_id: this.ill.ill_id,
           title: this.title,
-          search_word: this.search_word
+          content: this.content,
         }
-      }).then(({ data }) => {
+      }).finally(this.$vux.loading.hide)
+      .then(({ data }) => {
         if (data.result) {
           this.$toView('open_qa/question/questioned')
+          this.title = ''
+          
         } else {
           this.$bus.$emit('vux.toast', data.message)
         }

@@ -37,6 +37,16 @@
         @onClickRight="jumpPage(1)"
       ></page-selector>
 
+      <!-- 加载时显示的静态翻页栏，防止数据加载完ui篡位 -->
+      <page-selector v-else
+        nowPage="..."
+        pageCount="0"
+        @onClickLeft="() => {}"
+        @onClickRight="() => {}"
+      ></page-selector>
+
+      <div class="com-noData" v-if="QAData[selected] && !QAData[selected].data.length">暂无数据</div>
+
       <footer @click="toQuestion">
         <img src="@img/btn/edit.png">
         <span>我要提问</span>
@@ -250,5 +260,10 @@ footer{
     vertical-align: text-top;
     margin-right: 5px;
   }
+}
+
+.com-noData{
+  top: 127px;
+  background-color: white;
 }
 </style>

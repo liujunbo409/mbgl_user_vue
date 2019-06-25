@@ -7,7 +7,9 @@
     </div>
     <view-box minus="59px" ref="list">
       <vux-group class="com-group-noMarginTop">
-        <vux-cell v-for="(item, index) in collectionQaList.data" :key="index" :is-link="true" 
+        <vux-cell 
+          v-for="(item, index) in {}.constructor.keys(collectionQaList).length ? collectionQaList.data : []"  
+          :key="index" :is-link="true" 
           :title="item.qa.question" :inline-desc="`收藏时间:${item.qa.updated_at}`" 
           @click.native="$toView('collection_qa/qa_info', { query: { questionId: item.qa.id } })"
         ></vux-cell>
@@ -20,6 +22,10 @@
       @onClickLeft="jumpPage(-1)"
       @onClickRight="jumpPage(1)"
     ></page-selector>
+
+    <div class="noData" v-if="{}.constructor.keys(collectionQaList).length && 
+      !collectionQaList.data.length"
+    >暂无数据</div>
 
     <router-view class="com-modal"></router-view>
   </div>
@@ -37,7 +43,7 @@ export default {
     return {
       qaId: '',
       keyword: '',
-      collectionQaList: [],
+      collectionQaList: {},
     }
   },
 
@@ -111,5 +117,19 @@ export default {
     text-align: center;
     .themeBtn;
   }
+}
+
+.noData{
+  position: fixed;
+  top: 76px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #eee;
+  color: #666;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

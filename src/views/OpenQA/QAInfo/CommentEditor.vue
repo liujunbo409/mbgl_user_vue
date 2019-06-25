@@ -46,6 +46,7 @@ export default {
         return
       }
 
+      this.$vux.loading.show('提交评论中')
       _request({
         url: 'openquiz/comment',
         method: 'post',
@@ -55,7 +56,8 @@ export default {
           father_id: this.fatherId,
           ill_id: this.illId
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           this.comment = ''
           this.$bus.$emit('vux.toast', {

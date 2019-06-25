@@ -50,7 +50,8 @@ export default {
       questionData: null,
       answerData: null,
       questionStatus: 1,
-      answerStatus: 1
+      answerStatus: 1,
+      clickFollowCount: 0
     }
   },
 
@@ -75,6 +76,7 @@ export default {
   },
 
   methods: {
+    // 获取问题数据
     loadQuestionData (){
       this.questionStatus = 2
       _request({
@@ -100,6 +102,7 @@ export default {
       })
     },
 
+    // 获取回答
     loadAnswer (){
       this.answerStatus = 2
       _request({
@@ -126,7 +129,17 @@ export default {
       })
     },
     
+    // 切换关注状态
     toggleFollow (){
+      if(this.clickFollowCount > 4){
+        this.$bus.$emit('vux.toast', '您的操作频率过于频繁')
+        return
+      }
+
+      this.clickFollowCount++
+      setTimeout(() => this.clickFollowCount--, 10000)
+
+      this.$vux.loading.show()
       _request({
         url: 'openquiz/attention',
         method: 'post',
@@ -135,11 +148,15 @@ export default {
           type: this.questionData.attention_status ? 0 : 1,
           ill_id: this.illId
         }
-      }).then(({data}) =>{
+      }).finally(this.$vux.loading.hide)
+      .then(({data}) =>{
         if(data.result){
           console.log(true)
           this.questionData.attention_status = !this.questionData.attention_status
-          this.$bus.$emit('vux.toast', this.questionData.attention_status ? '已添加关注' : '已取消关注')
+          this.$bus.$emit('vux.toast', {
+            type: 'success',
+            text: this.questionData.attention_status ? '已添加关注' : '已取消关注'
+          })
         }else{
           this.$bus.$emit('vux.toast', data.message)
         }

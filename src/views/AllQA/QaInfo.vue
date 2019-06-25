@@ -11,9 +11,17 @@
           <span>浏览数:{{ infoData.count.doctor_show_num + infoData.count.user_show_num }}</span>
         </p>
         <p>所属分类: {{ infoData.banks.map(val => val.bankname).join(' > ') }}</p>
+
         <p v-html="infoData.question.answer" class="content"></p>
-        <p>关联文章:</p>
-        <p>文章来源:</p>
+
+        <!-- <p>关联文章:</p> -->
+
+        <div class="sources" v-if="infoData.sources.length">
+          <p class="title">文章来源：</p>
+          <p class="sources-item" v-for="(item, index) in infoData.sources" :key="index"
+          >{{ item.journal_date + ' ' + item.journal_name }}</p>
+        </div>
+
         <div class="btn" @click="showFeedback">问答反馈</div>
       </view-box>
       <div
@@ -117,6 +125,7 @@ export default {
       setTimeout(() => this.clickCount--, 10000)
 
       this.status = 2
+      this.$vux.loading.show()
       _request({
         url: 'qa/collectPost',
         method: 'post',
@@ -124,14 +133,14 @@ export default {
           qa_id: this.questionId
         }
       })
-      .finally(() => this.$bus.$emit('vux.spinner.hide'))
+      .finally(this.$vux.loading.hide)
       .then(({ data }) => {
         if (data.result) {
           this.status = 3
           this.isCollected = !this.isCollected
           this.$bus.$emit('vux.toast', {
             type: 'success',
-            text: '操作成功'
+            text: this.isCollected ? '已添加收藏' : '已取消收藏'
           })
         } else {
           this.status = 0
@@ -180,7 +189,7 @@ export default {
   background-color: white;
   text-align: center;
   border-radius: 51px;
-  margin-top: 8px;
+  margin: 8px;
   border: 1px #aaa solid;
 }
 .bottom-btn {
@@ -193,5 +202,9 @@ export default {
 .classify /deep/ #vux_view_box_body {
   padding: 10px;
   box-sizing: border-box;
+}
+
+.sources-item{
+  margin-left: 10px;
 }
 </style>

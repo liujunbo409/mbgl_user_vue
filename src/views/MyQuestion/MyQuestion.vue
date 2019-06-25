@@ -54,6 +54,11 @@
         @onClickLeft="jumpPage(-1)"
         @onClickRight="jumpPage(1)"
       ></page-selector>
+
+      <div class="com-noData" 
+        style="top:130px" 
+        v-if="$data[selected] && !$data[selected].data.length"
+      >暂无数据</div>
       
       <keep-alive>
         <router-view class="com-modal"></router-view>

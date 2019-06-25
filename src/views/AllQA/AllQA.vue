@@ -45,9 +45,14 @@
       ></page-selector>
     </template>
 
-    <view-box minus="106px" class="catalog-container" v-show="viewMode === 'classify' && classifyData">
+    <view-box minus="106px" class="catalog-container" v-show="viewMode === 'classify' && classifyData[selected].data.length">
       <catalog-group :catalogs="classifyData[selected] ? classifyData[selected].toTree() : {}" class="catalog" :onClickTitle="onClickTitle"></catalog-group>
     </view-box>
+
+    <div class="com-noData" :class="{ remainSearchBar: viewMode != 'classify' }" v-if="
+      ((viewMode === 'all' || viewMode === 'classifyList') && (!showList || !showList.length)) ||
+      (viewMode === 'classify' && !classifyData[selected].data.length)
+    ">暂无数据</div>
 
     <router-view class="com-modal"></router-view>
   </div>
@@ -301,6 +306,14 @@ export default {
     > * {
       vertical-align: middle;
     }
+  }
+}
+
+.com-noData{
+  top: 120px;
+
+  &.remainSearchBar{
+    top: 150px;
   }
 }
 </style>
