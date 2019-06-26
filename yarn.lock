@@ -125,6 +125,11 @@ aes-decrypter@3.0.0:
     global "^4.3.2"
     pkcs7 "^1.0.2"
 
+ajv-errors@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/ajv-errors/download/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
+  integrity sha1-81mGrOuRr63sQQL72FAUlQzvpk0=
+
 ajv-keywords@^3.1.0:
   version "3.4.0"
   resolved "https://registry.npm.taobao.org/ajv-keywords/download/ajv-keywords-3.4.0.tgz#4b831e7b531415a7cc518cd404e73f6193c6349d"
@@ -5552,6 +5557,14 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+raw-loader@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/raw-loader/download/raw-loader-3.0.0.tgz#9a660dc9cfbfb8324eede3ea3511454d2a5d0389"
+  integrity sha1-mmYNyc+/uDJO7ePqNRFFTSpdA4k=
+  dependencies:
+    loader-utils "^1.1.0"
+    schema-utils "^1.0.0"
+
 rc@^1.2.7:
   version "1.2.8"
   resolved "https://registry.npm.taobao.org/rc/download/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
@@ -5943,6 +5956,15 @@ schema-utils@^0.4.0, schema-utils@^0.4.5:
   integrity sha1-unT1l9K+LqiAExdG7hfQoJPGgYc=
   dependencies:
     ajv "^6.1.0"
+    ajv-keywords "^3.1.0"
+
+schema-utils@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/schema-utils/download/schema-utils-1.0.0.tgz#0b79a93204d7b600d4b2850d1f66c2a34951c770"
+  integrity sha1-C3mpMgTXtgDUsoUNH2bCo0lRx3A=
+  dependencies:
+    ajv "^6.1.0"
+    ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
 select-hose@^2.0.0:
@@ -6502,11 +6524,6 @@ tar@^4:
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
-
-text-loader@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.npm.taobao.org/text-loader/download/text-loader-0.0.1.tgz#8bf75d749b7c0579c939920051c69ea572ebddc1"
-  integrity sha1-i/dddJt8BXnJOZIAUcaepXLr3cE=
 
 through2@^2.0.0:
   version "2.0.5"

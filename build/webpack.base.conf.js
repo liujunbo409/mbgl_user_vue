@@ -71,7 +71,7 @@ let webpackConfig = {
       },
       {
         test: /\.html$/,
-        loader: 'text-loader'
+        loader: 'raw-loader'
       }
     ]
   }

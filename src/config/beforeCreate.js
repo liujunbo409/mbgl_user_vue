@@ -1,5 +1,6 @@
 // 根实例的beforeCreate钩子，主要用于接收beforeInit的数据（存于window._GLOBAL）
 import localStorage from '@u/localStorage'
+import bigFontSizeTheme from '@/styles/theme/fontSize/big.html'
 
 export default function(){
   this.$store.commit('user/editStatus/writeState', window._GLOBAL.editStatus)
@@ -12,12 +13,7 @@ export default function(){
 
     switch(size){
       case 'big': {
-        styleTag.innerHTML = peelTag(require('@/styles/theme/fontSize/big.html'))
-        break
-      }
-
-      case 'veryBig': {
-        styleTag.innerHTML = peelTag(require('@/styles/theme/fontSize/veryBig.html'))
+        styleTag.innerHTML = peelTag(bigFontSizeTheme)
         break
       }
 
