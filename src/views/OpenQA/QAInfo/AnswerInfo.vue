@@ -234,7 +234,6 @@ export default {
       }).finally(this.$vux.loading.hide)
       .then(({data}) =>{
         if(data.result){
-          console.log(true)
           this.answerData.thank_status = !this.answerData.thank_status
           this.answerData.thank_num += this.answerData.thank_status ? 1 : -1
           this.$bus.$emit('vux.toast', this.answerData.thank_status ? '已感谢' : '已撤销感谢')
