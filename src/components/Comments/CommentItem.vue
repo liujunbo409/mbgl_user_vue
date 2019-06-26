@@ -15,7 +15,7 @@
     <slot class="childComment"></slot>
   </div>
 </template>
-
+ 
 <script>
 export default {
   props: ['data', 'illId'],
@@ -25,9 +25,18 @@ export default {
       
     }
   },
-
+  computed:{
+    isReadonly (){
+      return this.$store.state.user.userInfo2 && this.$store.state.user.userInfo.qsgx.quanxian === 1
+    }
+  },
   methods: {
     dian_Zan (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
+
       this.$vux.loading.show()
       _request({
         url: 'openquiz/like',
@@ -57,6 +66,11 @@ export default {
     },
 
     sendComment (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
+      
       this.$toView('all_qa/qa_info/answer_info/commentEditor', {
         params: {
           quizId: this.data.quiz_id,

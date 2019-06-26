@@ -19,8 +19,18 @@ export default {
     }
   },
 
+  computed:{
+    isReadonly (){
+      return this.$store.state.user.userInfo2 && this.$store.state.user.userInfo.qsgx.quanxian === 1
+    }
+  },
   methods: {
     guide (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
+
       var {info, jbbq, xxjh} = this.$store.state.user.editStatus
       if(!info){
         this.$toView('my/info')

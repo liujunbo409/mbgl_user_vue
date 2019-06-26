@@ -34,6 +34,8 @@
       v-if="visibleFeedback"
       v-model="visibleFeedback"
     ></vue-feedback>
+    
+   <readonly-mask ></readonly-mask>
   </div>
 </template>
 

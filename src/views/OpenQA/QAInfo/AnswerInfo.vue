@@ -94,6 +94,10 @@ export default {
 
     comments (){
       return new List(this.answerData.comment_list).toTree()
+    },
+
+    isReadonly (){
+      return this.$store.state.user.userInfo2 && this.$store.state.user.userInfo.qsgx.quanxian === 1
     }
   },
 
@@ -164,6 +168,10 @@ export default {
 
     // 打开评论编辑器
     showCommentEditor (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
       this.$toView('all_qa/qa_info/answer_info/commentEditor', {
         params: {
           quizId: this.answerData.quiz_id,
@@ -176,6 +184,11 @@ export default {
 
     // 切换关注状态
     toggleFollow (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
+      
       if(this.clickBtnCount > 5){
         this.$bus.$emit('vux.toast', '您的操作过于频繁')
         return
@@ -213,6 +226,10 @@ export default {
 
     // 切换感谢状态
     toggleThank (){
+      if(this.isReadonly) {
+        this.$bus.$emit('vux.toast', '您没有权限修改信息')
+        return
+      }
       if(this.clickBtnCount > 5){
         this.$bus.$emit('vux.toast', '您的操作过于频繁')
         return
@@ -301,6 +318,7 @@ main{
 
     .icon{
       width: 40px;
+      height: 40px;
       border-radius: 50%;
       margin-right: 10px;
     }
