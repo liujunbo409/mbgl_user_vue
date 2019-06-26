@@ -24,6 +24,7 @@ export default {
       return this.$store.state.user.userInfo2 && this.$store.state.user.userInfo.qsgx.quanxian === 1
     }
   },
+  
   methods: {
     guide (){
       if(this.isReadonly) {
