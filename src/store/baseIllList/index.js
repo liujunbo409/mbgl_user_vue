@@ -33,7 +33,7 @@ export default {
             baseURL: Vue._GLOBAL.comApi,
             url: 'baseIllList',
             params: {
-              role: 'doctor'
+              role: 'user'
             }
           }).then(({data: {ret}}) =>{
             store.commit('writeStatus', ret)

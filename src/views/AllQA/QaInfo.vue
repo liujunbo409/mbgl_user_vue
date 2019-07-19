@@ -30,12 +30,12 @@
         :class="{ disabled: status === 2 }"
       >{{ isCollected ? '取消' : '添加' }}收藏</div>
     </template>
-    <vue-feedback feedbackType="question" :moduleId="bank_id" :modal="true" class="com-modal"
+    <vue-feedback feedbackType="question" :moduleId="bankId" :modal="true" class="com-modal"
       v-if="visibleFeedback"
       v-model="visibleFeedback"
     ></vue-feedback>
     
-   <readonly-mask ></readonly-mask>
+   <readonly-mask></readonly-mask>
   </div>
 </template>
 
