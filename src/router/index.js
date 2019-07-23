@@ -93,7 +93,8 @@ const r = {
 
   AllQA: {
     AllQA: () => import('@v/AllQA/AllQA'),
-    QAInfo: () => import('@v/AllQA/QAInfo')
+    QAInfo: () => import('@v/AllQA/QAInfo'),
+    Article: () => import('@v/AllQA/Article')
   },
 
   CollectionQA: {
@@ -324,9 +325,12 @@ var routes = [
       {
         ...p('all_qa/qa_info'),
         component: r.AllQA.QAInfo
+      }, {
+        ...p('all_qa/article'),
+        component: r.AllQA.Article
       }
     ]
-  }, {  // 收藏问答
+  },{  // 收藏问答
     ...p('collection_qa'),
     component: r.CollectionQA.CollectionQA,
 

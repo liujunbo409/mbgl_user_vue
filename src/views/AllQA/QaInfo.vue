@@ -14,12 +14,17 @@
 
         <p v-html="infoData.question.answer" class="content"></p>
 
-        <!-- <p>关联文章:</p> -->
+        <div class="binds" v-if="infoData.binds.length">
+          <p class="title com-fillTitle">关联文章：</p>
+          <p class="info-item" v-for="(item, index) in infoData.binds" :key="index"
+            @click="toArticle(item)"
+          >{{ `[${index + 1}] ${item.article.title}` }}</p>
+        </div>
 
         <div class="sources" v-if="infoData.sources.length">
-          <p class="title">文章来源：</p>
-          <p class="sources-item" v-for="(item, index) in infoData.sources" :key="index"
-          >{{ item.journal_date + ' ' + item.journal_name }}</p>
+          <p class="title com-fillTitle">问答来源：</p>
+          <p class="info-item" v-for="(item, index) in infoData.sources" :key="index"
+          >{{ `[${index + 1}] ${item.journal_date} ${item.journal_name}` }}</p>
         </div>
 
         <div class="btn" @click="showFeedback">问答反馈</div>
@@ -162,6 +167,16 @@ export default {
     // 显示反馈
     showFeedback (){
       this.visibleFeedback = true
+    },
+
+    // 跳转至指定文章
+    toArticle (data){
+      this.$toView('all_qa/article', { 
+        params: {
+          articleId: data.article_id,
+          illId: data.article_ill
+        } 
+      })
     }
   }
 }
@@ -206,7 +221,13 @@ export default {
   box-sizing: border-box;
 }
 
-.sources-item{
-  margin-left: 10px;
+.com-fillTitle{
+  font-size: 16px;
+  line-height: 26px;
+  border-radius: 10px;
+}
+
+.info-item{
+  margin: 5px 0 0 10px;
 }
 </style>
