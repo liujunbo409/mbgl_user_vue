@@ -64,7 +64,7 @@ export default {
     yao_List (){
       if(!this.selected){ return [] }
       return this.data.filter(val => val.id === this.selected)[0].medicines
-      .map(val => ({ key: val.medicine_id, value: val.name })) // vux有bug，key不能为对象
+      .map(val => ({ key: val.id, value: val.chemical_name })) // vux有bug，key不能为对象
     },
 
     // 已选药物
@@ -73,7 +73,7 @@ export default {
       var data = [], selected = []
       this.data.forEach(val => data = data.concat(val.medicines))
       Object.values(this.selected_Yao_Lists).forEach(val => selected = selected.concat(val))
-      return data.filter(val => selected.includes(val.medicine_id)).map(val => val.name)
+      return data.filter(val => selected.includes(val.id)).map(val => val.chemical_name)
     },
   },
 
