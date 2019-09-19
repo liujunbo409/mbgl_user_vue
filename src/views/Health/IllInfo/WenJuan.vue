@@ -77,7 +77,8 @@ export default {
         data: {
           option_id: this.selected[0],
           wj_id: this.data.id,
-          ill_id: this.illId
+          ill_id: this.illId,
+          answer_record: this.selected.join(',')
         }
       }).then(({data}) =>{
         if(data.result){
