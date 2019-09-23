@@ -4,7 +4,7 @@
     <inline-loading v-if="status === 2"></inline-loading>
     <main v-if="status === 3">
       <div class="number">第{{ data.seq }}题</div>
-      <vux-checklist v-model="selected" :required="true" :max="1"
+      <vux-checklist v-model="selected" :required="true" :max="data.type ? 4 : 1"
         :title="`【${data.type ?  '多选' : '单选'}】 ${data.question}`"
         :options="data.options.map(val => ({ key: val.id, value: val.option }))"
       ></vux-checklist>
@@ -78,7 +78,7 @@ export default {
           option_id: this.selected[0],
           wj_id: this.data.id,
           ill_id: this.illId,
-          answer_record: this.selected.join(',')
+          answer_record: this.selected.sort((x, y) => x < y ? 1 : -1).join(',')
         }
       }).then(({data}) =>{
         if(data.result){

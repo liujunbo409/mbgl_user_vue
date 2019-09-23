@@ -11,6 +11,10 @@
       <user-info-item title="性别" type="btn" :value="_gender" @click.native="openGenderSelect">
       </user-info-item>
 
+      <datetime title="生日" placeholder="请选择" v-model="userInfo.birthday"
+        :class="{ hasValue: userInfo.birthday }"
+      />
+
       <user-info-item title="学历" type="btn" :value="_xueli" @click.native="openXueliSelect">
       </user-info-item>
 
@@ -26,7 +30,7 @@
 </template>
 
 <script>
-import { XButton, Actionsheet } from 'vux'
+import { XButton, Actionsheet, Datetime } from 'vux'
 import UserInfoItem from '@c/cell/UserInfoItem'
 
 
@@ -34,7 +38,7 @@ import localStorage from '@u/localStorage'
 
 export default {
   components: {
-    XButton, Actionsheet,
+    XButton, Actionsheet, Datetime,
     UserInfoItem,
   },
 
@@ -45,6 +49,7 @@ export default {
         real_name: this.$store.state.user.userInfo.real_name || '',
         nick_name: this.$store.state.user.userInfo.nick_name || '',
         gender: this.$store.state.user.userInfo.gender,
+        birthday: this.$store.state.user.userInfo.birthday,
         xueli: this.$store.state.user.userInfo.xueli,
         phonenum: this.$store.state.user.userInfo.phonenum || '',
       },
@@ -184,6 +189,20 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .vux-datetime-value{
+  padding-right: 0 !important;
+
+  &::after{
+    display: none !important;
+  }
+}
+
+/deep/ .vux-datetime{
+  .vux-cell-value{
+    color: black;
+  }
+}
+
 .mainBtn{
   margin-top: 20px;
 }
