@@ -133,16 +133,23 @@ export default {
         }
       }).then(({data}) =>{
         if(data.result){
-          data.ret.forEach(val =>{
-            this.loadedSelected_Yao_List.push(val.medicine_id)
-            var data = []
-            this.data.forEach(foo => data = data.concat(foo.medicines))
-            data.forEach(bar => {
-              if(bar.medicine_id === val.medicine_id){
-                if(!this.selected_Yao_Lists[bar.classify_id]){
-                  this.selected_Yao_Lists[bar.classify_id] = []
+          data.ret.forEach(selectedMidicine =>{
+            this.loadedSelected_Yao_List.push(selectedMidicine.medicine_id)
+            var allMedicines = []
+            this.data.forEach(item => allMedicines = allMedicines.concat(item.medicines))
+            allMedicines.forEach(item => {
+              if(item.id === selectedMidicine.medicine_id){
+                var parentId = ''
+                this.data.some(item =>{
+                  if(item.medicines.map(item => item.id).includes(selectedMidicine.medicine_id)){
+                    return parentId = item.id
+                  }
+                })
+
+                if(!this.selected_Yao_Lists[parentId]){
+                  this.selected_Yao_Lists[parentId] = []
                 }
-                this.selected_Yao_Lists[bar.classify_id].push(val.medicine_id)
+                this.selected_Yao_Lists[parentId].push(selectedMidicine.medicine_id)
               }
             })
           })

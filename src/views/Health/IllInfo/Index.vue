@@ -48,6 +48,7 @@ export default {
             type = ''
           }
 
+          if(val.name === type) return val.name
           return val.name + type
         }).join('、')
       }else{

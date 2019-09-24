@@ -4,7 +4,7 @@ import localStorage from '@u/localStorage'
 export default function(router){
   // 未登录跳转到login
   router.beforeEach((to, from, next) =>{
-    if(!localStorage.get('isLogin', false) && to.name !== 'login'){
+    if(!localStorage.get('isLogin', false) &&  !(['login', 'register', 'reset_psd'].includes(to.name))){
       next({ name: 'login' })
     }
     next()

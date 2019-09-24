@@ -293,6 +293,7 @@ export default {
       })
       for(let i=0, len=selected.length; i < len; i++){
         var id = selected[i]
+
         if(
           (dataIdMap[id].date_status && !this.optionsForm[id].date) ||
           (dataIdMap[id].level_status && !this.optionsForm[id].level) 
@@ -405,6 +406,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .weui-select{
+  direction: rtl;
+}
+
 .hide{
   display: none;
 }
