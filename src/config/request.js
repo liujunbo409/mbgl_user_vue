@@ -18,40 +18,57 @@ var axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(requestDataHandler)
 
 // 若有token和userid，则自动添加
-function requestDataHandler(config){
+function requestDataHandler(config) {
   var {token, id} = localStorage.get('userInfo', {})
 
   var target = config.method === 'post' ? 'data' : 'params'
-  if(!config[target]){ config[target] = {} }
-  if(token){ config[target].token = token }
-  if(id){ config[target].user_id = id }
-
+  if (!config[target]) {
+    config[target] = {}
+  }
+  if (token) {
+    config[target].token = token
+  }
+  if (id) {
+    config[target].user_id = id
+  }
   return config
 }
 
 // 字符串数据全部做对应转换
 axiosInstance.interceptors.response.use(responseDataHandler)
 
-function responseDataHandler(res){
-  function foo(data){
-    if(typeof data !== 'object'){
-      if(data === 'true'){ return true }
-      if(data === 'false'){ return false }  
-      if(data === 'null'){ return null }
-      if(/^[1-9]\d*$/.test(data)){ return parseInt(data) }
-      if(data === '0'){ return 0 }
-      return data    
-    }else{
-      if(data === null){ return null }
-      if(data.constructor === Object){
+function responseDataHandler(res) {
+  function foo(data) {
+    if (typeof data !== 'object') {
+      if (data === 'true') {
+        return true
+      }
+      if (data === 'false') {
+        return false
+      }
+      if (data === 'null') {
+        return null
+      }
+      if (/^[1-9]\d*$/.test(data)) {
+        return parseInt(data)
+      }
+      if (data === '0') {
+        return 0
+      }
+      return data
+    } else {
+      if (data === null) {
+        return null
+      }
+      if (data.constructor === Object) {
         var obj = {}
-        for(let key in data){
+        for (let key in data) {
           obj[key] = foo(data[key])
         }
         return obj
-      }else if(data.constructor === Array){
+      } else if (data.constructor === Array) {
         var arr = []
-        for(let i=0, len=data.length; i < len; i++){
+        for (let i = 0, len = data.length; i < len; i++) {
           arr.push(foo(data[i]))
         }
         return arr

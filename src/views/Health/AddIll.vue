@@ -1,8 +1,8 @@
 <template>
   <div class="com-container">
-    <vue-header title="选择疾病"></vue-header>    
+    <vue-header title="选择疾病"></vue-header>
     <vux-checker v-model="selected"
-      class="checkers-container" 
+      class="checkers-container"
       default-item-class="checkers"
       selected-item-class="selected"
     >
@@ -34,7 +34,7 @@ export default {
   },
 
   mounted (){
-    // 载入全部疾病
+    // 载入全部疾病  test user_id = 62
     _request({
       url: 'jkda/otherIll'
     }).then(({data}) =>{
