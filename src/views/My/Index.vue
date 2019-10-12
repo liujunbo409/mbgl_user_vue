@@ -7,7 +7,11 @@
     </vux-group>
 
     <vux-group>
-      <vux-cell title="反馈" :is-link="true" link="/my/feedback"></vux-cell>      
+      <vux-cell title="反馈" :is-link="true" link="/my/feedback"></vux-cell>
+    </vux-group>
+
+    <vux-group>
+      <vux-cell style="color: red;" title="退出登录" @click.native="logOut"></vux-cell>
     </vux-group>
   </div>
 </template>
@@ -15,17 +19,35 @@
 <script>
 
 
-export default {
-  data (){
-    return {
+  export default {
+    data() {
+      return {
 
+      }
+    },
+
+    methods: {
+      logOut() {
+        let data = {
+          fwh_openid: this.$store.state.user.userInfo.fwh_openid,
+        };
+        _request({
+          url: `login/logOut`,
+          method: 'post',
+          data: data
+        }).then(({ data }) => {
+          if (data.result) {
+            this.$bus.$emit('vux.alert', '登出成功');
+            localStorage.clear();
+            this.$store.commit('user/clear');
+            this.$toView('login');
+          } else {
+            this.$bus.$emit('vux.toast', '好像哪里不对');
+          }
+        })
+      }
     }
-  },
-
-  methods: {
-
   }
-}
 </script>
 
 <style lang="less" scoped>
