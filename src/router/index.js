@@ -38,7 +38,7 @@ const r = {
   Health: {
     Health: () => import('@v/Health/Health'),
     AddIll: () => import('@v/Health/AddIll'),
-    
+
     IllInfo: {
       Index: () => import('@v/Health/IllInfo/Index'),
       Medicinal: () => import('@v/Health/IllInfo/Medicinal'),
@@ -72,14 +72,15 @@ const r = {
       CollectXT: () => import('@v/FamilyTest/XT/CollectXT')
     },
 
-    Weight: () => import('@v/FamilyTest/Weight')   
+    Weight: () => import('@v/FamilyTest/Weight')
   },
 
   FollowDoctors: {
     FollowDoctors: () => import('@v/FollowDoctors/FollowDoctors'),
     Search: () => import('@v/FollowDoctors/Search'),
     SearchByHosp: () => import('@v/FollowDoctors/SearchByHosp'),
-    DoctorInfo: () => import('@v/FollowDoctors/DoctorInfo')
+    DoctorInfo: () => import('@v/FollowDoctors/DoctorInfo'),
+    RoleSelect: () => import('@v/FollowDoctors/RoleSelect')
   },
 
   Relative: {
@@ -123,10 +124,10 @@ const r = {
 }
 
 const keepAlive = true,
-fromUrlStop = true
+  fromUrlStop = true
 
 // 设置路由path和name
-function p(name, path){
+function p(name, path) {
   return {
     path: `/${path ? path : name}`,
     name,
@@ -155,8 +156,11 @@ var routes = [
     ...p('login'),
     component: Login,
     beforeEnter: (to, from, next) => {
-      if(localStorage.get('isLogin', false) && from.name){ next({ name: 'home' }) }
-      else{ next() }
+      if (localStorage.get('isLogin', false) && from.name) {
+        next({name: 'home'})
+      } else {
+        next()
+      }
     }
   }, {  // 注册
     ...p('register'),
@@ -305,6 +309,9 @@ var routes = [
     meta: {
       keepAlive
     }
+  }, {  // 角色选择
+    ...p('follow_doctors/role_select'),
+    component: r.FollowDoctors.RoleSelect
   }, {  // 关注医生/医生详情
     ...p('follow_doctors/doctor_info'),
     component: r.FollowDoctors.DoctorInfo
@@ -320,7 +327,7 @@ var routes = [
   }, {  // 全部问答
     ...p('all_qa'),
     component: r.AllQA.AllQA,
-    
+
     children: [
       {
         ...p('all_qa/qa_info'),
@@ -330,7 +337,7 @@ var routes = [
         component: r.AllQA.Article
       }
     ]
-  },{  // 收藏问答
+  }, {  // 收藏问答
     ...p('collection_qa'),
     component: r.CollectionQA.CollectionQA,
 
@@ -365,11 +372,11 @@ var routes = [
     ...p('open_qa/qa_info'),
     component: r.OpenQA.QAInfo.QAInfo,
     meta: {
-      keepAlive, 
+      keepAlive,
     },
 
     children: [
-      {  // 公开提问/问题详情/回答详情  
+      {  // 公开提问/问题详情/回答详情
         ...p('all_qa/qa_info/answer_info'),
         component: r.OpenQA.QAInfo.AnswerInfo,
         meta: {
@@ -390,7 +397,7 @@ var routes = [
   }, {  // 我的提问
     ...p('my_question'),
     component: r.MyQuestion.MyQuestion,
-    
+
     children: [
       { // 我的提问/问题详情
         ...p('my_question/answer_info'),
@@ -398,8 +405,8 @@ var routes = [
       }
     ]
   },
-  
-  
+
+
   { // 输入不存在的路由时，回到home
     path: '*',
     redirect: '/home'

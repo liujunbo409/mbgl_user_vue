@@ -96,4 +96,4 @@ function responseDataHandler(res) {
 //   }
 // }
 
-window._request = axiosInstance
+window._request = axiosInstance;

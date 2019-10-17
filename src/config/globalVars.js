@@ -3,6 +3,7 @@ const SERVER_TYPE = window.localStorage.getItem('SERVER_TYPE') || 'local'
 const de = SERVER_TYPE === 'production' ? '' : 'de.'
 
 export default {
+  // api: `http://localhost:8000/api/user/`,
   api: `http://${de}lljiankang.top/api/user/`,
   comApi: `http://${de}lljiankang.top/api/common/`,
   qiniuPic: 'http://desrc.lljiankang.top/'

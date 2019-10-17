@@ -11,9 +11,7 @@
     <vux-group>
       <vux-cell v-for="(item, index) in byHospData" :key="index" :is-link="true"
         :title="item.real_name"
-        @click.native="$toView('follow_doctors/doctor_info', { 
-          query: { doctorUserId: item.user_id, doctorId: item.id }
-        })"
+                @click.native="$toView('follow_doctors/role_select', {query: { UserId: item.user_id}})"
       ></vux-cell>
       <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
       <vux-cell class="noData" title="搜索结果为空" v-if="status === 3 && isNoData"></vux-cell>
@@ -27,7 +25,7 @@ import { Selector } from 'vux'
 export default {
   components: {
     VuxSelector: Selector
-  },  
+  },
 
   data (){
     return {
@@ -51,12 +49,12 @@ export default {
     hospList (){
       return this.$store.getters['hospList/plain']
     },
-    
+
     isNoData (){
       return !Object.keys(this.byHospData).length
     }
   },
-  
+
   watch: {
     selectedHosp (){
       this.getDoctorsByHospId()
