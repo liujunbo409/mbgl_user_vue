@@ -167,7 +167,18 @@
                     })
                     .then(() => {
                         this.$bus.$emit('vux.alert', '信息修改成功', {
-                            onHide: () => this.$toView('home')
+                            onHide: () => {
+                                if (localStorage.get('originalTargetUrl', location.href).split('/')[6] == 'follow_doctors'
+                                    && localStorage.get('originalTargetUrl', location.href).split('/')[7].split('?')[0] == 'role_select') {
+                                    let to_view = localStorage.get('originalTargetUrl', location.href).split('?')[0].split('/');
+                                    to_view = to_view[6] + '/' + to_view[7];
+                                    let user_id = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[0].split('=')[1];
+                                    let auto_follow = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[1].split('=')[1];
+                                    this.$toView(to_view, {query: {UserId: user_id, autoFollow: auto_follow}});
+                                } else {
+                                    this.$toView('home');
+                                }
+                            }
                         })
                     })
                     .catch(e => {

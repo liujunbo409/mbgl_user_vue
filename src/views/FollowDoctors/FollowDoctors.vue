@@ -14,8 +14,8 @@
         <!-- 注意上面query中doctorId的位置，和同级两个组件中位置的不一样 -->
       </vux-group>
       <footer>
-        <div class="btn" @click="$toView('follow_doctors/search')">搜索关注医生</div>
-        <div class="btn" @click="$toView('follow_doctors/search_by_hosp')">医院查找医生</div>
+        <div class="btn" @click="$toView('follow_doctors/search')">搜索医生</div>
+        <div v-if="false" class="btn" @click="$toView('follow_doctors/search_by_hosp')">医院查找医生</div>
       </footer>
     </template>
   </div>

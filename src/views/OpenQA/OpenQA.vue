@@ -20,6 +20,10 @@
       </div>
 
       <view-box :minus="`${154 - (selected === 'recent' ? 37 : 0)}px`" class="list-container" ref="list">
+        <div style="display: flex;justify-content: center;margin-top: 45px;font-size: 20px;color: #888888;"
+             v-if="QAData[selected] && !QAData[selected].data.length">
+          —没有数据—
+        </div>
         <vux-group class="com-group-noMarginTop">
           <vux-cell v-for="(item, index) in (QAData[selected] ? QAData[selected].data : [])" :key="index"
             :title="item.title"
@@ -44,8 +48,6 @@
         @onClickLeft="() => {}"
         @onClickRight="() => {}"
       ></page-selector>
-
-      <div class="com-noData" v-if="QAData[selected] && !QAData[selected].data.length">暂无数据</div>
 
       <footer @click="toQuestion">
         <img src="@img/btn/edit.png">
@@ -142,10 +144,10 @@ export default {
       if(page < 1){
         this.$bus.$emit('vux.toast', '已经是第一页')
         return
-      }      
+      }
 
       this.$bus.$emit('vux.spinner.show')
-      
+
       // 这里要用到三个接口
       var url = 'openquiz/recentList'   // 最近更新
       if(this.selected !== 'recent'){

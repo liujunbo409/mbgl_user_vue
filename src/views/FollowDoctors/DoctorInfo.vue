@@ -51,16 +51,19 @@
             return {
                 doctorId: '',
                 doctorUserId: '',
+                autoFollow: '',
                 data: {},   // 医生数据
                 czsjData: [],   // 出诊计划数据
                 followed: false,    // 是否关注
                 status: 1,
+                execute_num: 1,  //执行次数
             }
         },
 
         mounted() {
             this.doctorId = this.$route.query.doctorId;
             this.doctorUserId = this.$route.query.doctorUserId;
+            this.autoFollow = this.$route.query.autoFollow;
             this.load();
             this.getFollowStatus();
         },
@@ -85,15 +88,21 @@
                             var week = ['一', '二', '三', '四', '五', '六', '日'];
                             var val = JSON.parse(JSON.stringify(val));
                             val.unshift({$prefix: `星期${week[ind]}`});
+                            if (this.execute_num) {
+                                if (!this.followed && this.autoFollow){
+                                    this.followToggle();
+                                }
+                                this.execute_num--;
+                            }
                             return val;
                         })
                     } else {
-                        this.stauts = 0;
+                        this.status = 0;
                         this.bus.emit('vux.toast', data.message);
                     }
                 }).catch(e => {
                     this.$vux.loading.hide();
-                    this.stauts = 0;
+                    this.status = 0;
                     console.log(e);
                     this.$bus.$emit('vux.toast', {
                         type: 'cancel',

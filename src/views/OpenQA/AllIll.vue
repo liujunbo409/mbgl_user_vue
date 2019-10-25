@@ -2,7 +2,7 @@
   <div class="com-container">
     <vue-header title="公开提问"></vue-header>
     <inline-loading v-if="status === 2 || illistStatus === 2"></inline-loading>
-    <view-box v-if="status === 3 && illistStatus === 3">
+    <view-box v-if="status == 3 && illistStatus === 3">
       <main>
         <p class="title">选择要提问的疾病</p>
         <p class="subtitle">我关注的疾病</p>
@@ -122,7 +122,7 @@ export default {
       font-size: 18px;
       line-height: 35px;
     }
-    
+
     .illBox-container{
       padding: 20px 0;
 
