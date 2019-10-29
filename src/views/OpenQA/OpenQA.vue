@@ -33,7 +33,6 @@
           ></vux-cell>
         </vux-group>
       </view-box>
-
       <page-selector v-if="QAData[selected]"
         :nowPage="QAData[selected].current_page || '...'"
         :pageCount="Math.ceil(QAData[selected].total / 10)"
