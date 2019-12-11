@@ -2,9 +2,6 @@
 import localStorage from '@u/localStorage'
 
 export default function (router) {
-  //扫描二维码发现未登录重定向到login，并记录二维码信息
-
-
 
   // 未登录跳转到login   auto_follow
   router.beforeEach((to, from, next) => {

@@ -41,7 +41,7 @@ export default {
     // 清除状态，相当于登出
     clear(state) {
       state.isLogin = false;
-        state.userInfo = null;
+      state.userInfo = null;
       localStorage.set('isLogin', false);
       localStorage.remove('userInfo');
       localStorage.remove('remoteUser');
@@ -121,8 +121,8 @@ export default {
             fwh_openid: state.openId
           }
         }).then(({data}) => {
-            return data.result ? resolve(data) : reject(data)
-          }).catch((e) => {
+          return data.result ? resolve(data) : reject(data)
+        }).catch((e) => {
           console.log(e);
           // 因为下面没有catch，这里直接退出
           return reject({result: false, type: 'timeout'});
@@ -137,12 +137,12 @@ export default {
                 user_id: data.ret.id
               }
             }).then(({data: {result}}) => {
-                if (result) {
-                  resolve(data);
-                } else {
-                  reject({result: false, type: 'ban'});
-                }
-              })
+              if (result) {
+                resolve(data);
+              } else {
+                reject({result: false, type: 'ban'});
+              }
+            })
           })
         })
         .then(data => {
@@ -210,14 +210,14 @@ export default {
           method: 'post',
           data: payload
         }).then(({data}) => {
-            if (data.result) {
-              store.commit('writeState', data.ret)
-              localStorage.set('isInfoEdited', true)
-              resolve()
-            } else {
-              reject(data)
-            }
-          })
+          if (data.result) {
+            store.commit('writeState', data.ret)
+            localStorage.set('isInfoEdited', true)
+            resolve()
+          } else {
+            reject(data)
+          }
+        })
           .catch(e => {
             console.log(e)
             reject({timeout: true})
