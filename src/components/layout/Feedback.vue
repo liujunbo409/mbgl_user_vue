@@ -77,10 +77,10 @@ export default {
 
   methods: {
     submit (){
-      if(!this.type.length){
-        this.$bus.$emit('vux.toast', '请选择反馈类型')
-        return
-      }
+      // if(!this.type.length){
+      //   this.$bus.$emit('vux.toast', '请选择反馈类型')
+      //   return
+      // }
       if(this.content === ''){
         this.$bus.$emit('vux.toast', '反馈内容不能为空')
       }
@@ -98,6 +98,7 @@ export default {
         }
       })
       .then(({data}) =>{
+        console.log(data)
         if(data.result){
           this.$bus.$emit('vux.toast', '提交成功，感谢您的反馈')
           this.$router.back()

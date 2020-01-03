@@ -8,6 +8,7 @@ export default function (router) {
     if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd'].includes(to.name))) {
 
       next({name: 'login'});
+      // next({name: 'illcourse'});
     }
     next();
   });

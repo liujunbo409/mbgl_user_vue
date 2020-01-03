@@ -32,6 +32,7 @@ export default {
       this.illId = this.$route.params.illId
       this.stageId = this.$route.params.stageId
       this.load()
+       console.log(11111)
     }
   },
 
@@ -61,7 +62,9 @@ export default {
       ]).then(([{data: art}, {data: source}]) =>{
         this.art = art.ret
         this.source = source.ret
+         console.log(22222)
       })
+        console.log(3333)
     },
 
     toTest (){
@@ -72,6 +75,7 @@ export default {
           illId: this.illId
         }
       })
+     
     }
   }
 }

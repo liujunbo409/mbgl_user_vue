@@ -43,11 +43,11 @@
         <img slot="label" src="@img/sub/lock.png" class="com-input-icon">
       </x-input>
 
-      <x-input type="password" v-model.trim="inviteCode" placeholder="请输入邀请码"
+      <!-- <x-input type="password" v-model.trim="inviteCode" placeholder="请输入邀请码"
         :show-clear="false" v-if="!resetPsd"
       >
         <img slot="label" src="@img/sub/yao_qing.png" class="com-input-icon">
-      </x-input>
+      </x-input> -->
 
       <div class="registerBtn-container">
         <x-button :text="resetPsd ? '重置密码' : '注册'" @click.native="register"></x-button>

@@ -3,7 +3,8 @@
     <vux-cell :title="title" :is-link="true"
       :arrow-direction="isCollapse ? 'down' : 'up'"
       @click.native="isCollapse = !isCollapse"
-    ></vux-cell>
+    >
+    </vux-cell>
     <ul v-if="!isCollapse" class="list">
       <li v-for="(file, index) in files || []" :key="index" @click="$emit('onClickItem', file)">
         {{ file.article.title }}

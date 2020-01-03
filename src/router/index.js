@@ -120,7 +120,16 @@ const r = {
 
   MyQuestion: {
     MyQuestion: () => import('@v/MyQuestion/MyQuestion')
-  }
+  },
+  Course:{
+      IllCourse:() => import('@v/Course/IllCourse'),
+      Course: () => import('@v/Course/Course'),
+      Lead:() => import('@v/Course/Lead'),
+      CourseArticle:() => import('@v/Course/CourseArticle')
+    
+  },
+      
+ 
 }
 
 const keepAlive = true,
@@ -353,7 +362,29 @@ var routes = [
     meta: {
       keepAlive
     }
-  }, {  // 公开问答/提问
+  },
+  
+  {  // 选择疾病课程
+    ...p('illcourse'),
+    component: r.Course.IllCourse
+  },
+  {  // 必修课程
+    ...p('course'),
+    component: r.Course.Course
+  },
+  {
+    // 必修课程文章
+...p('course/course_article'),
+component: r.Course.CourseArticle,
+meta: {
+  fromUrlStop,
+  keepAlive
+}
+}, 
+{  // 引导页
+  ...p('lead'),
+  component: r.Course.Lead
+},{  // 公开问答/提问
     ...p('open_qa/question'),
     component: r.OpenQA.Question.Question,
     meta: {
@@ -405,7 +436,7 @@ var routes = [
       }
     ]
   },
-
+  
 
   { // 输入不存在的路由时，回到home
     path: '*',

@@ -57,7 +57,12 @@ export default {
           this.$bus.$emit('vux.alert', '已为您生成学习计划')
         }else{
           this.count++
-          setTimeout(() => this.check(), 15000)
+          setTimeout(() => {
+            this.check();
+            console.log(`data == ${JSON.stringify(data)}`)
+            console.log(`????  ${this.count}`);
+          }, 5000)
+          // this.check()
         }
       })
     }

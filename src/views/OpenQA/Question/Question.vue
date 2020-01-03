@@ -8,7 +8,7 @@
     </p>
 
     <vux-group class="com-group-noMarginTop">
-      <x-textarea v-model.trim="title" :max="100" placeholder="请简明写下您的问题，并以“?”结尾" :height="40" @on-change="onContentChange"></x-textarea>
+      <x-textarea v-model.trim="title" :max="100" placeholder="请简明写下您的问题" :height="40" @on-change="onContentChange"></x-textarea>
     </vux-group>
 
     <div v-show="!visibleSimilarQA">
@@ -114,10 +114,10 @@ export default {
         this.$bus.$emit('vux.toast', '标题不能为空')
         return
       }
-      if (!/[\?？]$/.test(this.title)) {
-        this.$bus.$emit('vux.toast', '标题必须以问号结尾')
-        return
-      }
+      // if (!/[\?？]$/.test(this.title)) {
+      //   this.$bus.$emit('vux.toast', '标题必须以问号结尾')
+      //   return
+      // }
 
       this.$vux.loading.show('提交中')
       _request({

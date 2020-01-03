@@ -37,12 +37,15 @@
           data: data
         }).then(({ data }) => {
           if (data.result) {
-            this.$bus.$emit('vux.alert', '登出成功');
+            this.$bus.$emit('vux.toast', '登出成功');
             localStorage.clear();
             this.$store.commit('user/clear');
             this.$toView('login');
           } else {
-            this.$bus.$emit('vux.toast', '好像哪里不对');
+            this.$bus.$emit('vux.toast', '登出成功');
+            localStorage.clear();
+            this.$store.commit('user/clear');
+            this.$toView('login');
           }
         })
       }

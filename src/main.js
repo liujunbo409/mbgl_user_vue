@@ -14,8 +14,10 @@ import beforeInit from '././config/beforeInit'
 import beforeCreate from './config/beforeCreate'
 import created from './config/created'
 import mounted from './config/mounted'
-
 import globalVars from './config/globalVars'
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 
 // 全局组件及插件
 import { 
@@ -38,6 +40,7 @@ Vue.use(ConfirmPlugin, { title: '提示' })
 Vue.use(LoadingPlugin)
 Vue.use(ConfigPlugin, { $layout: 'VIEW_BOX' })
 Vue.use(DatetimePlugin)
+Vue.use(ElementUI);
 Vue.component('vux-group', Group)
 Vue.component('vux-cell', Cell)
 Vue.component('vue-header', VueHeader)

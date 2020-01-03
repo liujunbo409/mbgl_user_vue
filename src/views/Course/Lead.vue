@@ -7,7 +7,7 @@
     <p class="text">3.填写调查问卷</p>
     <img src="/static/images/doctor.png">
 
-    <div class="mainBtn" @click="guide">生成学习计划</div>
+    <div class="mainBtn" @click="toRegister">立即注册完善信息</div>
   </div>
 </template>
 
@@ -26,26 +26,9 @@ export default {
   },
 
   methods: {
-    guide (){
-      if(this.isReadonly) {
-        this.$bus.$emit('vux.toast', '您没有权限修改信息')
-        return
-      }
-
-      var {info, jbbq, xxjh} = this.$store.state.user.editStatus
-      console.log(JSON.stringify(info))
-      console.log(JSON.stringify(jbbq))
-      console.log(JSON.stringify(xxjh))
-      if(!info){
-        this.$toView('my/info')
-      }else if(typeof jbbq === 'number'){
-        this.$toView('health/ill_info/index', { params: { illId: jbbq } })
-      }else if(typeof jbbq === 'boolean'){
-        this.$toView('health')
-      }else if(xxjh){
-        this.$toView('learning_plan')
-      }
-    }
+    toRegister(){
+                this.$toView('register')
+            }
   }
 }
 </script>

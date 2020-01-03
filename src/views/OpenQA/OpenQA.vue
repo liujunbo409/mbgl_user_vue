@@ -3,29 +3,29 @@
     <vue-header title="公开提问"></vue-header>
     <inline-loading v-if="illistStatus === 2"></inline-loading>
     <template v-if="illistStatus === 3">
-      <div class="tabs-container">
+      <div class="openqa-tabs-container">
         <vux-tab :animate="false" class="tabs">
-          <tab-item ref="firstTab" @click.native="selected = 'recent'">最近更新</tab-item>
+          <tab-item ref="firstTab" @click.native="openqaSelected = 'recent'">最近更新</tab-item>
           <tab-item v-for="({ill_name, ill_id}, index) in selectedIllList" :key="index"
             :ref="`tab-${ill_id}`"
-            @click.native="selected = ill_id"
+            @click.native="openqaSelected = ill_id"
           >{{ ill_name }}</tab-item>
         </vux-tab>
         <span class="moreIllBtn" @click="$toView('open_qa/all_ill', { params: { selectedIllList } })"></span>
       </div>
 
-      <div class="com-input-container" v-if="selected !== 'recent'">
-        <input type="text" v-model.trim="keyword" placeholder="请输入要搜索的问题">
-        <x-icon type="ios-search-strong" size="30" @click="getQAList(1, keyword)"></x-icon>
+      <div class="com-input-container" v-if="openqaSelected !== 'recent'">
+        <input type="text" v-model.trim="openqaKeyword" placeholder="请输入要搜索的问题">
+        <x-icon type="ios-search-strong" size="30" @click="getQAList(1, openqaKeyword)"></x-icon>
       </div>
 
-      <view-box :minus="`${154 - (selected === 'recent' ? 37 : 0)}px`" class="list-container" ref="list">
+      <view-box :minus="`${154 - (openqaSelected === 'recent' ? 37 : 0)}px`" class="list-container" ref="list">
         <div style="display: flex;justify-content: center;margin-top: 45px;font-size: 20px;color: #888888;"
-             v-if="QAData[selected] && !QAData[selected].data.length">
+             v-if="QAData[openqaSelected] && !QAData[openqaSelected].data.length">
           —没有数据—
         </div>
         <vux-group class="com-group-noMarginTop">
-          <vux-cell v-for="(item, index) in (QAData[selected] ? QAData[selected].data : [])" :key="index"
+          <vux-cell v-for="(item, index) in (QAData[openqaSelected] ? QAData[openqaSelected].data : [])" :key="index"
             :title="item.title"
             :inline-desc="`${item.answer_num}个回答　${item.attention_num}人关注`"
             :value="item.created_at.split(' ')[0]"
@@ -33,9 +33,9 @@
           ></vux-cell>
         </vux-group>
       </view-box>
-      <page-selector v-if="QAData[selected]"
-        :nowPage="QAData[selected].current_page || '...'"
-        :pageCount="Math.ceil(QAData[selected].total / 10)"
+      <page-selector v-if="QAData[openqaSelected]"
+        :nowPage="QAData[openqaSelected].current_page || '...'"
+        :pageCount="Math.ceil(QAData[openqaSelected].total / 10)"
         @onClickLeft="jumpPage(-1)"
         @onClickRight="jumpPage(1)"
       ></page-selector>
@@ -67,16 +67,17 @@ export default {
 
   data (){
     return {
-      selected: '',
+      openqaSelected: '',
       selectedIllList: [],
       illistStatus: 1,
       QAData: {},     // 问题数据
-      keyword: ''
+      openqaKeyword: ''
     }
   },
 
   activated (){
     this.loadSelectedIllList().then(() =>{
+      console.log(2222)
       // 路由有select参数，选中指定id的tab
       if(this.$route.params.select){
         this.$refs[`tab-${this.$route.params.select}`][0].$el.click()
@@ -86,8 +87,8 @@ export default {
        }
        Vue.nextTick(() => this.$refs[`tab-${this.$route.params.add.ill_id}`][0].$el.click())
       }else{
-        if(this.selected && this.selected !== 'recent'){
-          Vue.nextTick(() => this.$refs[`tab-${this.selected}`][0].$el.click())
+        if(this.openqaSelected && this.openqaSelected !== 'recent'){
+          Vue.nextTick(() => this.$refs[`tab-${this.openqaSelected}`][0].$el.click())
         }else{
           this.$refs.firstTab.$el.click()   // 都没有，默认选择第一项（最近更新）
         }
@@ -100,7 +101,7 @@ export default {
   },
 
   watch: {
-    selected (){
+    openqaSelected (){
       this.getQAList()
     }
   },
@@ -108,6 +109,7 @@ export default {
   methods: {
     // 获取已选疾病列表
     loadSelectedIllList (){
+      console.log(3333)
       return new Promise((resolve, reject) =>{
         this.illistStatus = 2
         _request({
@@ -135,8 +137,8 @@ export default {
     },
 
     // 请求问答列表
-    getQAList (page = 1, keyword){
-      if(this.QAData[this.selected] && (page > this.QAData[this.selected].last_page)){
+    getQAList (page = 1, openqaKeyword){
+      if(this.QAData[this.openqaSelected] && (page > this.QAData[this.openqaSelected].last_page)){
         this.$bus.$emit('vux.toast', '已经是最后一页')
         return
       }
@@ -149,25 +151,25 @@ export default {
 
       // 这里要用到三个接口
       var url = 'openquiz/recentList'   // 最近更新
-      if(this.selected !== 'recent'){
+      if(this.openqaSelected !== 'recent'){
         url = 'openquiz/getListByIll'   // 按疾病全部
       }
-      if(keyword){
+      if(openqaKeyword){
         url = 'openquiz/getListBySearch'    // 按疾病搜索
       }
       _request({
         url,
         params: {
-          ill_id: this.selected,
+          ill_id: this.openqaSelected,
           page_size: 10,
           page,
-          search_word: keyword
+          search_word: openqaKeyword
         }
       })
       .finally(() => this.$bus.$emit('vux.spinner.hide'))
       .then(({data}) =>{
         if(data.result){
-          Vue.set(this.QAData, this.selected, data.ret)
+          Vue.set(this.QAData, this.openqaSelected, data.ret)
         }else{
           this.$bus.$emit('vux.toast', data.message)
         }
@@ -182,18 +184,18 @@ export default {
 
     // 切换页面
     jumpPage (num){
-      this.getQAList(this.QAData[this.selected].current_page + num)
+      this.getQAList(this.QAData[this.openqaSelected].current_page + num)
       Vue.nextTick(() => this.$refs.list.scrollTo(0))
     },
 
     toQuestion (){
-      if(this.selected === 'recent'){
+      if(this.openqaSelected === 'recent'){
         this.$toView('open_qa/all_ill', { params: { selectedIllList: this.selectedIllList } })
         this.$bus.$emit('vux.toast', '请先选择要提问的疾病')
       }else{
         this.$toView('open_qa/question', {
           params: {
-            ill: this.selectedIllList.filter(val => val.ill_id === this.selected)[0]
+            ill: this.selectedIllList.filter(val => val.ill_id === this.openqaSelected)[0]
           }
         })
       }
@@ -203,7 +205,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.tabs-container{
+.openqa-tabs-container{
   position: relative;
 
   .tabs{
