@@ -7,7 +7,7 @@ export default function (router) {
   router.beforeEach((to, from, next) => {
     if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd'].includes(to.name))) {
 
-      next({name: 'login'});
+      next({ name: 'login' });
       // next({name: 'illcourse'});
     }
     next();
@@ -16,7 +16,7 @@ export default function (router) {
   // 登录状态下未填信息跳转到信息填写
   router.beforeEach((to, from, next) => {
     if (localStorage.get('isLogin', false) && !localStorage.get('isInfoEdited', false) && to.name !== 'my/info' && to.name !== 'sub/create_plan_hint') {
-      next({name: 'my/info'});
+      next({ name: 'my/info' });
     }
     next();
   });
@@ -31,10 +31,23 @@ export default function (router) {
   //   next()
   // })
 
+
+  //先引导用户页面
+  router.beforeEach((to, from, next) => {
+    if (['illcourse', 'course', 'course/course_article','lead'].includes(to.name)) {
+      if (localStorage.get('isLogin', false)) {
+        next({ name: 'illcourse' })
+      }
+    }
+    next()
+  })
+
+
+
   // 带有meta.fromUrlStop的路由，若从url进入(name为null)则跳到home(防止用户从url直接进入需要重要参数数据的页面)
   router.beforeEach((to, from, next) => {
     if (to.meta.fromUrlStop && from.name === null) {
-      next({name: 'home'});
+      next({ name: 'home' });
     }
     next();
   });
