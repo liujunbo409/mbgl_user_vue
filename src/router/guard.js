@@ -33,14 +33,13 @@ export default function (router) {
 
 
   //先引导用户页面
-  // router.beforeEach((to, from, next) => {
-  //   if (['illcourse', 'course', 'course/course_article','lead'].includes(to.name)) {
-  //     if (localStorage.get('isLogin', false)) {
-  //       next({ name: 'illcourse' })
-  //     }
-  //   }
-  //   next()
-  // })
+  router.beforeEach((to, from, next) => {
+    console.log(`to.name == ${to.name}`);
+    if (['illcourse', 'course', 'course/course_article'].includes(to.name)){
+      console.log(`有的呀!`)
+    }
+    next();
+  });
 
 
 
