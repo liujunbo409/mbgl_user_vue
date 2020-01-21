@@ -66,9 +66,9 @@
                     },
                     {
                         ...title('全部问答'),
-                        
+
                         link: 'all_qa',
-                    }, 
+                    },
                     {
                         ...title('收藏问答'),
                         link: 'collection_qa',
@@ -82,10 +82,10 @@
                         link: 'sub/create_plan_hint'
                     },
 
-                    // {
-                    //   ...title('我的提问'),
-                    //   link: 'my_question'
-                    // }
+                    {
+                      ...title('我的提问'),
+                      link: 'illcourse'
+                    }
                 ]
             }
         },

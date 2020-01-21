@@ -32,103 +32,103 @@
 </template>
 
 <script>
-    import {XHeader, XInput, XButton} from 'vux'
-    import localStorage from '@u/localStorage'
+  import {XHeader, XInput, XButton} from 'vux'
+  import localStorage from '@u/localStorage'
 
-    export default {
-        components: {
-            XHeader, XInput, XButton
-        },
+  export default {
+    components: {
+      XHeader, XInput, XButton
+    },
 
-        data() {
-            return {
-                phoneNum: localStorage.get('phoneNum', ''),
-                password: '',
-                disabled: false,
-                errorType: 'none'
-            }
-        },
+    data() {
+      return {
+        phoneNum: localStorage.get('phoneNum', ''),
+        password: '',
+        disabled: false,
+        errorType: 'none'
+      }
+    },
 
-        mounted() {
+    mounted() {
 
-        },
+    },
 
-        watch: {},
+    watch: {},
 
-        methods: {
-            // 判断手机号是否合法
-            testPhoneNum() {
-                var val = this.phoneNum
-                if (val === '') {
-                    this.errorType = 'empty'
-                    return false
-                }
-                if (!/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/.test(val)) {
-                    this.errorType = 'badFormat'
-                    return false
-                }
-
-                this.errorType = 'none'
-                return true
-            },
-
-            // 判断密码
-            testPsd() {
-                var val = this.password
-                if (val === '') {
-                    this.errorType = 'empty'
-                    return false
-                }
-
-                this.errorType = 'none'
-                return true
-            },
-
-            // 登录逻辑
-            login() {
-                if (this.testPhoneNum() && this.testPsd()) {
-                    this.$vux.loading.show();
-                    var {phoneNum, password} = this;
-                    this.$store.dispatch('user/login', {
-                        phoneNum, password
-                    }).finally(this.$vux.loading.hide).then(() => {
-                        this.$bus.$emit('vux.toast', {type: 'success', text: '登录成功'});
-                        this.$store.dispatch('hospList/load');
-                        this.$store.dispatch('user/editStatus/get').then(() => {
-                            //在无登录状态的情况下保存原始访问页 保存方法在 src/config/beforeInit.js
-                            if (localStorage.get('originalTargetUrl', location.href).split('/')[6] == 'follow_doctors'
-                                && localStorage.get('originalTargetUrl', location.href).split('/')[7].split('?')[0] == 'role_select') {
-                                let to_view = localStorage.get('originalTargetUrl', location.href).split('?')[0].split('/');
-                                to_view = to_view[6] + '/' + to_view[7];
-                                let user_id = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[0].split('=')[1];
-                                let auto_follow = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[1].split('=')[1];
-                                this.$toView(to_view, {query: {UserId: user_id, autoFollow: auto_follow}});
-                            } else {
-                                this.$toView('home');
-                            }
-                        })
-                    }).catch(e => {
-                        // 这里拿到的错误对象的type属性为自定义的(在store)，用于提示非login接口返回的错误类型
-                        // 若不包含type，则为login接口返回的包含result为false的数据
-                        let text = {
-                            timeout: '网络错误',
-                            ban: '该账户已被禁用'
-                        }[e.type] || e.message;
-                        this.$bus.$emit('vux.toast', {
-                            type: 'cancel',
-                            text
-                        });
-                    });
-                } else {
-                    this.$bus.$emit('vux.toast', {
-                        type: 'text',
-                        text: '请确认手机号与密码格式是否正确',
-                        width: '10em'
-                    });
-                }
-            }
+    methods: {
+      // 判断手机号是否合法
+      testPhoneNum() {
+        var val = this.phoneNum
+        if (val === '') {
+          this.errorType = 'empty'
+          return false
         }
+        if (!/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/.test(val)) {
+          this.errorType = 'badFormat'
+          return false
+        }
+
+        this.errorType = 'none'
+        return true
+      },
+
+      // 判断密码
+      testPsd() {
+        var val = this.password
+        if (val === '') {
+          this.errorType = 'empty'
+          return false
+        }
+
+        this.errorType = 'none'
+        return true
+      },
+
+      // 登录逻辑
+      login() {
+        if (this.testPhoneNum() && this.testPsd()) {
+          this.$vux.loading.show();
+          var {phoneNum, password} = this;
+          this.$store.dispatch('user/login', {
+            phoneNum, password
+          }).finally(this.$vux.loading.hide).then(() => {
+            this.$bus.$emit('vux.toast', {type: 'success', text: '登录成功'});
+            this.$store.dispatch('hospList/load');
+            this.$store.dispatch('user/editStatus/get').then(() => {
+              //在无登录状态的情况下保存原始访问页 保存方法在 src/config/beforeInit.js
+              if (localStorage.get('originalTargetUrl', location.href).split('/')[6] == 'follow_doctors'
+                && localStorage.get('originalTargetUrl', location.href).split('/')[7].split('?')[0] == 'role_select') {
+                let to_view = localStorage.get('originalTargetUrl', location.href).split('?')[0].split('/');
+                to_view = to_view[6] + '/' + to_view[7];
+                let user_id = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[0].split('=')[1];
+                let auto_follow = localStorage.get('originalTargetUrl', location.href).split('?')[1].split('&')[1].split('=')[1];
+                this.$toView(to_view, {query: {UserId: user_id, autoFollow: auto_follow}});
+              } else {
+                this.$toView('home');
+              }
+            })
+          }).catch(e => {
+            // 这里拿到的错误对象的type属性为自定义的(在store)，用于提示非login接口返回的错误类型
+            // 若不包含type，则为login接口返回的包含result为false的数据
+            let text = {
+              timeout: '网络错误',
+              ban: '该账户已被禁用'
+            }[e.type] || e.message;
+            this.$bus.$emit('vux.toast', {
+              type: 'cancel',
+              text
+            });
+          });
+        } else {
+          this.$bus.$emit('vux.toast', {
+            type: 'text',
+            text: '请确认手机号与密码格式是否正确',
+            width: '10em'
+          });
+        }
+      }
     }
+  }
 </script>
 
 <style lang="less" scoped>
