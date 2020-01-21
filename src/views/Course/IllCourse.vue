@@ -44,7 +44,8 @@
     mounted() {
       // 载入全部疾病  test user_id = 62
       _request({
-        url: 'jkda/otherIll'
+         baseURL: Vue._GLOBAL.comApi,
+            url: 'baseIllList',
       }).then(({data}) => {
         if (data.result) {
           this.list = data.ret

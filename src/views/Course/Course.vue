@@ -34,7 +34,7 @@
       </vux-group>
       <footer>
        <div class="mainBtn-container">
-          <x-button @click.native="toLead">完善资料定制我的学习计划</x-button>
+          <x-button @click.native="toLead" >完善资料定制我的学习计划</x-button>
         </div>
       </footer>
     </div>
