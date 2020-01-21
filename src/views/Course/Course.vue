@@ -24,7 +24,7 @@
     </div>
     <div class="mask" v-if="visibleIllList"></div>
 
-    <vux-group class="com-group-noMarginTop" style="margin-bottom: 42px;">
+    <vux-group class="com-group-noMarginTop" style="margin-bottom: 55px;">
       <dir-item v-for="(item, index) in allStage" :key="index"
                 :title="item.catalog_name"
                 :files="allArticle[item.id]"
