@@ -92,7 +92,6 @@ export default {
   mounted (){
 
   },
-
   computed: {
     // 验证码不对时为true
     msgDisabled (){

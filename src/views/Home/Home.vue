@@ -33,7 +33,6 @@
             VuxGrid: Grid,
             GridItem
         },
-
         data() {
             return {
                 // 渲染主体
@@ -70,10 +69,10 @@
                         
                         link: 'all_qa',
                     }, 
-                    // {
-                    //     ...title('收藏问答'),
-                    //     link: 'collection_qa',
-                    // },
+                    {
+                        ...title('收藏问答'),
+                        link: 'collection_qa',
+                    },
                     // {
                     //     ...title('公开问答'),
                     //     link: 'open_qa'
@@ -129,19 +128,16 @@
                 this.updateEidtStatus()
             },
         },
-
         methods: {
             updateEidtStatus() {
                 this.blocks[0].badge = this.infoStatus ? '完成' : '待填写'
                 this.blocks[0].badgeClass = this.infoStatus ? 'info-done' : 'info-blank'
                 this.blocks[2].badge = this.czsjStatus
             },
-
             onClickItem(link, before) {
                 before = before || (() => Promise.resolve())
                 before().then(() => this.$toView(link))
             },
-
             beforeCheckLearningPlan() {
                 return new Promise((resolve, reject) => {
                     _request({
@@ -152,7 +148,6 @@
                             reject()
                             return
                         }
-
                         resolve()
                     })
                 })

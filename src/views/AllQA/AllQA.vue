@@ -4,7 +4,8 @@
      <vux-tab :animate="false">
       <tab-item @click.native="wenda_type = 0" ref="allqatab">全部问答</tab-item>
       <tab-item @click.native="wenda_type = 1">收藏问答</tab-item>
-      <tab-item @click.native="wenda_type = 2">公开问答</tab-item>
+      <!-- <tab-item @click.native="$toView('collection_qa')">收藏问答</tab-item> -->
+      <tab-item  @click.native="$toView('open_qa/all_ill')">公开问答</tab-item>
     </vux-tab>
     <div v-if="wenda_type === 0">
       <div>
@@ -68,13 +69,13 @@
     </div>
     </div>
     <div v-if="wenda_type === 1">
-      <div class="com-container">
-    <div class="com-input-container">
+      <div class="com-container " >
+    <div class="com-input-container" style="margin-top:90px;">
       <input type="text" v-model.trim="keyword">
       <span class="searchBtn" @click="load(keyword)">搜索</span>
     </div>
     <view-box minus="59px" ref="list">
-      <vux-group class="com-group-noMarginTop">
+      <vux-group class="com-group-noMarginTop" >
         <vux-cell 
           v-for="(item, index) in {}.constructor.keys(collectionQaList).length ? collectionQaList.data : []"  
           :key="index" :is-link="true" 
@@ -141,12 +142,12 @@
       ></page-selector>
 
        <!-- 加载时显示的静态翻页栏，防止数据加载完ui篡位 -->
-      <!-- <page-selector v-else
+      <page-selector v-else
         nowPage="..."
         pageCount="0"
         @onClickLeft="() => {}"
         @onClickRight="() => {}"
-      ></page-selector> -->
+      ></page-selector>
 
       <footer @click="toQuestion">
         <img src="@img/btn/edit.png">
@@ -209,7 +210,7 @@
               if(this.openqaSelected && this.openqaSelected !== 'recent'){
                 Vue.nextTick(() => this.$refs[`tab-${this.openqaSelected}`][0].$el.click())
               }else{
-                this.$refs.firstTab.$el.click()   // 都没有，默认选择第一项（最近更新）
+                // this.$refs.firstTab.$el.click()   // 都没有，默认选择第一项（最近更新）
               }
             }
           })

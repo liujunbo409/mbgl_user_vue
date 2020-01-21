@@ -25,22 +25,19 @@
     export default {
         data() {
             return {
-                data: [],         // 已关注医生数据
+                data: [],// 已关注医生数据
                 status: 1,
             }
         },
-
         mounted() {
             this.load()
         },
-
         computed: {
             // 拿回的数据格式为对象，需要这样判断是否为空
             isNoData() {
                 return this.status === 3 && !Object.keys(this.data).length
             }
         },
-
         methods: {
             // 载入数据
             load() {
