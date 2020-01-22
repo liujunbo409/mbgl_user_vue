@@ -3,12 +3,17 @@ import localStorage from '@u/localStorage'
 
 export default function (router) {
 
+
   // 未登录跳转到login   auto_follow
   router.beforeEach((to, from, next) => {
-    if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd'].includes(to.name))) {
+    if (to.name == 'illcourse'){
+      next();
+      return;
+    }
+
+    if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd','course','course/course_article'].includes(to.name))) {
 
       next({ name: 'login' });
-      // next({name: 'illcourse'});
     }
     next();
   });
@@ -32,14 +37,7 @@ export default function (router) {
   // })
 
 
-  //先引导用户页面
-  router.beforeEach((to, from, next) => {
-    console.log(`to.name == ${to.name}`);
-    if (['illcourse', 'course', 'course/course_article'].includes(to.name)){
-      console.log(`有的呀!`)
-    }
-    next();
-  });
+  
 
 
 
