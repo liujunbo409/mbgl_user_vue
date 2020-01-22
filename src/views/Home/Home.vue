@@ -65,7 +65,7 @@
                         link: 'role_management',
                     },
                     {
-                        ...title('全部问答'),
+                        ...title('疾病问答'),
 
                         link: 'all_qa',
                     },

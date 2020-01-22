@@ -22,7 +22,7 @@
       }[errorType]"></div>
       <div class="com-box loginBtn-container">
         <x-button text="登录" @click.native="login"></x-button>
-        <x-button text="注册" @click.native="$toView('register')"></x-button>
+<!--        <x-button text="注册" @click.native="$toView('register')"></x-button>-->
         <div class="bottom-btns">
           <span class="forgetPsdBtn" @click="$toView('reset_psd')">忘记密码？</span>
         </div>
@@ -32,12 +32,12 @@
 </template>
 
 <script>
-  import {XHeader, XInput, XButton} from 'vux'
+  import {XInput, XButton} from 'vux'
   import localStorage from '@u/localStorage'
 
   export default {
     components: {
-      XHeader, XInput, XButton
+      XInput, XButton
     },
 
     data() {

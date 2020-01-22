@@ -5,7 +5,7 @@
     <view-box class="com-header-view" v-if="status === 3">
       <vux-checklist
         v-for="({test: item}, index) in data" :key="index"
-        v-model="selecteds[item.id]" label-position="right" 
+        v-model="selecteds[item.id]" label-position="right"
         :title="`【${item.answer.toString().indexOf(',') < 0 ? '单选' : '多选'}】${item.question}`"
         :options="item.answers.map((val, ind) => ({ key: ind, value: val }))"
       ></vux-checklist>
@@ -83,7 +83,7 @@ export default {
       var errors = []
       for(let key in answers){
         if(
-          answers[key].length !== this.selecteds[key].length || 
+          answers[key].length !== this.selecteds[key].length ||
           !answers[key].every(val => this.selecteds[key].includes(parseInt(val)))
         ){
           errors.push(key)
@@ -95,7 +95,7 @@ export default {
         this.$vux.confirm.show({
           title: '对不起',
           content: `您答错了${errors.length}道题`,
-          confirmText: '查看解析',
+          // confirmText: '查看解析',
           cancelText: '返回学习计划',
 
           onConfirm: () =>{

@@ -11,9 +11,9 @@ export default function (router) {
       return;
     }
 
-    if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd','course','course/course_article'].includes(to.name))) {
+    if (!localStorage.get('isLogin', false) && !(['login', 'register', 'reset_psd','course','lead','course/course_article'].includes(to.name))) {
 
-      next({ name: 'login' });
+      next({ name: 'illcourse' });
     }
     next();
   });
@@ -37,7 +37,7 @@ export default function (router) {
   // })
 
 
-  
+
 
 
 
