@@ -70,7 +70,7 @@
     </div>
     <div v-if="wenda_type === 1">
       <div class="com-container " >
-    <div class="com-input-container" style="margin-top:90px;">
+    <div class="com-input-container" >
       <input type="text" v-model.trim="keyword">
       <span class="searchBtn" @click="load(keyword)">搜索</span>
     </div>
