@@ -75,6 +75,10 @@
 
     mounted() {
 
+      this.ill_id = this.$route.query.ill_id;
+      this.ill_name = this.$route.query.ill_name;
+      console.log(`this.ill_id == ${this.ill_id};;this.ill_name==${this.ill_name}`);
+
       this.loadIllList().then(() => {
         this.getSelectedIllId()
       })

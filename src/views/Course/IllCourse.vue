@@ -1,26 +1,22 @@
 <template>
   <div class="com-container">
     <x-header title="选择疾病" :left-options="{
-        backText:'',
-        preventGoBack: back !== null
-      }" @on-click-back="back && back()" class="header">
+        showBack: false,
+      }" class="header">
 
     </x-header>
-    <vux-checker v-model="selected"
+    <vux-checker v-model="selec_ill_list_index"
                  class="checkers-container"
                  default-item-class="checkers"
                  selected-item-class="selected"
     >
-      <checker-item v-for="({id, name}, index) in list" :key="index" :value="id">{{ name }}</checker-item>
+      <checker-item v-for="({id, name}, index) in ill_list" :key="index" :value="index">{{ name }}</checker-item>
     </vux-checker>
-    <div class="noData" v-if="status === 3 && !list.length">已经添加了全部的疾病</div>
     <div class="mainBtn-container">
-      <x-button v-if="list.length" @click.native="next">下一步</x-button>
-      <x-button v-else @click.native="$router.back">点击返回</x-button>
+      <x-button @click.native="next">下一步</x-button>
     </div>
   </div>
 </template>
-
 <script>
   import {XButton, Checker, CheckerItem, XHeader} from 'vux'
   export default {
@@ -34,19 +30,17 @@
     },
     data() {
       return {
-        list: [],     // 可选疾病列表
-        selected: '',
-        status: 1,
+        ill_list: [],     // 可选疾病列表
+        selec_ill_list_index: '',
       }
     },
     mounted() {
-      // 载入全部疾病  test user_id = 62
       _request({
         baseURL: Vue._GLOBAL.comApi,
         url: 'baseIllList',
       }).then(({data}) => {
         if (data.result) {
-          this.list = data.ret
+          this.ill_list = data.ret
         }
       }).catch(e => {
         console.log(e)
@@ -55,16 +49,12 @@
     methods: {
       //下一步
       next() {
-        if (!this.selected){
+        if (!this.selec_ill_list_index){
           this.$bus.$emit('vux.toast', {type: 'text', text: '请选择疾病'});
           return;
         }
-        this.$toView('course', {
-          params: {
-            selected: this.selected,
-          }
-        })
-        console.log(this.selected)
+        let query = {ill_id:this.ill_list[this.selec_ill_list_index].id,ill_name:this.ill_list[this.selec_ill_list_index].name};
+        this.$router.push({path: 'course', query: query});
       }
     }
   }
