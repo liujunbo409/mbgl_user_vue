@@ -7,7 +7,7 @@
     </vux-cell>
     <ul v-if="!isCollapse" class="list">
       <li v-for="(file, index) in files || []" :key="index" @click="$emit('onClickItem', file)">
-        {{ file.article.title }}
+        {{ file.article_title }}
       </li>
     </ul>
   </div>

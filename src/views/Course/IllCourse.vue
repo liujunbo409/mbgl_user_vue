@@ -14,6 +14,7 @@
     </vux-checker>
     <div class="mainBtn-container">
       <x-button @click.native="next">下一步</x-button>
+      <x-button @click.native="goLogin">已有帐号去登陆</x-button>
     </div>
   </div>
 </template>
@@ -49,13 +50,15 @@
     methods: {
       //下一步
       next() {
-        if (!this.selec_ill_list_index){
+        if (!this.selec_ill_list_index && this.selec_ill_list_index !== 0){
           this.$bus.$emit('vux.toast', {type: 'text', text: '请选择疾病'});
           return;
         }
         let query = {ill_id:this.ill_list[this.selec_ill_list_index].id,ill_name:this.ill_list[this.selec_ill_list_index].name};
+        console.log(`query ?? ${JSON.stringify(query)}`)
         this.$router.push({path: 'course', query: query});
-      }
+      },
+      goLogin(){this.$toView('login')}
     }
   }
 </script>
