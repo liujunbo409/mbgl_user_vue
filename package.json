@@ -15,7 +15,7 @@
     "element-ui": "^2.13.0",
     "fastclick": "^1.0.6",
     "qiniu-js": "^2.5.4",
-    "qs": "^6.7.0",
+    "qs": "^6.9.7",
     "raw-loader": "^3.0.0",
     "sass-resources-loader": "^2.0.0",
     "vue": "^2.5.2",
